@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using Server.Storage.Exceptions;
 
 namespace Server.Storage.Files
 {
@@ -13,7 +14,14 @@ namespace Server.Storage.Files
 		
 		public void allocate(string queueName)
 		{
-			
+			if (!exists(queueName))
+			{
+				Directory.CreateDirectory(Paths.makeQueuePath(queueName));
+			}
+			else
+			{
+				throw new QueueAlreadyExists();
+			}
 		}
 
 		public bool exists(string queueName)
