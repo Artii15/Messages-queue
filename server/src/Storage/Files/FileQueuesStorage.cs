@@ -16,12 +16,19 @@ namespace Server.Storage.Files
 		{
 			if (!exists(queueName))
 			{
-				Directory.CreateDirectory(Paths.makeQueuePath(queueName));
+				initializeQueueDirs(queueName);
 			}
 			else
 			{
 				throw new QueueAlreadyExists();
 			}
+		}
+
+		private void initializeQueueDirs(string queueName)
+		{
+			Directory.CreateDirectory(Paths.makeQueuePath(queueName));
+			Directory.CreateDirectory(Paths.makeMessagesPath(queueName));
+			Directory.CreateDirectory(Paths.makeTopicsPath(queueName));
 		}
 
 		public bool exists(string queueName)

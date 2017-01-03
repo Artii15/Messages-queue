@@ -9,12 +9,23 @@
 			Config = config;
 		}
 
+
+		public string makeTopicsPath(string queueName)
+		{
+			return $"{makeQueuePath(queueName)}/topics";
+		}
+
+		public string makeMessagesPath(string queueName)
+		{
+			return $"{makeQueuePath(queueName)}/messages";
+		}
+
 		public string makeQueuePath(string queueName)
 		{
 			return $"{getQueuesPath()}/{queueName}";
 		}
 
-		public string getQueuesPath()
+		private string getQueuesPath()
 		{
 			return $"{Config.RootPath}/queues";
 		}
