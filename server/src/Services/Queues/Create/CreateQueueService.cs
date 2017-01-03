@@ -6,7 +6,7 @@ namespace Server.Services.Queues.Create
 	{
 		public CreateQueueResponse Post(CreateQueue request)
 		{
-			var queue = new Queue { Name = request.QueueName };
+			
 			return new CreateQueueResponse();
 		}
 	}
