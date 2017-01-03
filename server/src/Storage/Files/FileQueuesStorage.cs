@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Server.Storage.Exceptions;
 
 namespace Server.Storage.Files
@@ -24,9 +25,8 @@ namespace Server.Storage.Files
 			}
 		}
 
-		private void initializeQueueDirs(string queueName)
+		void initializeQueueDirs(string queueName)
 		{
-			Directory.CreateDirectory(Paths.makeQueuePath(queueName));
 			Directory.CreateDirectory(Paths.makeMessagesPath(queueName));
 			Directory.CreateDirectory(Paths.makeTopicsPath(queueName));
 		}
