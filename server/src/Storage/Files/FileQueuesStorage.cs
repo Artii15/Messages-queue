@@ -27,18 +27,18 @@ namespace Server.Storage.Files
 
 		void initializeQueueDirs(string queueName)
 		{
-			Directory.CreateDirectory(Paths.makeMessagesPath(queueName));
-			Directory.CreateDirectory(Paths.makeTopicsPath(queueName));
+			Directory.CreateDirectory(Paths.MakeMessagesPath(queueName));
+			Directory.CreateDirectory(Paths.MakeTopicsPath(queueName));
 		}
 
 		public bool exists(string queueName)
 		{
-			return File.Exists(Paths.makeQueuePath(queueName));
+			return File.Exists(Paths.MakeQueuePath(queueName));
 		}
 
 		public IEnumerable<string> findAll()
 		{
-			return Directory.EnumerateDirectories(Paths.getQueuesPath());
+			return Directory.EnumerateDirectories(Paths.GetQueuesPath());
 		}
 	}
 }

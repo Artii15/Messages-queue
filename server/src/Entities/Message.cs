@@ -1,6 +1,8 @@
-﻿namespace Server.Entities
+﻿using System.Runtime.Serialization;
+
+namespace Server.Entities
 {
-	public interface Message
+	public interface Message: ISerializable
 	{
 	}
 }

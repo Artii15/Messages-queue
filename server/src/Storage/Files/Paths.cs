@@ -9,23 +9,22 @@
 			Config = config;
 		}
 
-
-		public string makeTopicsPath(string queueName)
+		public string MakeTopicsPath(string queueName)
 		{
-			return $"{makeQueuePath(queueName)}/topics";
+			return $"{MakeQueuePath(queueName)}/topics";
 		}
 
-		public string makeMessagesPath(string queueName)
+		public string MakeMessagesPath(string queueName)
 		{
-			return $"{makeQueuePath(queueName)}/messages";
+			return $"{MakeQueuePath(queueName)}/messages";
 		}
 
-		public string makeQueuePath(string queueName)
+		public string MakeQueuePath(string queueName)
 		{
-			return $"{getQueuesPath()}/{queueName}";
+			return $"{GetQueuesPath()}/{queueName}";
 		}
 
-		public string getQueuesPath()
+		public string GetQueuesPath()
 		{
 			return $"{Config.RootPath}/queues";
 		}
