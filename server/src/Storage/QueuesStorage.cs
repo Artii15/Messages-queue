@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Server.Entities;
 
 namespace Server.Storage
 {
@@ -7,6 +6,6 @@ namespace Server.Storage
 	{
 		bool exists(string queueName);
 		void allocate(string queueName);
-		IEnumerable<Queue> findAll();
+		IEnumerable<string> findAll();
 	}
 }
