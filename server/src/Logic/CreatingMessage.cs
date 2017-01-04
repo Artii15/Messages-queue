@@ -1,9 +1,12 @@
-﻿namespace Server.Logic
+﻿using Server.Entities;
+
+namespace Server.Logic
 {
 	public class CreatingMessage
 	{
-		public CreatingMessage()
+		public void Create(Message message)
 		{
+
 		}
 	}
 }

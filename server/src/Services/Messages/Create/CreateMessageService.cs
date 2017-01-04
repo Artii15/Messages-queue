@@ -12,8 +12,9 @@ namespace Server.Services.Messages.Create
 			CreatingMessage = creatingMessage;
 		}
 
-		public CreateMessageResponse post(CreateMessage request)
+		public CreateMessageResponse Post(CreateMessage request)
 		{
+			CreatingMessage.Create(request.Message);
 			return new CreateMessageResponse();
 		}
 	}
