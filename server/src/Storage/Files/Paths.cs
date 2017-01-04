@@ -25,7 +25,7 @@
 			return $"{getQueuesPath()}/{queueName}";
 		}
 
-		private string getQueuesPath()
+		public string getQueuesPath()
 		{
 			return $"{Config.RootPath}/queues";
 		}

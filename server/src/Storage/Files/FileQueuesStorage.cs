@@ -1,5 +1,7 @@
-﻿using System;
+﻿using System.Linq;
+using System.Collections.Generic;
 using System.IO;
+using Server.Entities;
 using Server.Storage.Exceptions;
 
 namespace Server.Storage.Files
@@ -34,6 +36,12 @@ namespace Server.Storage.Files
 		public bool exists(string queueName)
 		{
 			return File.Exists(Paths.makeQueuePath(queueName));
+		}
+
+		public IEnumerable<Queue> findAll()
+		{
+			return Directory.EnumerateDirectories(Paths.getQueuesPath())
+							.Select(dirName => new Queue { Name = dirName });
 		}
 	}
 }
