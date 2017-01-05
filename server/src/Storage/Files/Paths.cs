@@ -11,12 +11,12 @@
 
 		public string GetQueueMessagesPointerFile(string queueName, string pointerName)
 		{
-			return $"{GetQueuePath(queueName)}/pointers/{pointerName}";
+			return $"{GetQueueMessagesPointersDir(queueName)}/{pointerName}";
 		}
 
-		public string GetLockFilePath(string queueName)
+		public string GetQueueMessagesPointersDir(string queueName)
 		{
-			return $"{GetQueuePath(queueName)}/lockfile";
+			return $"{GetQueuePath(queueName)}/pointers";
 		}
 
 		public string GetTopicsPath(string queueName)

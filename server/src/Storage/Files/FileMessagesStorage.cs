@@ -1,10 +1,9 @@
-﻿using System;
-using System.IO;
-using ServiceStack.FluentValidation.Resources;
+﻿using System.IO;
+using Server.Entities;
 
 namespace Server.Storage.Files
 {
-	public class FileMessagesStorage : MessagesStorage
+	public class FileMessagesStorage
 	{
 		Paths Paths;
 
@@ -13,18 +12,16 @@ namespace Server.Storage.Files
 			Paths = paths;
 		}
 
-		public void Create(string queueName, Messages message)
+		public void Create(string queueName, Message message)
 		{
-			var messagesPath = Paths.MakeMessagesPath(queueName);
-			EnsureMessagesDirExists(messagesPath);
-
-			var messageId = Guid.NewGuid().ToString();
+			InitializeQueueIfNeeded(queueName);
 
 		}
 
-		void EnsureMessagesDirExists(string messagesPath)
+		void InitializeQueueIfNeeded(string queueName)
 		{
-			Directory.CreateDirectory(messagesPath);
+			Directory.CreateDirectory(Paths.GetMessagesPath(queueName));
+			Directory.CreateDirectory(Paths.GetQueueMessagesPointersDir(queueName));
 		}
 	}
 }
