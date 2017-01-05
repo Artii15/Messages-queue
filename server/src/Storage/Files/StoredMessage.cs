@@ -4,7 +4,7 @@ namespace Server.Storage.Files
 {
 	public class StoredMessage
 	{
-		public Message message { get; set; }
-		public string next { get; set; }
+		public Message Message { get; set; }
+		public string Next { get; set; }
 	}
 }
