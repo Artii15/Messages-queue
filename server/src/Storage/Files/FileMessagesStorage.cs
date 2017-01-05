@@ -15,7 +15,10 @@ namespace Server.Storage.Files
 		public void Create(string queueName, Message message)
 		{
 			InitializeQueueIfNeeded(queueName);
+			var dirSynchronizationHandle = Synchronizer.generateQueueSynchronizationObject(queueName);
+			dirSynchronizationHandle.WaitOne();
 
+			dirSynchronizationHandle.Set();
 		}
 
 		void InitializeQueueIfNeeded(string queueName)
