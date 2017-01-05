@@ -16,8 +16,9 @@ namespace Server.Storage.Files
 		{
 			InitializeQueueIfNeeded(queueName);
 			var dirSynchronizationHandle = Synchronizer.generateQueueSynchronizationObject(queueName);
-			dirSynchronizationHandle.WaitOne();
 
+			dirSynchronizationHandle.WaitOne();
+			StoreMessage(queueName, message);
 			dirSynchronizationHandle.Set();
 		}
 
@@ -25,6 +26,11 @@ namespace Server.Storage.Files
 		{
 			Directory.CreateDirectory(Paths.GetMessagesPath(queueName));
 			Directory.CreateDirectory(Paths.GetQueueMessagesPointersDir(queueName));
+		}
+
+		void StoreMessage(string queueName, Message message)
+		{
+
 		}
 	}
 }
