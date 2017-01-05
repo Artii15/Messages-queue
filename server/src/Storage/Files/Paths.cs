@@ -9,17 +9,27 @@
 			Config = config;
 		}
 
-		public string MakeTopicsPath(string queueName)
+		public string GetQueueMessagesPointerFile(string queueName, string pointerName)
 		{
-			return $"{MakeQueuePath(queueName)}/topics";
+			return $"{GetQueuePath(queueName)}/pointers/{pointerName}";
 		}
 
-		public string MakeMessagesPath(string queueName)
+		public string GetLockFilePath(string queueName)
 		{
-			return $"{MakeQueuePath(queueName)}/messages";
+			return $"{GetQueuePath(queueName)}/lockfile";
 		}
 
-		public string MakeQueuePath(string queueName)
+		public string GetTopicsPath(string queueName)
+		{
+			return $"{GetQueuePath(queueName)}/topics";
+		}
+
+		public string GetMessagesPath(string queueName)
+		{
+			return $"{GetQueuePath(queueName)}/messages";
+		}
+
+		public string GetQueuePath(string queueName)
 		{
 			return $"{GetQueuesPath()}/{queueName}";
 		}

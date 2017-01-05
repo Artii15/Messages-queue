@@ -6,7 +6,7 @@ namespace Server.Logic
 	{
 		public void Create(Message message)
 		{
-
+			
 		}
 	}
 }

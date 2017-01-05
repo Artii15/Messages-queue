@@ -27,13 +27,13 @@ namespace Server.Storage.Files
 
 		void initializeQueueDirs(string queueName)
 		{
-			Directory.CreateDirectory(Paths.MakeMessagesPath(queueName));
-			Directory.CreateDirectory(Paths.MakeTopicsPath(queueName));
+			Directory.CreateDirectory(Paths.GetMessagesPath(queueName));
+			Directory.CreateDirectory(Paths.GetTopicsPath(queueName));
 		}
 
 		public bool exists(string queueName)
 		{
-			return File.Exists(Paths.MakeQueuePath(queueName));
+			return File.Exists(Paths.GetQueuePath(queueName));
 		}
 
 		public IEnumerable<string> findAll()

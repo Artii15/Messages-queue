@@ -19,6 +19,7 @@ namespace Server.Storage.Files
 			EnsureMessagesDirExists(messagesPath);
 
 			var messageId = Guid.NewGuid().ToString();
+
 		}
 
 		void EnsureMessagesDirExists(string messagesPath)
