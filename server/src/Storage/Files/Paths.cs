@@ -24,6 +24,11 @@
 			return $"{GetQueuePath(queueName)}/topics";
 		}
 
+		public string GetMessagePath(string queueName, string messageId)
+		{
+			return $"{GetMessagesPath(queueName)}/{messageId}";
+		}
+
 		public string GetMessagesPath(string queueName)
 		{
 			return $"{GetQueuePath(queueName)}/messages";
