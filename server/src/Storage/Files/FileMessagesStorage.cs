@@ -50,10 +50,7 @@ namespace Server.Storage.Files
 			}
 			else
 			{
-				var lastMessagePath = Paths.GetMessagePath(queueName, lastMessageId);
-				var lastMessage = (StoredMessage) Formatter.Deserialize(new FileStream(lastMessagePath, FileMode.Open));
-				lastMessage.Next = messageId;
-				//Formatter.Serialize(new FileStream(lastMessagePath, FileMode.Truncate);
+				LetLastMessagePointToNewMessage(Paths.GetMessagePath(queueName, lastMessageId), messageId);
 			}
 			File.WriteAllText(queueLastPointerPath, messageId);
 		}
@@ -67,6 +64,17 @@ namespace Server.Storage.Files
 				Formatter.Serialize(newMessageFileStream, storedMessage);
 			}
 			return messageId;
+		}
+
+		void LetLastMessagePointToNewMessage(string lastMessagePath, string newMessageId)
+		{
+			using (var lastMessageStream = new FileStream(lastMessagePath, FileMode.Open))
+			{
+				var lastMessage = (StoredMessage)Formatter.Deserialize(lastMessageStream);
+				lastMessage.Next = newMessageId;
+				lastMessageStream.Position = 0;
+				Formatter.Serialize(lastMessageStream, lastMessage);
+			}
 		}
 	}
 }
