@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using Server.Entities;
 
 namespace Server.Storage.Files
@@ -39,7 +40,9 @@ namespace Server.Storage.Files
 		{
 			var messageId = Guid.NewGuid().ToString();
 			var newMessageFileStream = new FileStream(Paths.GetMessagePath(queueName, messageId), FileMode.Create);
-			//var storedMessage = new StoredMessage(
+			var storedMessage = new StoredMessage { Message = message, Next = null };
+			var formatter = new BinaryFormatter();
+			formatter.Serialize(newMessageFileStream, storedMessage);
 
 			var queueTailPointerPath = Paths.GetQueueMessagesPointerFile(queueName, QueuePointersNames.LastMessagePointerName);
 			using (var queueTailFile = new BinaryReader(new FileStream(queueTailPointerPath, FileMode.OpenOrCreate)))
