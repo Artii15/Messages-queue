@@ -8,6 +8,7 @@ namespace Server.Storage.Files
 	public class FileMessagesStorage
 	{
 		Paths Paths;
+		BinaryFormatter Formatter = new BinaryFormatter();
 
 		public FileMessagesStorage(Paths paths)
 		{
@@ -38,24 +39,34 @@ namespace Server.Storage.Files
 
 		void StoreMessage(string queueName, Message message)
 		{
-			var messageId = Guid.NewGuid().ToString();
-			var newMessageFileStream = new FileStream(Paths.GetMessagePath(queueName, messageId), FileMode.Create);
-			var storedMessage = new StoredMessage { Message = message, Next = null };
-			var formatter = new BinaryFormatter();
-			formatter.Serialize(newMessageFileStream, storedMessage);
+			var messageId = SaveMessageToFile(queueName, message);
 
 			var queueFirstPointerPath = Paths.GetQueueMessagesPointerFile(queueName, QueuePointersNames.First);
 			var queueLastPointerPath = Paths.GetQueueMessagesPointerFile(queueName, QueuePointersNames.Last);
 			var lastMessageId = File.ReadAllText(queueLastPointerPath);
 			if (lastMessageId == "")
 			{
-				File.WriteAllText(queueLastPointerPath, messageId);
 				File.WriteAllText(queueFirstPointerPath, messageId);
 			}
 			else
 			{
-
+				var lastMessagePath = Paths.GetMessagePath(queueName, lastMessageId);
+				var lastMessage = (StoredMessage) Formatter.Deserialize(new FileStream(lastMessagePath, FileMode.Open));
+				lastMessage.Next = messageId;
+				//Formatter.Serialize(new FileStream(lastMessagePath, FileMode.Truncate);
 			}
+			File.WriteAllText(queueLastPointerPath, messageId);
+		}
+
+		string SaveMessageToFile(string queueName, Message message)
+		{
+			var messageId = Guid.NewGuid().ToString();
+			var storedMessage = new StoredMessage { Message = message, Next = null };
+			using (var newMessageFileStream = new FileStream(Paths.GetMessagePath(queueName, messageId), FileMode.Create))
+			{
+				Formatter.Serialize(newMessageFileStream, storedMessage);
+			}
+			return messageId;
 		}
 	}
 }
