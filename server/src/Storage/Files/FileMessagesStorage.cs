@@ -44,10 +44,17 @@ namespace Server.Storage.Files
 			var formatter = new BinaryFormatter();
 			formatter.Serialize(newMessageFileStream, storedMessage);
 
-			var queueTailPointerPath = Paths.GetQueueMessagesPointerFile(queueName, QueuePointersNames.LastMessagePointerName);
-			using (var queueTailFile = new BinaryReader(new FileStream(queueTailPointerPath, FileMode.OpenOrCreate)))
+			var queueFirstPointerPath = Paths.GetQueueMessagesPointerFile(queueName, QueuePointersNames.First);
+			var queueLastPointerPath = Paths.GetQueueMessagesPointerFile(queueName, QueuePointersNames.Last);
+			var lastMessageId = File.ReadAllText(queueLastPointerPath);
+			if (lastMessageId == "")
 			{
-				
+				File.WriteAllText(queueLastPointerPath, messageId);
+				File.WriteAllText(queueFirstPointerPath, messageId);
+			}
+			else
+			{
+
 			}
 		}
 	}
