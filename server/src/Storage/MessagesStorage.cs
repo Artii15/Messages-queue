@@ -1,9 +1,7 @@
-﻿using ServiceStack.FluentValidation.Resources;
-
-namespace Server.Storage
+﻿namespace Server.Storage
 {
 	public interface MessagesStorage
 	{
-		void Create(string queueName, Messages message);
+		void Create(string queueName, string message);
 	}
 }

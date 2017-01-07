@@ -14,7 +14,7 @@ namespace Server.Services.Messages.Create
 
 		public CreateMessageResponse Post(CreateMessage request)
 		{
-			CreatingMessage.Create(request.Message);
+			CreatingMessage.Create(request.Content);
 			return new CreateMessageResponse();
 		}
 	}

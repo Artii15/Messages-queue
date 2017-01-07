@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using Server.Entities;
 
 namespace Server.Storage.Files
 {
@@ -15,7 +14,7 @@ namespace Server.Storage.Files
 			Paths = paths;
 		}
 
-		public void Create(string queueName, Message message)
+		public void Create(string queueName, string message)
 		{
 			InitializeQueueIfNeeded(queueName);
 			var dirSynchronizationHandle = Synchronizer.generateQueueSynchronizationObject(queueName);
@@ -37,7 +36,7 @@ namespace Server.Storage.Files
 			if (!File.Exists(lastPointerPath)) File.Create(lastPointerPath);
 		}
 
-		void StoreMessage(string queueName, Message message)
+		void StoreMessage(string queueName, string message)
 		{
 			var messageId = SaveMessageToFile(queueName, message);
 
@@ -55,10 +54,10 @@ namespace Server.Storage.Files
 			File.WriteAllText(queueLastPointerPath, messageId);
 		}
 
-		string SaveMessageToFile(string queueName, Message message)
+		string SaveMessageToFile(string queueName, string message)
 		{
 			var messageId = Guid.NewGuid().ToString();
-			var storedMessage = new StoredMessage { Message = message, Next = null };
+			var storedMessage = new StoredMessage { Content = message, Next = null };
 			using (var newMessageFileStream = new FileStream(Paths.GetMessagePath(queueName, messageId), FileMode.Create))
 			{
 				Formatter.Serialize(newMessageFileStream, storedMessage);
@@ -72,7 +71,8 @@ namespace Server.Storage.Files
 			{
 				var lastMessage = (StoredMessage)Formatter.Deserialize(lastMessageStream);
 				lastMessage.Next = newMessageId;
-				lastMessageStream.Position = 0;
+				lastMessageStream.SetLength(0);
+				lastMessageStream.Seek(0, SeekOrigin.Begin);
 				Formatter.Serialize(lastMessageStream, lastMessage);
 			}
 		}
