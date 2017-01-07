@@ -15,6 +15,7 @@ using ServiceStack.Logging;
 using System;
 using Server.Storage;
 using Server.Storage.Files;
+using Server.Logic;
 
 namespace Server
 {
@@ -61,11 +62,15 @@ namespace Server
             //Use OrmLite DB Connection to persist the UserAuth and AuthProvider info
             container.Register<IUserAuthRepository> (c => new OrmLiteAuthRepository (c.Resolve<IDbConnectionFactory> ()));
 
+
 			var storageConfig = new FileStorageConfig { RootPath = "./MQ" };
 			var storagePaths = new Paths(storageConfig);
 			container.Register<QueuesStorage>(new FileQueuesStorage(storagePaths));
+			container.Register<MessagesStorage>(new FileMessagesStorage(storagePaths));
+			container.RegisterAutoWired<CreatingMessage>();
 
-            Plugins.Add (new ValidationFeature ());
+            
+			Plugins.Add (new ValidationFeature ());
 
             var config = new EndpointHostConfig ();
 

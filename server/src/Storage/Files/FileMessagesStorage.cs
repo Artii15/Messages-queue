@@ -4,7 +4,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Server.Storage.Files
 {
-	public class FileMessagesStorage
+	public class FileMessagesStorage: MessagesStorage
 	{
 		Paths Paths;
 		BinaryFormatter Formatter = new BinaryFormatter();

@@ -2,7 +2,7 @@
 
 namespace Server.Services.Messages.Create
 {
-	[Route("/api/queues/{queueName}/messages", "POST")]
+	[Route("/api/queues/{QueueName}/messages", "POST")]
 	public class CreateMessage
 	{
 		public string QueueName { get; set; }
