@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
@@ -9,13 +9,13 @@ namespace Server.Storage.Files
 	public class FileMessagesStorage: MessagesStorage
 	{
 		Paths Paths;
-		Dictionary<string, ReaderWriterLockSlim> MessagesLocks;
-		Dictionary<string, ManualResetEventSlim> MessagesEvents;
+		ConcurrentDictionary<string, ReaderWriterLockSlim> MessagesLocks;
+		ConcurrentDictionary<string, ManualResetEventSlim> MessagesEvents;
 		BinaryFormatter Formatter = new BinaryFormatter();
 
 		public FileMessagesStorage(Paths paths, 
-		                           Dictionary<string, ReaderWriterLockSlim> messagesLocks,
-		                           Dictionary<string, ManualResetEventSlim> messagesEvents)
+		                           ConcurrentDictionary<string, ReaderWriterLockSlim> messagesLocks,
+		                           ConcurrentDictionary<string, ManualResetEventSlim> messagesEvents)
 		{
 			Paths = paths;
 			MessagesLocks = messagesLocks;
@@ -25,11 +25,21 @@ namespace Server.Storage.Files
 		public void Create(string queueName, string message)
 		{
 			InitializeQueueIfNeeded(queueName);
-			var messagesLock = MessagesLocks[queueName];
+			ReaderWriterLockSlim messagesLock;
+			ManualResetEventSlim messagesEvent;
 
-			messagesLock.EnterWriteLock();
-			StoreMessage(queueName, message);
-			messagesLock.ExitReadLock();
+			if (MessagesLocks.TryGetValue(queueName, out messagesLock)
+			    && MessagesEvents.TryGetValue(queueName, out messagesEvent))
+			{
+				messagesLock.EnterWriteLock();
+				StoreMessage(queueName, message);
+				messagesLock.ExitReadLock();
+				messagesEvent.Set();
+			}
+			else
+			{
+				throw new Exception(); //TODO Throw more specific exception
+			}
 		}
 
 		void InitializeQueueIfNeeded(string queueName)
@@ -60,7 +70,6 @@ namespace Server.Storage.Files
 				LetLastMessagePointToNewMessage(Paths.GetMessagePath(queueName, lastMessageId), messageId);
 			}
 			File.WriteAllText(queueLastPointerPath, messageId);
-			MessagesEvents[queueName].Set();
 		}
 
 		string SaveMessageToFile(string queueName, string message)
@@ -88,9 +97,19 @@ namespace Server.Storage.Files
 
 		public string TryToReadNextMessage(string queueName)
 		{
-			var messagesLock = MessagesLocks[queueName];
-			messagesLock.EnterWriteLock();
+			ReaderWriterLockSlim messagesLock;
+			if (MessagesLocks.TryGetValue(queueName, out messagesLock))
+			{
+				messagesLock.EnterWriteLock();
+				string message = readNextMessage(queueName);
+				messagesLock.ExitWriteLock();
+				return message;
+			}
+			throw new Exception(); // TODO More specific exception
+		}
 
+		string readNextMessage(string queueName)
+		{
 			var messagePointerPath = Paths.GetQueueMessagesPointerFile(queueName, QueuePointersNames.First);
 			var nextMessageId = File.ReadAllText(messagePointerPath);
 
@@ -99,8 +118,6 @@ namespace Server.Storage.Files
 			{
 				message = File.ReadAllText(Paths.GetMessagePath(queueName, nextMessageId));
 			}
-			messagesLock.ExitWriteLock();
-
 			return message;
 		}
 	}

@@ -16,8 +16,8 @@ using System;
 using Server.Storage;
 using Server.Storage.Files;
 using Server.Logic;
-using System.Collections.Generic;
 using System.Threading;
+using System.Collections.Concurrent;
 
 namespace Server
 {
@@ -64,13 +64,15 @@ namespace Server
             //Use OrmLite DB Connection to persist the UserAuth and AuthProvider info
             container.Register<IUserAuthRepository> (c => new OrmLiteAuthRepository (c.Resolve<IDbConnectionFactory> ()));
 
-			var messagesLocks = new Dictionary<string, ReaderWriterLockSlim>();
-			var waitOnMessageEvents = new Dictionary<string, ManualResetEventSlim>();
+			var messagesLocks = new ConcurrentDictionary<string, ReaderWriterLockSlim>();
+			var waitOnMessageEvents = new ConcurrentDictionary<string, ManualResetEventSlim>();
 
 			var storageConfig = new FileStorageConfig { RootPath = "./MQ" };
 			var storagePaths = new Paths(storageConfig);
 			container.Register<QueuesStorage>(new FileQueuesStorage(storagePaths));
-			container.Register<MessagesStorage>(new FileMessagesStorage(storagePaths, messagesLocks));
+			container.Register<MessagesStorage>(new FileMessagesStorage(storagePaths, 
+			                                                            messagesLocks, 
+			                                                            waitOnMessageEvents));
 			container.RegisterAutoWired<CreatingMessage>();
 
             
