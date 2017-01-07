@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using Server.Storage.Exceptions;
 
 namespace Server.Storage.Files
 {
@@ -15,25 +14,14 @@ namespace Server.Storage.Files
 		
 		public void Allocate(string queueName)
 		{
-			if (!exists(queueName))
-			{
-				initializeQueueDirs(queueName);
-			}
-			else
-			{
-				throw new QueueAlreadyExists();
-			}
-		}
-
-		void initializeQueueDirs(string queueName)
-		{
-			Directory.CreateDirectory(Paths.GetMessagesPath(queueName));
 			Directory.CreateDirectory(Paths.GetTopicsPath(queueName));
-		}
+			Directory.CreateDirectory(Paths.GetMessagesPath(queueName));
 
-		public bool exists(string queueName)
-		{
-			return File.Exists(Paths.GetQueuePath(queueName));
+			Directory.CreateDirectory(Paths.GetQueueMessagesPointersDir(queueName));
+			var firstPointerPath = Paths.GetQueueMessagesPointerFile(queueName, QueuePointersNames.First);
+			File.Create(firstPointerPath);
+			var lastPointerPath = Paths.GetQueueMessagesPointerFile(queueName, QueuePointersNames.Last);
+			File.Create(lastPointerPath);
 		}
 
 		public IEnumerable<string> FindAll()

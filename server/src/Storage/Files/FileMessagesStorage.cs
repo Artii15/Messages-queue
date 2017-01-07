@@ -8,7 +8,7 @@ namespace Server.Storage.Files
 {
 	public class FileMessagesStorage: MessagesStorage
 	{
-		Paths Paths;
+		readonly Paths Paths;
 		ConcurrentDictionary<string, ReaderWriterLockSlim> MessagesLocks;
 		BinaryFormatter Formatter = new BinaryFormatter();
 
@@ -21,7 +21,6 @@ namespace Server.Storage.Files
 
 		public void Create(string queueName, string message)
 		{
-			InitializeQueueIfNeeded(queueName);
 			ReaderWriterLockSlim messagesLock;
 
 			if (MessagesLocks.TryGetValue(queueName, out messagesLock))
@@ -34,18 +33,6 @@ namespace Server.Storage.Files
 			{
 				throw new Exception(); //TODO Throw more specific exception
 			}
-		}
-
-		void InitializeQueueIfNeeded(string queueName)
-		{
-			Directory.CreateDirectory(Paths.GetMessagesPath(queueName));
-			Directory.CreateDirectory(Paths.GetQueueMessagesPointersDir(queueName));
-
-			var firstPointerPath = Paths.GetQueueMessagesPointerFile(queueName, QueuePointersNames.First);
-			if (!File.Exists(firstPointerPath)) File.Create(firstPointerPath);
-
-			var lastPointerPath = Paths.GetQueueMessagesPointerFile(queueName, QueuePointersNames.Last);
-			if (!File.Exists(lastPointerPath)) File.Create(lastPointerPath);
 		}
 
 		void StoreMessage(string queueName, string message)
@@ -95,7 +82,7 @@ namespace Server.Storage.Files
 			if (MessagesLocks.TryGetValue(queueName, out messagesLock))
 			{
 				messagesLock.EnterWriteLock();
-				string message = readNextMessage(queueName);
+				var message = readNextMessage(queueName);
 				messagesLock.ExitWriteLock();
 				return message;
 			}
