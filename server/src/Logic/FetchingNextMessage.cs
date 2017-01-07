@@ -35,7 +35,6 @@ namespace Server.Logic
 				waitOnMessageEvent.Wait();
 				messageInQueue = MessagesStorage.TryToReadNextMessage(queueName);
 			}
-
 			return messageInQueue;
 		}
 	}
