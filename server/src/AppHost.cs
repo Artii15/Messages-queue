@@ -16,6 +16,8 @@ using System;
 using Server.Storage;
 using Server.Storage.Files;
 using Server.Logic;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace Server
 {
@@ -62,6 +64,7 @@ namespace Server
             //Use OrmLite DB Connection to persist the UserAuth and AuthProvider info
             container.Register<IUserAuthRepository> (c => new OrmLiteAuthRepository (c.Resolve<IDbConnectionFactory> ()));
 
+			var messagesLocks = new Dictionary<string, ReaderWriterLockSlim>();
 
 			var storageConfig = new FileStorageConfig { RootPath = "./MQ" };
 			var storagePaths = new Paths(storageConfig);
