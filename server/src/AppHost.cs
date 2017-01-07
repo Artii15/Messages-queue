@@ -65,6 +65,7 @@ namespace Server
             container.Register<IUserAuthRepository> (c => new OrmLiteAuthRepository (c.Resolve<IDbConnectionFactory> ()));
 
 			var messagesLocks = new Dictionary<string, ReaderWriterLockSlim>();
+			var waitOnMessageEvents = new Dictionary<string, ManualResetEventSlim>();
 
 			var storageConfig = new FileStorageConfig { RootPath = "./MQ" };
 			var storagePaths = new Paths(storageConfig);
