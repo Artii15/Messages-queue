@@ -10,12 +10,16 @@ namespace Server.Storage.Files
 	{
 		Paths Paths;
 		Dictionary<string, ReaderWriterLockSlim> MessagesLocks;
+		Dictionary<string, ManualResetEventSlim> MessagesEvents;
 		BinaryFormatter Formatter = new BinaryFormatter();
 
-		public FileMessagesStorage(Paths paths, Dictionary<string, ReaderWriterLockSlim> messagesLocks)
+		public FileMessagesStorage(Paths paths, 
+		                           Dictionary<string, ReaderWriterLockSlim> messagesLocks,
+		                           Dictionary<string, ManualResetEventSlim> messagesEvents)
 		{
 			Paths = paths;
 			MessagesLocks = messagesLocks;
+			MessagesEvents = messagesEvents;
 		}
 
 		public void Create(string queueName, string message)
@@ -56,6 +60,7 @@ namespace Server.Storage.Files
 				LetLastMessagePointToNewMessage(Paths.GetMessagePath(queueName, lastMessageId), messageId);
 			}
 			File.WriteAllText(queueLastPointerPath, messageId);
+			MessagesEvents[queueName].Set();
 		}
 
 		string SaveMessageToFile(string queueName, string message)
