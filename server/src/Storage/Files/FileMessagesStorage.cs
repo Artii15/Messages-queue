@@ -80,5 +80,23 @@ namespace Server.Storage.Files
 				Formatter.Serialize(lastMessageStream, lastMessage);
 			}
 		}
+
+		public string TryToReadNextMessage(string queueName)
+		{
+			var messagesLock = MessagesLocks[queueName];
+			messagesLock.EnterWriteLock();
+
+			var messagePointerPath = Paths.GetQueueMessagesPointerFile(queueName, QueuePointersNames.First);
+			var nextMessageId = File.ReadAllText(messagePointerPath);
+
+			string message = null;
+			if (nextMessageId != "")
+			{
+				message = File.ReadAllText(Paths.GetMessagePath(queueName, nextMessageId));
+			}
+			messagesLock.ExitWriteLock();
+
+			return message;
+		}
 	}
 }
