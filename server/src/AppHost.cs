@@ -69,7 +69,7 @@ namespace Server
 			var storageConfig = new FileStorageConfig { RootPath = "./MQ" };
 			var storagePaths = new Paths(storageConfig);
 			container.Register<QueuesStorage>(new FileQueuesStorage(storagePaths));
-			container.Register<MessagesStorage>(new FileMessagesStorage(storagePaths));
+			container.Register<MessagesStorage>(new FileMessagesStorage(storagePaths, messagesLocks));
 			container.RegisterAutoWired<CreatingMessage>();
 
             

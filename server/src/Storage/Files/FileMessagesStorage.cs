@@ -1,27 +1,31 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Threading;
 
 namespace Server.Storage.Files
 {
 	public class FileMessagesStorage: MessagesStorage
 	{
 		Paths Paths;
+		Dictionary<string, ReaderWriterLockSlim> MessagesLocks;
 		BinaryFormatter Formatter = new BinaryFormatter();
 
-		public FileMessagesStorage(Paths paths)
+		public FileMessagesStorage(Paths paths, Dictionary<string, ReaderWriterLockSlim> messagesLocks)
 		{
 			Paths = paths;
+			MessagesLocks = messagesLocks;
 		}
 
 		public void Create(string queueName, string message)
 		{
 			InitializeQueueIfNeeded(queueName);
-			var dirSynchronizationHandle = Synchronizer.generateQueueSynchronizationObject(queueName);
+			var messagesLock = MessagesLocks[queueName];
 
-			dirSynchronizationHandle.WaitOne();
+			messagesLock.EnterWriteLock();
 			StoreMessage(queueName, message);
-			dirSynchronizationHandle.Set();
+			messagesLock.ExitReadLock();
 		}
 
 		void InitializeQueueIfNeeded(string queueName)
