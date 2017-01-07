@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Threading;
 using Server.Storage;
 
@@ -6,10 +7,10 @@ namespace Server.Logic
 {
 	public class FetchingNextMessage
 	{
-		Dictionary<string, ManualResetEventSlim> WaitOnMessageEvents;
+		ConcurrentDictionary<string, ManualResetEventSlim> WaitOnMessageEvents;
 		MessagesStorage MessagesStorage;
 
-		public FetchingNextMessage(Dictionary<string, ManualResetEventSlim> waitOnMessageEvents,
+		public FetchingNextMessage(ConcurrentDictionary<string, ManualResetEventSlim> waitOnMessageEvents,
 		                           MessagesStorage messagesStorage)
 		{
 			WaitOnMessageEvents = waitOnMessageEvents;
@@ -18,8 +19,16 @@ namespace Server.Logic
 
 		public string Fetch(string queueName)
 		{
-			var waitOnMessageEvent = WaitOnMessageEvents[queueName];
+			ManualResetEventSlim waitOnMessageEvent;
+			if (WaitOnMessageEvents.TryGetValue(queueName, out waitOnMessageEvent))
+			{
+				return readMessageFromStorage(queueName, waitOnMessageEvent);
+			}
+			throw new Exception(); //TODO More specific exception
+		}
 
+		string readMessageFromStorage(string queueName, ManualResetEventSlim waitOnMessageEvent)
+		{
 			string messageInQueue = null;
 			while (messageInQueue == null)
 			{

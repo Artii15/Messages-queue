@@ -10,31 +10,25 @@ namespace Server.Storage.Files
 	{
 		Paths Paths;
 		ConcurrentDictionary<string, ReaderWriterLockSlim> MessagesLocks;
-		ConcurrentDictionary<string, ManualResetEventSlim> MessagesEvents;
 		BinaryFormatter Formatter = new BinaryFormatter();
 
 		public FileMessagesStorage(Paths paths, 
-		                           ConcurrentDictionary<string, ReaderWriterLockSlim> messagesLocks,
-		                           ConcurrentDictionary<string, ManualResetEventSlim> messagesEvents)
+		                           ConcurrentDictionary<string, ReaderWriterLockSlim> messagesLocks)
 		{
 			Paths = paths;
 			MessagesLocks = messagesLocks;
-			MessagesEvents = messagesEvents;
 		}
 
 		public void Create(string queueName, string message)
 		{
 			InitializeQueueIfNeeded(queueName);
 			ReaderWriterLockSlim messagesLock;
-			ManualResetEventSlim messagesEvent;
 
-			if (MessagesLocks.TryGetValue(queueName, out messagesLock)
-			    && MessagesEvents.TryGetValue(queueName, out messagesEvent))
+			if (MessagesLocks.TryGetValue(queueName, out messagesLock))
 			{
 				messagesLock.EnterWriteLock();
 				StoreMessage(queueName, message);
 				messagesLock.ExitReadLock();
-				messagesEvent.Set();
 			}
 			else
 			{
