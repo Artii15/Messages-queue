@@ -13,7 +13,6 @@ using ServiceStack.WebHost.Endpoints;
 using ServiceStack.ServiceInterface.Admin;
 using ServiceStack.Logging;
 using System;
-using Server.Storage;
 using Server.Storage.Files;
 using Server.Logic;
 using System.Threading;
@@ -33,12 +32,12 @@ namespace Server
 		public override void Configure (Container container)
         {
 			RequestFilters.Add((req, resp, requestDto) => {
-				ILog log = LogManager.GetLogger(GetType());
+				var log = LogManager.GetLogger(GetType());
 				log.Info (string.Format ("REQ {0}: {1} {2} {3} {4} {5}", DateTimeOffset.Now.Ticks, req.HttpMethod, 
 					req.OperationName, req.RemoteIp, req.RawUrl, req.UserAgent));
 			});
 			ResponseFilters.Add((req, resp, dto) => {
-				ILog log = LogManager.GetLogger(GetType());
+				var log = LogManager.GetLogger(GetType());
 				log.Info (string.Format ("RES {0}: {1} {2}", DateTimeOffset.Now.Ticks, resp.StatusCode,
 					resp.ContentType));
 			});
@@ -69,11 +68,12 @@ namespace Server
 
 			var storageConfig = new FileStorageConfig { RootPath = "./MQ" };
 			var storagePaths = new Paths(storageConfig);
-			container.Register<QueuesStorage>(new FileQueuesStorage(storagePaths));
-			container.Register<MessagesStorage>(new FileMessagesStorage(storagePaths, 
-			                                                            messagesLocks, 
-			                                                            waitOnMessageEvents));
-			container.RegisterAutoWired<CreatingMessage>();
+			var fileQueuesStorage = new FileQueuesStorage(storagePaths, messagesLocks);
+			var fileMessagesStorage = new FileMessagesStorage(storagePaths, messagesLocks);
+
+			container.Register(new CreatingMessage(fileMessagesStorage, waitOnMessageEvents));
+			container.Register(new CreatingQueue(fileQueuesStorage, waitOnMessageEvents));
+			container.Register(new FetchingNextMessage(fileMessagesStorage, waitOnMessageEvents));
 
             
 			Plugins.Add (new ValidationFeature ());

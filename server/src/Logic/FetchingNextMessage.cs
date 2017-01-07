@@ -7,14 +7,14 @@ namespace Server.Logic
 {
 	public class FetchingNextMessage
 	{
+		readonly MessagesStorage MessagesStorage;
 		ConcurrentDictionary<string, ManualResetEventSlim> WaitOnMessageEvents;
-		MessagesStorage MessagesStorage;
 
-		public FetchingNextMessage(ConcurrentDictionary<string, ManualResetEventSlim> waitOnMessageEvents,
-		                           MessagesStorage messagesStorage)
+		public FetchingNextMessage(MessagesStorage messagesStorage,
+		                          ConcurrentDictionary<string, ManualResetEventSlim> waitOnMessageEvents)
 		{
-			WaitOnMessageEvents = waitOnMessageEvents;
 			MessagesStorage = messagesStorage;
+			WaitOnMessageEvents = waitOnMessageEvents;
 		}
 
 		public string Fetch(string queueName)

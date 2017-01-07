@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
-using ServiceStack.Net30.Collections.Concurrent;
 
 namespace Server.Storage.Files
 {

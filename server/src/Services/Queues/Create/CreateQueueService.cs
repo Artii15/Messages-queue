@@ -1,20 +1,20 @@
-﻿using Server.Storage;
+﻿using Server.Logic;
 using ServiceStack.ServiceInterface;
 
 namespace Server.Services.Queues.Create
 {
 	public class CreateQueueService: Service
 	{
-		private QueuesStorage QueuesStorage;
+		readonly CreatingQueue CreatingQueue;
 
-		public CreateQueueService(QueuesStorage queuesStorage)
+		public CreateQueueService(CreatingQueue creatingQueue)
 		{
-			QueuesStorage = queuesStorage;
+			CreatingQueue = creatingQueue;
 		}
 
 		public CreateQueueResponse Post(CreateQueue request)
 		{
-			QueuesStorage.Allocate(request.QueueName);
+			CreatingQueue.Create(request.QueueName);
 			return new CreateQueueResponse();
 		}
 	}
