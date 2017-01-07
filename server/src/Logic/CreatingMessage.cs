@@ -7,8 +7,8 @@ namespace Server.Logic
 {
 	public class CreatingMessage
 	{
-		MessagesStorage MessagesStorage;
-		ConcurrentDictionary<string, ManualResetEventSlim> MessagesEvents;
+		readonly MessagesStorage MessagesStorage;
+		readonly ConcurrentDictionary<string, ManualResetEventSlim> MessagesEvents;
 
 		public CreatingMessage(MessagesStorage messagesStorage,
 		                       ConcurrentDictionary<string, ManualResetEventSlim> messagesEvents)

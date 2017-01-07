@@ -14,7 +14,7 @@ namespace Server.Services.Queues.List
 
 		public ListQueuesResponse get(ListQueues request)
 		{
-			return new ListQueuesResponse { Queues = QueuesStorage.findAll() };
+			return new ListQueuesResponse { Queues = QueuesStorage.FindAll() };
 		}
 	}
 }

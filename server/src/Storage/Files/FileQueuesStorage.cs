@@ -13,7 +13,7 @@ namespace Server.Storage.Files
 			Paths = paths;
 		}
 		
-		public void allocate(string queueName)
+		public void Allocate(string queueName)
 		{
 			if (!exists(queueName))
 			{
@@ -36,7 +36,7 @@ namespace Server.Storage.Files
 			return File.Exists(Paths.GetQueuePath(queueName));
 		}
 
-		public IEnumerable<string> findAll()
+		public IEnumerable<string> FindAll()
 		{
 			return Directory.EnumerateDirectories(Paths.GetQueuesPath());
 		}

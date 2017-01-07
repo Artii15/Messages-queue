@@ -14,7 +14,7 @@ namespace Server.Services.Queues.Create
 
 		public CreateQueueResponse Post(CreateQueue request)
 		{
-			QueuesStorage.allocate(request.QueueName);
+			QueuesStorage.Allocate(request.QueueName);
 			return new CreateQueueResponse();
 		}
 	}
