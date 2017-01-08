@@ -49,12 +49,12 @@ namespace Server.Storage.Files
 		public bool HasMessages(string queueName)
 		{
 			var MessagesLock = MessagesLocks[queueName];
-			MessagesLock.EnterWriteLock();
+			MessagesLock.EnterReadLock();
 
 			var queueHeadPointerPath = Paths.GetPointerFile(queueName, QueuePointersNames.First);
-			var hasMessages = File.ReadAllText(queueHeadPointerPath) != ""; 
+			var hasMessages = !string.IsNullOrWhiteSpace(File.ReadAllText(queueHeadPointerPath)); 
 
-			MessagesLock.ExitWriteLock();
+			MessagesLock.ExitReadLock();
 
 			return hasMessages;
 		}

@@ -1,6 +1,4 @@
-﻿using System.Collections.Concurrent;
-using System.Threading;
-using Server.Storage;
+﻿using Server.Storage;
 
 namespace Server.Logic
 {
@@ -15,13 +13,7 @@ namespace Server.Logic
 
 		public MessageRemovingStatus TryToPop(string queueName, string messageId)
 		{
-			var removingStatus = MessagesStorage.TryToPop(queueName, messageId);
-			if (removingStatus.NextMessageId == "")
-			{
-				
-			}
-
-			return removingStatus;
+			return MessagesStorage.TryToPop(queueName, messageId);
 		}
 	}
 }

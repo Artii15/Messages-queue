@@ -11,7 +11,7 @@ namespace Server.Storage.Files
 	{
 		readonly Paths Paths;
 		ConcurrentDictionary<string, ReaderWriterLockSlim> MessagesLocks;
-		ConcurrentDictionary<string, ManualResetEventSlim> MessagesEvents;
+		readonly ConcurrentDictionary<string, ManualResetEventSlim> MessagesEvents;
 		readonly BinaryFormatter Formatter = new BinaryFormatter();
 
 		public FileMessagesStorage(Paths paths, 
