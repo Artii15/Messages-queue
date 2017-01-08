@@ -64,19 +64,7 @@ namespace Server
             //Use OrmLite DB Connection to persist the UserAuth and AuthProvider info
             container.Register<IUserAuthRepository> (c => new OrmLiteAuthRepository (c.Resolve<IDbConnectionFactory> ()));
 
-			var messagesLocks = new ConcurrentDictionary<string, ReaderWriterLockSlim>();
-			var waitOnMessageEvents = new ConcurrentDictionary<string, ManualResetEventSlim>();
-
-			var storageConfig = new FileStorageConfig { RootPath = "./MQ" };
-			var storagePaths = new Paths(storageConfig);
-			var fileQueuesStorage = new FileQueuesStorage(storagePaths, messagesLocks);
-			var fileMessagesStorage = new FileMessagesStorage(storagePaths, messagesLocks);
-
-			container.Register<QueuesStorage>(fileQueuesStorage);
-			container.Register(new CreatingMessage(fileMessagesStorage, waitOnMessageEvents));
-			container.Register(new CreatingQueue(fileQueuesStorage, waitOnMessageEvents));
-			container.Register(new FetchingNextMessage(fileMessagesStorage, waitOnMessageEvents));
-
+			ConfigureQueues(container);
             
 			Plugins.Add (new ValidationFeature ());
 
@@ -91,5 +79,27 @@ namespace Server
 
             SetConfig (config);
         }
+
+		void ConfigureQueues(Container container)
+		{
+			var messagesLocks = new ConcurrentDictionary<string, ReaderWriterLockSlim>();
+			var waitOnMessageEvents = new ConcurrentDictionary<string, ManualResetEventSlim>();
+
+			var storageConfig = new FileStorageConfig { RootPath = "./MQ" };
+			var storagePaths = new Paths(storageConfig);
+			var fileQueuesStorage = new FileQueuesStorage(storagePaths, messagesLocks);
+			var fileMessagesStorage = new FileMessagesStorage(storagePaths, messagesLocks);
+
+			container.Register<QueuesStorage>(fileQueuesStorage);
+			container.Register(new CreatingMessage(fileMessagesStorage, waitOnMessageEvents));
+			container.Register(new CreatingQueue(fileQueuesStorage, waitOnMessageEvents));
+			container.Register(new FetchingNextMessage(fileMessagesStorage, waitOnMessageEvents));
+
+			foreach (var queueName in fileQueuesStorage.FindAll())
+			{
+				messagesLocks.TryAdd(queueName, new ReaderWriterLockSlim());
+				waitOnMessageEvents.TryAdd(queueName, new ManualResetEventSlim(false));
+			}
+		}
     }
 }
