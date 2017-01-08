@@ -97,9 +97,18 @@ namespace Server.Storage.Files
 			string message = null;
 			if (nextMessageId != "")
 			{
-				message = File.ReadAllText(Paths.GetMessagePath(queueName, nextMessageId));
+				message = DeserializeMessage(queueName, nextMessageId).Content;
 			}
 			return message;
+		}
+
+		StoredMessage DeserializeMessage(string queueName, string messageId)
+		{
+			var messagePath = Paths.GetMessagePath(queueName, messageId);
+			using (var messageStream = new FileStream(messagePath, FileMode.Open))
+			{
+				return (StoredMessage)Formatter.Deserialize(messageStream);
+			}
 		}
 	}
 }
