@@ -1,4 +1,5 @@
-﻿using Server.Logic;
+﻿using System;
+using Server.Logic;
 using ServiceStack.ServiceInterface;
 
 namespace Server.Services.Queues.Create
@@ -14,6 +15,10 @@ namespace Server.Services.Queues.Create
 
 		public CreateQueueResponse Post(CreateQueue request)
 		{
+			if (string.IsNullOrWhiteSpace(request.QueueName))
+			{
+				throw new ArgumentException("QueueName must not be empty");
+			}
 			CreatingQueue.Create(request.QueueName);
 			return new CreateQueueResponse();
 		}
