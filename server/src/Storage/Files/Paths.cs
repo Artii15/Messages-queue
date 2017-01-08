@@ -9,7 +9,7 @@
 			Config = config;
 		}
 
-		public string GetQueueMessagesPointerFile(string queueName, string pointerName)
+		public string GetPointerFile(string queueName, string pointerName)
 		{
 			return $"{GetQueueMessagesPointersDir(queueName)}/{pointerName}";
 		}

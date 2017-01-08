@@ -6,5 +6,6 @@ namespace Server.Storage
 	{
 		void Create(string queueName, string message);
 		Message? TryToReadNextMessage(string queueName);
+		MessageRemovingStatus TryToPop(string queueName, string messageId);
 	}
 }

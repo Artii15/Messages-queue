@@ -40,8 +40,8 @@ namespace Server.Storage.Files
 		{
 			var messageId = SaveMessageToFile(queueName, message);
 
-			var queueFirstPointerPath = Paths.GetQueueMessagesPointerFile(queueName, QueuePointersNames.First);
-			var queueLastPointerPath = Paths.GetQueueMessagesPointerFile(queueName, QueuePointersNames.Last);
+			var queueFirstPointerPath = Paths.GetPointerFile(queueName, QueuePointersNames.First);
+			var queueLastPointerPath = Paths.GetPointerFile(queueName, QueuePointersNames.Last);
 			var lastMessageId = File.ReadAllText(queueLastPointerPath);
 			if (lastMessageId == "")
 			{
@@ -57,7 +57,7 @@ namespace Server.Storage.Files
 		string SaveMessageToFile(string queueName, string message)
 		{
 			var messageId = Guid.NewGuid().ToString();
-			var storedMessage = new StoredMessage { Content = message, Next = null };
+			var storedMessage = new StoredMessage { Content = message, Next = "" };
 			using (var newMessageFileStream = new FileStream(Paths.GetMessagePath(queueName, messageId), FileMode.Create))
 			{
 				Formatter.Serialize(newMessageFileStream, storedMessage);
@@ -92,7 +92,7 @@ namespace Server.Storage.Files
 
 		Message? readNextMessage(string queueName)
 		{
-			var messagePointerPath = Paths.GetQueueMessagesPointerFile(queueName, QueuePointersNames.First);
+			var messagePointerPath = Paths.GetPointerFile(queueName, QueuePointersNames.First);
 			var nextMessageId = File.ReadAllText(messagePointerPath);
 
 			Message? message = null;
@@ -111,6 +111,38 @@ namespace Server.Storage.Files
 			{
 				return (StoredMessage)Formatter.Deserialize(messageStream);
 			}
+		}
+
+		public MessageRemovingStatus TryToPop(string queueName, string messageId)
+		{
+			ReaderWriterLockSlim messagesLock;
+			if (MessagesLocks.TryGetValue(queueName, out messagesLock))
+			{
+				messagesLock.EnterWriteLock();
+				var removingStatus = RemoveIfPossible(queueName, messageId);
+				messagesLock.ExitWriteLock();
+
+				return removingStatus;
+			}
+			throw new ArgumentException();
+		}
+
+		MessageRemovingStatus RemoveIfPossible(string queueName, string messageId)
+		{
+			var firstMessageId = File.ReadAllText(Paths.GetPointerFile(queueName, QueuePointersNames.First));
+			if (firstMessageId == messageId)
+			{
+				var messageToRemove = DeserializeMessage(queueName, messageId);
+				File.WriteAllText(Paths.GetPointerFile(queueName, QueuePointersNames.First), messageToRemove.Next);
+
+				var lastPointerPath = Paths.GetPointerFile(queueName, QueuePointersNames.Last);
+				if (File.ReadAllText(lastPointerPath) == messageId)
+				{
+					File.WriteAllText(lastPointerPath, messageToRemove.Next);
+				}
+				return new MessageRemovingStatus(true, messageToRemove.Next);
+			}
+			return new MessageRemovingStatus(false, firstMessageId);
 		}
 	}
 }
