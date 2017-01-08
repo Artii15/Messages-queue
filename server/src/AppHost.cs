@@ -98,7 +98,7 @@ namespace Server
 			foreach (var queueName in fileQueuesStorage.FindAll())
 			{
 				messagesLocks.TryAdd(queueName, new ReaderWriterLockSlim());
-				waitOnMessageEvents.TryAdd(queueName, new ManualResetEventSlim(false));
+				waitOnMessageEvents.TryAdd(queueName, new ManualResetEventSlim(fileQueuesStorage.HasMessages(queueName)));
 			}
 		}
     }

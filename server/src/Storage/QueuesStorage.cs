@@ -4,7 +4,8 @@ namespace Server.Storage
 {
 	public interface QueuesStorage
 	{
-		void Allocate(string queueName);
+		void Create(string queueName);
 		IEnumerable<string> FindAll();
+		bool HasMessages(string queueName);
 	}
 }

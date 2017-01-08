@@ -18,7 +18,7 @@ namespace Server.Storage.Files
 			MessagesLocks = messagesLocks;
 		}
 		
-		public void Allocate(string queueName)
+		public void Create(string queueName)
 		{
 			createQueueFiles(queueName);
 			MessagesLocks.TryAdd(queueName, new ReaderWriterLockSlim());
@@ -40,6 +40,19 @@ namespace Server.Storage.Files
 		{
 			return from directoryPath in Directory.GetDirectories(Paths.GetQueuesPath())
 				   select directoryPath.Substring(directoryPath.LastIndexOf('/') + 1);
+		}
+
+		public bool HasMessages(string queueName)
+		{
+			var MessagesLock = MessagesLocks[queueName];
+			MessagesLock.EnterWriteLock();
+
+			var queueHeadPointerPath = Paths.GetQueueMessagesPointerFile(queueName, QueuePointersNames.First);
+			var hasMessages = File.ReadAllText(queueHeadPointerPath) != ""; 
+
+			MessagesLock.ExitWriteLock();
+
+			return hasMessages;
 		}
 	}
 }

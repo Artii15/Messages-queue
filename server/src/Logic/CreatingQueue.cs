@@ -20,7 +20,7 @@ namespace Server.Logic
 		{
 			if (MessagesEvents.TryAdd(queueName, new ManualResetEventSlim(false)))
 			{
-				QueuesStorage.Allocate(queueName);
+				QueuesStorage.Create(queueName);
 			}
 			else
 			{
