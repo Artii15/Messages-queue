@@ -27,7 +27,7 @@ namespace Server.Storage.Files
 			{
 				messagesLock.EnterWriteLock();
 				StoreMessage(queueName, message);
-				messagesLock.ExitReadLock();
+				messagesLock.ExitWriteLock();
 			}
 			else
 			{
