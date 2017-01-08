@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using System.Linq;
 
 namespace Server.Storage.Files
 {
@@ -37,7 +38,8 @@ namespace Server.Storage.Files
 
 		public IEnumerable<string> FindAll()
 		{
-			return Directory.EnumerateDirectories(Paths.GetQueuesPath());
+			return from directoryPath in Directory.GetDirectories(Paths.GetQueuesPath())
+				   select directoryPath.Substring(directoryPath.LastIndexOf('/') + 1);
 		}
 	}
 }

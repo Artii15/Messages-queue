@@ -17,6 +17,7 @@ using Server.Storage.Files;
 using Server.Logic;
 using System.Threading;
 using System.Collections.Concurrent;
+using Server.Storage;
 
 namespace Server
 {
@@ -71,6 +72,7 @@ namespace Server
 			var fileQueuesStorage = new FileQueuesStorage(storagePaths, messagesLocks);
 			var fileMessagesStorage = new FileMessagesStorage(storagePaths, messagesLocks);
 
+			container.Register<QueuesStorage>(fileQueuesStorage);
 			container.Register(new CreatingMessage(fileMessagesStorage, waitOnMessageEvents));
 			container.Register(new CreatingQueue(fileQueuesStorage, waitOnMessageEvents));
 			container.Register(new FetchingNextMessage(fileMessagesStorage, waitOnMessageEvents));
