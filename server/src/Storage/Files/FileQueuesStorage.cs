@@ -30,9 +30,9 @@ namespace Server.Storage.Files
 
 			Directory.CreateDirectory(Paths.GetQueueMessagesPointersDir(queueName));
 			var firstPointerPath = Paths.GetQueueMessagesPointerFile(queueName, QueuePointersNames.First);
-			File.Create(firstPointerPath);
+			File.Create(firstPointerPath).Close();
 			var lastPointerPath = Paths.GetQueueMessagesPointerFile(queueName, QueuePointersNames.Last);
-			File.Create(lastPointerPath);
+			File.Create(lastPointerPath).Close();
 		}
 
 		public IEnumerable<string> FindAll()

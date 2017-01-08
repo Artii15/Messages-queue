@@ -1,8 +1,9 @@
 ﻿using Server.Logic;
+using ServiceStack.ServiceInterface;
 
 namespace Server.Services.Messages.Next
 {
-	public class GetNextMessageService
+	public class GetNextMessageService: Service
 	{
 		FetchingNextMessage FetchingNextMessage;
 
