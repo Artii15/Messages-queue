@@ -15,7 +15,7 @@ namespace Server.Services.Messages.Next
 		public GetNextMessageResponse Get(GetNextMessage request)
 		{
 			var message = FetchingNextMessage.Fetch(request.QueueName);
-			return new GetNextMessageResponse { Message = message };
+			return new GetNextMessageResponse { Id = message.Id, Content = message.Content };
 		}
 	}
 }

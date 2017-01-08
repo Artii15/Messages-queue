@@ -1,9 +1,8 @@
-﻿using Server.Entities;
-
-namespace Server.Services.Messages.Next
+﻿namespace Server.Services.Messages.Next
 {
 	public class GetNextMessageResponse
 	{
-		public Message Message { get; set; }
+		public string Id { get; set; }
+		public string Content { get; set; }
 	}
 }
