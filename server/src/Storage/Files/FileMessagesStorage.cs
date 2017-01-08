@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
+using Server.Entities;
 
 namespace Server.Storage.Files
 {
@@ -76,7 +77,7 @@ namespace Server.Storage.Files
 			}
 		}
 
-		public string TryToReadNextMessage(string queueName)
+		public Message? TryToReadNextMessage(string queueName)
 		{
 			ReaderWriterLockSlim messagesLock;
 			if (MessagesLocks.TryGetValue(queueName, out messagesLock))
@@ -89,15 +90,16 @@ namespace Server.Storage.Files
 			throw new Exception(); // TODO More specific exception
 		}
 
-		string readNextMessage(string queueName)
+		Message? readNextMessage(string queueName)
 		{
 			var messagePointerPath = Paths.GetQueueMessagesPointerFile(queueName, QueuePointersNames.First);
 			var nextMessageId = File.ReadAllText(messagePointerPath);
 
-			string message = null;
+			Message? message = null;
 			if (nextMessageId != "")
 			{
-				message = DeserializeMessage(queueName, nextMessageId).Content;
+				var storedMessage = DeserializeMessage(queueName, nextMessageId);
+				message = new Message(nextMessageId, storedMessage.Content);
 			}
 			return message;
 		}

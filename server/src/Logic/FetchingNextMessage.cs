@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Threading;
+using Server.Entities;
 using Server.Storage;
 
 namespace Server.Logic
@@ -17,7 +18,7 @@ namespace Server.Logic
 			WaitOnMessageEvents = waitOnMessageEvents;
 		}
 
-		public string Fetch(string queueName)
+		public Message Fetch(string queueName)
 		{
 			ManualResetEventSlim waitOnMessageEvent;
 			if (WaitOnMessageEvents.TryGetValue(queueName, out waitOnMessageEvent))
@@ -27,15 +28,15 @@ namespace Server.Logic
 			throw new Exception(); //TODO More specific exception
 		}
 
-		string readMessageFromStorage(string queueName, ManualResetEventSlim waitOnMessageEvent)
+		Message readMessageFromStorage(string queueName, ManualResetEventSlim waitOnMessageEvent)
 		{
-			string messageInQueue = null;
+			Message? messageInQueue = null;
 			while (messageInQueue == null)
 			{
 				waitOnMessageEvent.Wait();
 				messageInQueue = MessagesStorage.TryToReadNextMessage(queueName);
 			}
-			return messageInQueue;
+			return (Message) messageInQueue;
 		}
 	}
 }
