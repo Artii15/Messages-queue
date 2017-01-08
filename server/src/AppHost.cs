@@ -87,13 +87,13 @@ namespace Server
 
 			var storageConfig = new FileStorageConfig { RootPath = "./MQ" };
 			var storagePaths = new Paths(storageConfig);
-			var fileQueuesStorage = new FileQueuesStorage(storagePaths, messagesLocks);
-			var fileMessagesStorage = new FileMessagesStorage(storagePaths, messagesLocks);
+			var fileQueuesStorage = new FileQueuesStorage(storagePaths, messagesLocks, waitOnMessageEvents);
+			var fileMessagesStorage = new FileMessagesStorage(storagePaths, messagesLocks, waitOnMessageEvents);
 
 			container.Register<QueuesStorage>(fileQueuesStorage);
-			container.Register(new CreatingMessage(fileMessagesStorage, waitOnMessageEvents));
-			container.Register(new CreatingQueue(fileQueuesStorage, waitOnMessageEvents));
-			container.Register(new FetchingNextMessage(fileMessagesStorage, waitOnMessageEvents));
+			container.Register(new CreatingMessage(fileMessagesStorage));
+			container.Register(new CreatingQueue(fileQueuesStorage));
+			container.Register(new FetchingNextMessage(fileMessagesStorage));
 
 			foreach (var queueName in fileQueuesStorage.FindAll())
 			{

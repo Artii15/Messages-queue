@@ -9,23 +9,15 @@ namespace Server.Logic
 	public class FetchingNextMessage
 	{
 		readonly MessagesStorage MessagesStorage;
-		ConcurrentDictionary<string, ManualResetEventSlim> WaitOnMessageEvents;
 
-		public FetchingNextMessage(MessagesStorage messagesStorage,
-		                          ConcurrentDictionary<string, ManualResetEventSlim> waitOnMessageEvents)
+		public FetchingNextMessage(MessagesStorage messagesStorage)
 		{
 			MessagesStorage = messagesStorage;
-			WaitOnMessageEvents = waitOnMessageEvents;
 		}
 
 		public Message Fetch(string queueName)
 		{
-			ManualResetEventSlim waitOnMessageEvent;
-			if (WaitOnMessageEvents.TryGetValue(queueName, out waitOnMessageEvent))
-			{
-				return readMessageFromStorage(queueName, waitOnMessageEvent);
-			}
-			throw new Exception(); //TODO More specific exception
+			return MessagesStorage.ReadNextMessage(queueName);
 		}
 
 		Message readMessageFromStorage(string queueName, ManualResetEventSlim waitOnMessageEvent)
@@ -34,7 +26,7 @@ namespace Server.Logic
 			while (messageInQueue == null)
 			{
 				waitOnMessageEvent.Wait();
-				messageInQueue = MessagesStorage.TryToReadNextMessage(queueName);
+				messageInQueue = MessagesStorage.ReadNextMessage(queueName);
 			}
 			return (Message)messageInQueue;
 		}

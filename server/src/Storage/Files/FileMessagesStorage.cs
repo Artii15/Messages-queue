@@ -11,13 +11,16 @@ namespace Server.Storage.Files
 	{
 		readonly Paths Paths;
 		ConcurrentDictionary<string, ReaderWriterLockSlim> MessagesLocks;
+		ConcurrentDictionary<string, ManualResetEventSlim> MessagesEvents;
 		readonly BinaryFormatter Formatter = new BinaryFormatter();
 
 		public FileMessagesStorage(Paths paths, 
-		                           ConcurrentDictionary<string, ReaderWriterLockSlim> messagesLocks)
+		                           ConcurrentDictionary<string, ReaderWriterLockSlim> messagesLocks,
+		                           ConcurrentDictionary<string, ManualResetEventSlim> messagesEvents)
 		{
 			Paths = paths;
 			MessagesLocks = messagesLocks;
+			MessagesEvents = messagesEvents;
 		}
 
 		public void Create(string queueName, string message)
@@ -28,6 +31,7 @@ namespace Server.Storage.Files
 			{
 				messagesLock.EnterWriteLock();
 				StoreMessage(queueName, message);
+				MessagesEvents[queueName].Set();
 				messagesLock.ExitWriteLock();
 			}
 			else
@@ -77,17 +81,21 @@ namespace Server.Storage.Files
 			}
 		}
 
-		public Message? TryToReadNextMessage(string queueName)
+		public Message ReadNextMessage(string queueName)
 		{
-			ReaderWriterLockSlim messagesLock;
-			if (MessagesLocks.TryGetValue(queueName, out messagesLock))
+			ReaderWriterLockSlim messagesLock = MessagesLocks[queueName];
+			ManualResetEventSlim messagesEvent = MessagesEvents[queueName];
+
+			Message? message = null;
+			while (message == null)
 			{
-				messagesLock.EnterWriteLock();
-				var message = readNextMessage(queueName);
-				messagesLock.ExitWriteLock();
-				return message;
+				messagesEvent.Wait();
+				messagesLock.EnterReadLock();
+				message = readNextMessage(queueName);
+				messagesLock.ExitReadLock();
 			}
-			throw new Exception(); // TODO More specific exception
+
+			return (Message)message;
 		}
 
 		Message? readNextMessage(string queueName)
@@ -139,6 +147,7 @@ namespace Server.Storage.Files
 				if (File.ReadAllText(lastPointerPath) == messageId)
 				{
 					File.WriteAllText(lastPointerPath, messageToRemove.Next);
+					MessagesEvents[queueName].Reset();
 				}
 				return new MessageRemovingStatus(true, messageToRemove.Next);
 			}

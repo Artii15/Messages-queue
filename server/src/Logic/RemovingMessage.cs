@@ -7,13 +7,10 @@ namespace Server.Logic
 	public class RemovingMessage
 	{
 		readonly MessagesStorage MessagesStorage;
-		readonly ConcurrentDictionary<string, ManualResetEventSlim> MessagesEvents;
 
-		public RemovingMessage(MessagesStorage messagesStorage,
-		                      ConcurrentDictionary<string, ManualResetEventSlim> messagesEvents)
+		public RemovingMessage(MessagesStorage messagesStorage)
 		{
 			MessagesStorage = messagesStorage;
-			MessagesEvents = messagesEvents;
 		}
 
 		public MessageRemovingStatus TryToPop(string queueName, string messageId)
@@ -21,7 +18,7 @@ namespace Server.Logic
 			var removingStatus = MessagesStorage.TryToPop(queueName, messageId);
 			if (removingStatus.NextMessageId == "")
 			{
-				MessagesEvents[queueName].Reset();
+				
 			}
 
 			return removingStatus;

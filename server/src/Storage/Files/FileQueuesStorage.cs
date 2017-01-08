@@ -10,18 +10,22 @@ namespace Server.Storage.Files
 	{
 		readonly Paths Paths;
 		readonly ConcurrentDictionary<string, ReaderWriterLockSlim> MessagesLocks;
+		readonly ConcurrentDictionary<string, ManualResetEventSlim> MessagesEvents;
 
 		public FileQueuesStorage(Paths paths,
-		                        ConcurrentDictionary<string, ReaderWriterLockSlim> messagesLocks)
+		                         ConcurrentDictionary<string, ReaderWriterLockSlim> messagesLocks,
+		                         ConcurrentDictionary<string, ManualResetEventSlim> messagesEvents)
 		{
 			Paths = paths;
 			MessagesLocks = messagesLocks;
+			MessagesEvents = messagesEvents;
 		}
 		
 		public void Create(string queueName)
 		{
 			createQueueFiles(queueName);
 			MessagesLocks.TryAdd(queueName, new ReaderWriterLockSlim());
+			MessagesEvents.TryAdd(queueName, new ManualResetEventSlim(false));
 		}
 
 		void createQueueFiles(string queueName)
