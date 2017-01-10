@@ -1,5 +1,7 @@
 ﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 
 namespace Server.Storage.Files
@@ -52,7 +54,7 @@ namespace Server.Storage.Files
 			topicLock.ExitWriteLock();
 		}
 
-		string MakeTopicSyncKey(string queueName, string topicName)
+		public string MakeTopicSyncKey(string queueName, string topicName)
 		{
 			return $"{queueName}-{topicName}";
 		}
@@ -63,6 +65,12 @@ namespace Server.Storage.Files
 											  Paths.GetTopicPointer(queueName, topicName, PointersNames.First),
 											  Paths.GetTopicPointer(queueName, topicName, PointersNames.Last));
 			fileStorage.AddMessage(message);
+		}
+
+		public IEnumerable<string> FindAll(string queueName)
+		{
+			return from directoryPath in Directory.GetDirectories(Paths.GetTopicsPath(queueName))
+				   select directoryPath.Substring(directoryPath.LastIndexOf('/') + 1);
 		}
 	}
 }

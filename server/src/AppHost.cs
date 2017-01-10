@@ -103,6 +103,13 @@ namespace Server
 			{
 				messagesLocks.TryAdd(queueName, new ReaderWriterLockSlim());
 				waitOnMessageEvents.TryAdd(queueName, new ManualResetEventSlim(fileQueuesStorage.HasMessages(queueName)));
+
+				foreach (var topicName in fileTopicsStorage.FindAll(queueName))
+				{
+					var topicSyncKey = fileTopicsStorage.MakeTopicSyncKey(queueName, topicName);
+					topicsLocks.TryAdd(topicSyncKey, new ReaderWriterLockSlim());
+					topicsMonitors.TryAdd(topicSyncKey, new object());
+				}
 			}
 		}
     }
