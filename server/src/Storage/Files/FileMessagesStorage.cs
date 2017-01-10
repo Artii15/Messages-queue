@@ -44,8 +44,8 @@ namespace Server.Storage.Files
 		{
 			var messageId = SaveMessageToFile(queueName, message);
 
-			var queueFirstPointerPath = Paths.GetPointerFile(queueName, QueuePointersNames.First);
-			var queueLastPointerPath = Paths.GetPointerFile(queueName, QueuePointersNames.Last);
+			var queueFirstPointerPath = Paths.GetPointerFile(queueName, PointersNames.First);
+			var queueLastPointerPath = Paths.GetPointerFile(queueName, PointersNames.Last);
 			var lastMessageId = File.ReadAllText(queueLastPointerPath);
 			if (lastMessageId == "")
 			{
@@ -100,7 +100,7 @@ namespace Server.Storage.Files
 
 		Message? readNextMessage(string queueName)
 		{
-			var messagePointerPath = Paths.GetPointerFile(queueName, QueuePointersNames.First);
+			var messagePointerPath = Paths.GetPointerFile(queueName, PointersNames.First);
 			var nextMessageId = File.ReadAllText(messagePointerPath);
 
 			Message? message = null;
@@ -137,13 +137,13 @@ namespace Server.Storage.Files
 
 		MessageRemovingStatus RemoveIfPossible(string queueName, string messageId)
 		{
-			var firstMessageId = File.ReadAllText(Paths.GetPointerFile(queueName, QueuePointersNames.First));
+			var firstMessageId = File.ReadAllText(Paths.GetPointerFile(queueName, PointersNames.First));
 			if (firstMessageId == messageId)
 			{
 				var messageToRemove = DeserializeMessage(queueName, messageId);
-				File.WriteAllText(Paths.GetPointerFile(queueName, QueuePointersNames.First), messageToRemove.Next);
+				File.WriteAllText(Paths.GetPointerFile(queueName, PointersNames.First), messageToRemove.Next);
 
-				var lastPointerPath = Paths.GetPointerFile(queueName, QueuePointersNames.Last);
+				var lastPointerPath = Paths.GetPointerFile(queueName, PointersNames.Last);
 				if (File.ReadAllText(lastPointerPath) == messageId)
 				{
 					File.WriteAllText(lastPointerPath, messageToRemove.Next);

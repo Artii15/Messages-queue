@@ -34,9 +34,9 @@ namespace Server.Storage.Files
 			Directory.CreateDirectory(Paths.GetMessagesPath(queueName));
 
 			Directory.CreateDirectory(Paths.GetQueueMessagesPointersDir(queueName));
-			var firstPointerPath = Paths.GetPointerFile(queueName, QueuePointersNames.First);
+			var firstPointerPath = Paths.GetPointerFile(queueName, PointersNames.First);
 			File.Create(firstPointerPath).Close();
-			var lastPointerPath = Paths.GetPointerFile(queueName, QueuePointersNames.Last);
+			var lastPointerPath = Paths.GetPointerFile(queueName, PointersNames.Last);
 			File.Create(lastPointerPath).Close();
 		}
 
@@ -51,7 +51,7 @@ namespace Server.Storage.Files
 			var MessagesLock = MessagesLocks[queueName];
 			MessagesLock.EnterReadLock();
 
-			var queueHeadPointerPath = Paths.GetPointerFile(queueName, QueuePointersNames.First);
+			var queueHeadPointerPath = Paths.GetPointerFile(queueName, PointersNames.First);
 			var hasMessages = !string.IsNullOrWhiteSpace(File.ReadAllText(queueHeadPointerPath)); 
 
 			MessagesLock.ExitReadLock();

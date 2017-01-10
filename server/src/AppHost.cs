@@ -89,11 +89,13 @@ namespace Server
 			var storagePaths = new Paths(storageConfig);
 			var fileQueuesStorage = new FileQueuesStorage(storagePaths, messagesLocks, waitOnMessageEvents);
 			var fileMessagesStorage = new FileMessagesStorage(storagePaths, messagesLocks, waitOnMessageEvents);
+			var fileTopicsStorage = new FileTopicsStorage(storagePaths);
 
 			container.Register<QueuesStorage>(fileQueuesStorage);
 			container.Register(new CreatingMessage(fileMessagesStorage));
 			container.Register(new CreatingQueue(fileQueuesStorage));
 			container.Register(new FetchingNextMessage(fileMessagesStorage));
+			container.Register(new CreatingTopic(fileTopicsStorage));
 
 			foreach (var queueName in fileQueuesStorage.FindAll())
 			{
