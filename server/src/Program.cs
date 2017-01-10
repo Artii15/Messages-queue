@@ -20,7 +20,7 @@ namespace Server
 
 			var appHost = new AppHost();
             appHost.Init ();            
-            string listeningOn = string.Format ("http://*:{0}/", port);
+            var listeningOn = string.Format ("http://*:{0}/", port);
             appHost.Start (listeningOn);
 
             Console.WriteLine ("AppHost Created at {0}, listening on {1}", DateTime.Now, listeningOn);

@@ -5,7 +5,7 @@ namespace Server.Services.Messages.Next
 {
 	public class GetNextMessageService: Service
 	{
-		FetchingNextMessage FetchingNextMessage;
+		readonly FetchingNextMessage FetchingNextMessage;
 
 		public GetNextMessageService(FetchingNextMessage fetchingNextMessage)
 		{
