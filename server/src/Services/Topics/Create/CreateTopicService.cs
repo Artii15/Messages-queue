@@ -1,20 +1,20 @@
-﻿using Server.Storage;
+﻿using Server.Logic;
 using ServiceStack.ServiceInterface;
 
 namespace Server.Services.Topics.Create
 {
 	public class CreateTopicService: Service
 	{
-		readonly TopicsStorage TopicsStorage;
+		readonly CreatingTopic CreatingTopic;
 
-		public CreateTopicService(TopicsStorage topicsStorage)
+		public CreateTopicService(CreatingTopic creatingTopic)
 		{
-			TopicsStorage = topicsStorage;
+			CreatingTopic = creatingTopic;
 		}
 
 		public CreateTopicResponse Post(CreateTopic request)
 		{
-			TopicsStorage.Create(request.QueueName, request.TopicName);
+			CreatingTopic.Create(request.QueueName, request.TopicName);
 			return new CreateTopicResponse();
 		}
 	}
