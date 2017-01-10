@@ -1,23 +1,33 @@
 ﻿using System.Collections.Concurrent;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 
 namespace Server.Storage.Files
 {
 	public class FileTopicsStorage: TopicsStorage
 	{
-		readonly BinaryFormatter Formatter = new BinaryFormatter();
 		readonly Paths Paths;
-		readonly ConcurrentDictionary<string, ReaderWriterLockSlim> topicsLocks;
-		ConcurrentDictionary<string, object> topicsMonitors;
+		readonly ConcurrentDictionary<string, ReaderWriterLockSlim> TopicsLocks;
+		readonly ConcurrentDictionary<string, object> TopicsMonitors;
 
-		public FileTopicsStorage(Paths paths)
+		public FileTopicsStorage(Paths paths,
+		                         ConcurrentDictionary<string, ReaderWriterLockSlim> topicsLocks,
+		                         ConcurrentDictionary<string, object> topicsMonitors)
 		{
 			Paths = paths;
+			TopicsLocks = topicsLocks;
+			TopicsMonitors = topicsMonitors;
 		}
 
 		public void Create(string queueName, string topicName)
+		{
+			CreateTopicFiles(queueName, topicName);
+			var topicSyncKey = MakeTopicSyncKey(queueName, topicName);
+			TopicsLocks.TryAdd(topicSyncKey, new ReaderWriterLockSlim());
+			TopicsMonitors.TryAdd(topicSyncKey, new object());
+		}
+
+		void CreateTopicFiles(string queueName, string topicName)
 		{
 			Directory.CreateDirectory(Paths.GetTopicPath(queueName, topicName));
 			Directory.CreateDirectory(Paths.GetTopicMessages(queueName, topicName));
@@ -29,8 +39,8 @@ namespace Server.Storage.Files
 		public void Publish(string queueName, string topicName, string message)
 		{
 			var topicSyncKey = MakeTopicSyncKey(queueName, topicName);
-			var topicLock = topicsLocks[topicSyncKey];
-			var topicMonitor = topicsMonitors[topicSyncKey];
+			var topicLock = TopicsLocks[topicSyncKey];
+			var topicMonitor = TopicsMonitors[topicSyncKey];
 
 			topicLock.EnterWriteLock();
 
@@ -49,7 +59,10 @@ namespace Server.Storage.Files
 
 		void WriteMessage(string queueName, string topicName, string message)
 		{
-			var storedMessage = new StoredMessage { Content = message, Next = "" };
+			var fileStorage = new FileStorage(Paths.GetTopicMessages(queueName, topicName),
+											  Paths.GetTopicPointer(queueName, topicName, PointersNames.First),
+											  Paths.GetTopicPointer(queueName, topicName, PointersNames.Last));
+			fileStorage.AddMessage(message);
 		}
 	}
 }

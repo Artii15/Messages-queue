@@ -84,12 +84,14 @@ namespace Server
 		{
 			var messagesLocks = new ConcurrentDictionary<string, ReaderWriterLockSlim>();
 			var waitOnMessageEvents = new ConcurrentDictionary<string, ManualResetEventSlim>();
+			var topicsLocks = new ConcurrentDictionary<string, ReaderWriterLockSlim>();
+			var topicsMonitors = new ConcurrentDictionary<string, object>();
 
 			var storageConfig = new FileStorageConfig { RootPath = "./MQ" };
 			var storagePaths = new Paths(storageConfig);
 			var fileQueuesStorage = new FileQueuesStorage(storagePaths, messagesLocks, waitOnMessageEvents);
 			var fileMessagesStorage = new FileMessagesStorage(storagePaths, messagesLocks, waitOnMessageEvents);
-			var fileTopicsStorage = new FileTopicsStorage(storagePaths);
+			var fileTopicsStorage = new FileTopicsStorage(storagePaths, topicsLocks, topicsMonitors);
 
 			container.Register<QueuesStorage>(fileQueuesStorage);
 			container.Register(new CreatingMessage(fileMessagesStorage));
