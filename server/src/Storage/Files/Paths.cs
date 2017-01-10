@@ -2,7 +2,7 @@
 {
 	public class Paths
 	{
-		FileStorageConfig Config;
+		readonly FileStorageConfig Config;
 
 		public Paths(FileStorageConfig config)
 		{
@@ -17,6 +17,21 @@
 		public string GetQueueMessagesPointersDir(string queueName)
 		{
 			return $"{GetQueuePath(queueName)}/pointers";
+		}
+
+		public string GetTopicMessages(string queueName, string topicName)
+		{
+			return $"{GetTopicPath(queueName, topicName)}/messages";
+		}
+
+		public string GetTopicPointers(string queueName, string topicName)
+		{
+			return $"{GetTopicPath(queueName, topicName)}/pointers";
+		}
+
+		public string GetTopicPath(string queueName, string topicName)
+		{
+			return $"{GetTopicsPath(queueName)}/{topicName}";
 		}
 
 		public string GetTopicsPath(string queueName)
