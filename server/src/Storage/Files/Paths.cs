@@ -24,6 +24,11 @@
 			return $"{GetTopicPath(queueName, topicName)}/messages";
 		}
 
+		public string GetTopicPointer(string queueName, string topicName, string pointerName)
+		{
+			return $"{GetTopicPointers(queueName, topicName)}/{pointerName}";
+		}
+
 		public string GetTopicPointers(string queueName, string topicName)
 		{
 			return $"{GetTopicPath(queueName, topicName)}/pointers";

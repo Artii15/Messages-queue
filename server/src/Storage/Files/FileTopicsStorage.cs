@@ -16,6 +16,8 @@ namespace Server.Storage.Files
 			Directory.CreateDirectory(Paths.GetTopicPath(queueName, topicName));
 			Directory.CreateDirectory(Paths.GetTopicMessages(queueName, topicName));
 			Directory.CreateDirectory(Paths.GetTopicPointers(queueName, topicName));
+			File.Create(Paths.GetTopicPointer(queueName, topicName, PointersNames.First)).Close();
+			File.Create(Paths.GetTopicPointer(queueName, topicName, PointersNames.Last)).Close();
 		}
 	}
 }
