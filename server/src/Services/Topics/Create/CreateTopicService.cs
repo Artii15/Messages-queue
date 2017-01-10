@@ -5,7 +5,7 @@ namespace Server.Services.Topics.Create
 {
 	public class CreateTopicService: Service
 	{
-		TopicsStorage TopicsStorage;
+		readonly TopicsStorage TopicsStorage;
 
 		public CreateTopicService(TopicsStorage topicsStorage)
 		{
