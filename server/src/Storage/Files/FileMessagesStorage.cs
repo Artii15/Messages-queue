@@ -42,43 +42,10 @@ namespace Server.Storage.Files
 
 		void StoreMessage(string queueName, string message)
 		{
-			var messageId = SaveMessageToFile(queueName, message);
-
-			var queueFirstPointerPath = Paths.GetPointerFile(queueName, PointersNames.First);
-			var queueLastPointerPath = Paths.GetPointerFile(queueName, PointersNames.Last);
-			var lastMessageId = File.ReadAllText(queueLastPointerPath);
-			if (lastMessageId == "")
-			{
-				File.WriteAllText(queueFirstPointerPath, messageId);
-			}
-			else
-			{
-				LetLastMessagePointToNewMessage(Paths.GetMessagePath(queueName, lastMessageId), messageId);
-			}
-			File.WriteAllText(queueLastPointerPath, messageId);
-		}
-
-		string SaveMessageToFile(string queueName, string message)
-		{
-			var messageId = Guid.NewGuid().ToString();
-			var storedMessage = new StoredMessage { Content = message, Next = "" };
-			using (var newMessageFileStream = new FileStream(Paths.GetMessagePath(queueName, messageId), FileMode.Create))
-			{
-				Formatter.Serialize(newMessageFileStream, storedMessage);
-			}
-			return messageId;
-		}
-
-		void LetLastMessagePointToNewMessage(string lastMessagePath, string newMessageId)
-		{
-			using (var lastMessageStream = new FileStream(lastMessagePath, FileMode.Open))
-			{
-				var lastMessage = (StoredMessage)Formatter.Deserialize(lastMessageStream);
-				lastMessage.Next = newMessageId;
-				lastMessageStream.SetLength(0);
-				lastMessageStream.Seek(0, SeekOrigin.Begin);
-				Formatter.Serialize(lastMessageStream, lastMessage);
-			}
+			var fileStorage = new FileStorage(Paths.GetMessagesPath(queueName),
+			                                  Paths.GetPointerFile(queueName, PointersNames.First),
+			                                  Paths.GetPointerFile(queueName, PointersNames.Last));
+			fileStorage.AddMessage(message);
 		}
 
 		public Message ReadNextMessage(string queueName)
