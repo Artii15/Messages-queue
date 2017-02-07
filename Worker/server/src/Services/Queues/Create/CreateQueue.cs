@@ -1,6 +1,6 @@
 ﻿using ServiceStack.ServiceHost;
 
-namespace Server.Services.CreatingQueue
+namespace Server.Services.Queues.Create
 {
 	[Route("/queues", "post")]
 	public class CreateQueue
