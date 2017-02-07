@@ -97,6 +97,7 @@
     <Compile Include="src\Services\Messages\Create\CreateMessage.cs" />
     <Compile Include="src\Services\Messages\Create\CreateMessageService.cs" />
     <Compile Include="src\Services\Messages\Create\CreateMessageResponse.cs" />
+    <Compile Include="src\Logic\CreatingMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
