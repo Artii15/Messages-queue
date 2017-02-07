@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using Server.Entities;
 using Server.Services.Queues.Create;
 using ServiceStack.OrmLite;
@@ -17,12 +18,19 @@ namespace Server.Logic
 
 		public void Create(CreateQueue request)
 		{
-			var queueStoragePath = $"queues/{request.Name}.sqlite";
-			var queueDbConn = Queues.GetOrAdd(request.Name, 
-			                new OrmLiteConnectionFactory($"Data Source={queueStoragePath};Version=3;", 
-			                                             SqliteOrmLiteDialectProvider.Instance)).Open();
-			queueDbConn.CreateTableIfNotExists<QueueMessage>();
-			queueDbConn.Close();
+			try
+			{
+				var queueStoragePath = $"queues/{request.Name}.sqlite";
+				var queueDbConn = Queues.GetOrAdd(request.Name,
+								new OrmLiteConnectionFactory($"Data Source={queueStoragePath};Version=3;",
+															 SqliteOrmLiteDialectProvider.Instance)).Open();
+				queueDbConn.CreateTableIfNotExists<QueueMessage>();
+				queueDbConn.Close();
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e.StackTrace);
+			}
 		}
 	}
 }
