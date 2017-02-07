@@ -4,7 +4,7 @@ using Server.Services.CreatingQueue;
 using ServiceStack.OrmLite;
 using ServiceStack.OrmLite.Sqlite;
 
-namespace Server
+namespace Server.Logic
 {
 	public class CreatingQueue
 	{
@@ -14,11 +14,15 @@ namespace Server
 		public void Create(CreateQueue request)
 		{
 			var queueStoragePath = $"queues/{request.Name}.sqlite";
-			var queueDbConnFactory = Queues.GetOrAdd(request.Name, 
+			var queueDbConn = Queues.GetOrAdd(request.Name, 
 			                new OrmLiteConnectionFactory($"Data Source={queueStoragePath};Version=3;", 
-			                                             SqliteOrmLiteDialectProvider.Instance));
-			queueDbConnFactory.Open().CreateTableIfNotExists<QueueMessage>();
+			                                             SqliteOrmLiteDialectProvider.Instance)).Open();
+			var systemDbConn = SystemDb.Open();
+			systemDbConn.Insert(new Cooperator { Address=request.Cooperator });
 
+
+			queueDbConn.Close();
+			systemDbConn.Close();
 		}
 	}
 }
