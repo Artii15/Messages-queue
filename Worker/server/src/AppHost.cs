@@ -60,9 +60,8 @@ namespace Server
 			var queues = new ConcurrentDictionary<string, IDbConnectionFactory>();
 			var topics = new ConcurrentDictionary<string, IDbConnectionFactory>();
 
-			var appDir = AppDomain.CurrentDomain.BaseDirectory;
-			Directory.CreateDirectory($"queues");
-			Directory.CreateDirectory($"topics");
+			Directory.CreateDirectory("queues");
+			Directory.CreateDirectory("topics");
 
 			container.Register(new CreatingQueue(queues));
 			container.Register(new CreatingQueue(topics));
