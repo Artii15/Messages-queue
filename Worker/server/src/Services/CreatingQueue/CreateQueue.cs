@@ -7,6 +7,6 @@ namespace Server.Services.CreatingQueue
 	{
 		public string Name { get; set; }
 		public string Cooperator { get; set; }
-		public string AmIPrimary { get; set; }
+		public bool AmIPrimary { get; set; }
 	}
 }

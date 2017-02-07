@@ -12,6 +12,7 @@ using ServiceStack.Text;
 using ServiceStack.WebHost.Endpoints;
 using ServiceStack.ServiceInterface.Admin;
 using ServiceStack.Logging;
+using System.Collections.Concurrent;
 using System;
 
 namespace Server
@@ -50,7 +51,7 @@ namespace Server
 			container.Register<ICacheClient> (new MemoryCacheClient ());
 
             container.Register<IDbConnectionFactory> (
-				new OrmLiteConnectionFactory (@"Data Source=db.sqlite;Version=3;",
+				new OrmLiteConnectionFactory (@"Data Source=system.sqlite;Version=3;",
 					SqliteOrmLiteDialectProvider.Instance)
                     {
                         ConnectionFilter = x => new ProfiledDbConnection (x, Profiler.Current)
@@ -58,7 +59,9 @@ namespace Server
 
             //Use OrmLite DB Connection to persist the UserAuth and AuthProvider info
             container.Register<IUserAuthRepository> (c => new OrmLiteAuthRepository (c.Resolve<IDbConnectionFactory> ()));
-            
+
+			ConfigureQueues(container);
+
 			Plugins.Add (new ValidationFeature ());
 
             var config = new EndpointHostConfig ();
@@ -72,5 +75,11 @@ namespace Server
 
             SetConfig (config);
         }
+
+		void ConfigureQueues(Container container)
+		{
+			var queues = new ConcurrentDictionary<string, IDbConnectionFactory>();
+			var topics = new ConcurrentDictionary<string, IDbConnectionFactory>();
+		}
     }
 }
