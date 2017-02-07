@@ -9,7 +9,6 @@ namespace Server.Logic
 	public class CreatingQueue
 	{
 		readonly ConcurrentDictionary<string, IDbConnectionFactory> Queues;
-		readonly IDbConnectionFactory SystemDb;
 
 		public void Create(CreateQueue request)
 		{
@@ -17,12 +16,8 @@ namespace Server.Logic
 			var queueDbConn = Queues.GetOrAdd(request.Name, 
 			                new OrmLiteConnectionFactory($"Data Source={queueStoragePath};Version=3;", 
 			                                             SqliteOrmLiteDialectProvider.Instance)).Open();
-			var systemDbConn = SystemDb.Open();
-			systemDbConn.Insert(new Cooperator { Address=request.Cooperator });
-
-
+			queueDbConn.CreateTableIfNotExists<QueueMessage>();
 			queueDbConn.Close();
-			systemDbConn.Close();
 		}
 	}
 }

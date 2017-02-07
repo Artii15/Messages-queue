@@ -91,8 +91,6 @@
     <Compile Include="src\Services\Hello\HelloService.cs" />
     <Compile Include="src\Logic\CreatingQueue.cs" />
     <Compile Include="src\Entities\QueueMessage.cs" />
-    <Compile Include="src\Entities\Cooperator.cs" />
-    <Compile Include="src\Entities\Queue.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
