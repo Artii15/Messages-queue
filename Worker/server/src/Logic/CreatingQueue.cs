@@ -20,17 +20,28 @@ namespace Server.Logic
 		{
 			try
 			{
-				var queueStoragePath = $"queues/{request.Name}.sqlite";
-				var queueDbConn = Queues.GetOrAdd(request.Name,
-								new OrmLiteConnectionFactory($"Data Source={queueStoragePath};Version=3;",
-															 SqliteOrmLiteDialectProvider.Instance)).Open();
-				queueDbConn.CreateTableIfNotExists<QueueMessage>();
-				queueDbConn.Close();
+				PropagateRequestToCo(request);		
+				CreateQueueFile(request.Name);
 			}
 			catch (Exception e)
 			{
 				Console.WriteLine(e.StackTrace);
 			}
+		}
+
+		void CreateQueueFile(string queueName)
+		{
+			var queueStoragePath = $"queues/{queueName}.sqlite";
+			var queueDbConn = Queues.GetOrAdd(queueName,
+							new OrmLiteConnectionFactory($"Data Source={queueStoragePath};Version=3;",
+														 SqliteOrmLiteDialectProvider.Instance)).Open();
+			queueDbConn.CreateTableIfNotExists<QueueMessage>();
+			queueDbConn.Close();
+		}
+
+		void PropagateRequestToCo(CreateQueue request)
+		{
+
 		}
 	}
 }
