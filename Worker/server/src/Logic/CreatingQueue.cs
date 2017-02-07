@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Net;
+using System.Net.Sockets;
+using RestSharp;
 using Server.Entities;
 using Server.Services.Queues.Create;
 using ServiceStack.OrmLite;
@@ -20,7 +23,10 @@ namespace Server.Logic
 		{
 			try
 			{
-				PropagateRequestToCo(request);		
+				if (!string.IsNullOrEmpty(request.Cooperator))
+				{
+					PropagateRequestToCo(request);
+				}
 				CreateQueueFile(request.Name);
 			}
 			catch (Exception e)
@@ -41,7 +47,25 @@ namespace Server.Logic
 
 		void PropagateRequestToCo(CreateQueue request)
 		{
+			var client = new RestClient(request.Cooperator);
 
+			var requestToSend = new RestRequest("queues", Method.POST);
+			requestToSend.AddParameter("Name", request.Name);
+
+			client.Execute(requestToSend);
+		}
+
+		IPAddress GetIpAddress()
+		{
+			var host = Dns.GetHostEntry(Dns.GetHostName());
+			foreach (IPAddress ip in host.AddressList)
+			{
+				if (ip.AddressFamily == AddressFamily.InterNetwork)
+				{
+					return ip;
+				}
+			}
+			return null;
 		}
 	}
 }
