@@ -83,12 +83,13 @@
     <Compile Include="src\AppHost.cs" />
     <Compile Include="src\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\Hello\Hello.cs" />
-    <Compile Include="Services\Hello\HelloResponse.cs" />
-    <Compile Include="Services\Hello\HelloService.cs" />
-    <Compile Include="Services\CreatingQueue\CreateQueue.cs" />
-    <Compile Include="Services\CreatingQueue\CreateQueueService.cs" />
-    <Compile Include="Services\CreatingQueue\CreateQueueResponse.cs" />
+    <Compile Include="src\Services\CreatingQueue\CreateQueue.cs" />
+    <Compile Include="src\Services\CreatingQueue\CreateQueueResponse.cs" />
+    <Compile Include="src\Services\CreatingQueue\CreateQueueService.cs" />
+    <Compile Include="src\Services\Hello\Hello.cs" />
+    <Compile Include="src\Services\Hello\HelloResponse.cs" />
+    <Compile Include="src\Services\Hello\HelloService.cs" />
+    <Compile Include="src\Logic\CreatingQueue.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -99,9 +100,8 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Folder Include="Services\" />
-    <Folder Include="Services\Hello\" />
-    <Folder Include="Services\CreatingQueue\" />
+    <Folder Include="src\Services\" />
+    <Folder Include="src\Logic\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
