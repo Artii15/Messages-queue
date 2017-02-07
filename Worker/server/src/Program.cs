@@ -6,7 +6,7 @@ namespace Server
     {
 		static void Main (string[] args)
         {
-			if (args.Length > 2) 
+			if (args.Length > 1) 
 			{
 				Console.Error.WriteLine ("Usage: server <port_number>");
 				Environment.Exit(1);

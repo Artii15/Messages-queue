@@ -47,7 +47,7 @@ namespace Server
 
             if (m_debugEnabled)
             {
-                config.DebugMode = true; //Show StackTraces in service responses during development
+                config.DebugMode = true;
                 config.WriteErrorsToResponse = true;
                 config.ReturnsInnerException = true;
             }
@@ -60,8 +60,9 @@ namespace Server
 			var queues = new ConcurrentDictionary<string, IDbConnectionFactory>();
 			var topics = new ConcurrentDictionary<string, IDbConnectionFactory>();
 
-			Directory.CreateDirectory("queues");
-			Directory.CreateDirectory("topics");
+			var appDir = AppDomain.CurrentDomain.BaseDirectory;
+			Directory.CreateDirectory($"{appDir}/queues");
+			Directory.CreateDirectory($"{appDir}/topics");
 
 			container.Register(new CreatingQueue(queues));
 			container.Register(new CreatingQueue(topics));

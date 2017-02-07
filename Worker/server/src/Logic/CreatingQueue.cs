@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Net;
-using System.Net.Sockets;
 using RestSharp;
 using Server.Entities;
 using Server.Services.Queues.Create;
