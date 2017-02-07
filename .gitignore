@@ -1,6 +1,4 @@
-/packages
-/supervisor
-*.sln
-*csproj*
-/servstack.userprefs
+packages
+supervisor
+*.userprefs
 
