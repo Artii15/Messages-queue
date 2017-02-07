@@ -8,6 +8,7 @@ using ServiceStack.ServiceInterface.Admin;
 using ServiceStack.Logging;
 using System.Collections.Concurrent;
 using System;
+using Server.Logic;
 
 namespace Server
 {
@@ -58,7 +59,7 @@ namespace Server
 			var queues = new ConcurrentDictionary<string, IDbConnectionFactory>();
 			var topics = new ConcurrentDictionary<string, IDbConnectionFactory>();
 
-
+			container.Register(new CreatingQueue(queues));
 		}
     }
 }

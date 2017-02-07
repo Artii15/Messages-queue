@@ -5,7 +5,7 @@ namespace Server.Services.Queues.Create
 {
 	public class CreateQueueService: IService
 	{
-		CreatingQueue CreatingQueue;
+		readonly CreatingQueue CreatingQueue;
 
 		public CreateQueueService(CreatingQueue creatingQueue)
 		{
