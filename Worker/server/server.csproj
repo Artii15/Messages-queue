@@ -90,6 +90,7 @@
     <Compile Include="src\Services\Hello\HelloResponse.cs" />
     <Compile Include="src\Services\Hello\HelloService.cs" />
     <Compile Include="src\Logic\CreatingQueue.cs" />
+    <Compile Include="src\Entities\QueueMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -102,6 +103,7 @@
   <ItemGroup>
     <Folder Include="src\Services\" />
     <Folder Include="src\Logic\" />
+    <Folder Include="src\Entities\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

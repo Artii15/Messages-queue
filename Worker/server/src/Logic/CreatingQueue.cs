@@ -7,7 +7,7 @@ namespace Server
 {
 	public class CreatingQueue
 	{
-		ConcurrentDictionary<string, IDbConnectionFactory> Queues;
+		readonly ConcurrentDictionary<string, IDbConnectionFactory> Queues;
 
 		public void Create(CreateQueue request)
 		{
@@ -15,6 +15,7 @@ namespace Server
 			var queueDbConnection = Queues.GetOrAdd(request.Name, 
 			                new OrmLiteConnectionFactory($"Data Source={queueStoragePath};Version=3;", 
 			                                             SqliteOrmLiteDialectProvider.Instance));
+			
 		}
 	}
 }
