@@ -94,6 +94,9 @@
     <Compile Include="src\Services\Queues\Create\CreateQueue.cs" />
     <Compile Include="src\Services\Queues\Create\CreateQueueResponse.cs" />
     <Compile Include="src\Services\Queues\Create\CreateQueueService.cs" />
+    <Compile Include="src\Services\Messages\Create\CreateMessage.cs" />
+    <Compile Include="src\Services\Messages\Create\CreateMessageService.cs" />
+    <Compile Include="src\Services\Messages\Create\CreateMessageResponse.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -108,6 +111,8 @@
     <Folder Include="src\Logic\" />
     <Folder Include="src\Entities\" />
     <Folder Include="src\Services\Queues\Create\" />
+    <Folder Include="src\Services\Messages\" />
+    <Folder Include="src\Services\Messages\Create\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
