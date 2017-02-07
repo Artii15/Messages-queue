@@ -54,18 +54,5 @@ namespace Server.Logic
 
 			client.Execute(requestToSend);
 		}
-
-		IPAddress GetIpAddress()
-		{
-			var host = Dns.GetHostEntry(Dns.GetHostName());
-			foreach (IPAddress ip in host.AddressList)
-			{
-				if (ip.AddressFamily == AddressFamily.InterNetwork)
-				{
-					return ip;
-				}
-			}
-			return null;
-		}
 	}
 }
