@@ -1,12 +1,6 @@
 ﻿using Funq;
-using ServiceStack.CacheAccess;
-using ServiceStack.CacheAccess.Providers;
-using ServiceStack.MiniProfiler;
-using ServiceStack.MiniProfiler.Data;
 using ServiceStack.OrmLite;
-using ServiceStack.OrmLite.Sqlite;
 using ServiceStack.ServiceInterface;
-using ServiceStack.ServiceInterface.Auth;
 using ServiceStack.ServiceInterface.Validation;
 using ServiceStack.Text;
 using ServiceStack.WebHost.Endpoints;
@@ -19,7 +13,7 @@ namespace Server
 {
     public class AppHost : AppHostHttpListenerBase
     {
-		private readonly bool m_debugEnabled = true;
+		readonly bool m_debugEnabled = true;
 
         public AppHost ()
             : base ("Server HttpListener", typeof (AppHost).Assembly)
@@ -39,26 +33,9 @@ namespace Server
 					resp.ContentType));
 			});
 
-            JsConfig.DateHandler = JsonDateHandler.ISO8601;        
-
-            Plugins.Add (new AuthFeature (() => new AuthUserSession (),
-                                          new IAuthProvider[] {new CredentialsAuthProvider ()})
-                );
-            Plugins.Add (new RegistrationFeature ());
+			JsConfig.DateHandler = JsonDateHandler.ISO8601;
 			Plugins.Add(new SessionFeature());
 			Plugins.Add(new RequestLogsFeature());
-
-			container.Register<ICacheClient> (new MemoryCacheClient ());
-
-            container.Register<IDbConnectionFactory> (
-				new OrmLiteConnectionFactory (@"Data Source=system.sqlite;Version=3;",
-					SqliteOrmLiteDialectProvider.Instance)
-                    {
-                        ConnectionFilter = x => new ProfiledDbConnection (x, Profiler.Current)
-                    });
-
-            //Use OrmLite DB Connection to persist the UserAuth and AuthProvider info
-            container.Register<IUserAuthRepository> (c => new OrmLiteAuthRepository (c.Resolve<IDbConnectionFactory> ()));
 
 			ConfigureQueues(container);
 
@@ -80,6 +57,8 @@ namespace Server
 		{
 			var queues = new ConcurrentDictionary<string, IDbConnectionFactory>();
 			var topics = new ConcurrentDictionary<string, IDbConnectionFactory>();
+
+
 		}
     }
 }
