@@ -7,26 +7,23 @@ namespace Server.Logic
 {
 	public class CreatingMessage
 	{
-		readonly ConcurrentDictionary<string, IDbConnectionFactory> Queues;
+		readonly Connections Connections;
 
-		public CreatingMessage(ConcurrentDictionary<string, IDbConnectionFactory> queues)
+		public CreatingMessage(Connections connections)
 		{
-			Queues = queues;
+			Connections = connections;
 		}
 
 		public void Create(CreateMessage request)
 		{
-			IDbConnectionFactory queueConnectionFactory;
-			if (Queues.TryGetValue(request.QueueName, out queueConnectionFactory))
+			var connection = Connections.ConnectToInitializedQueue(request.QueueName);
+			connection.Insert(new QueueMessage
 			{
-				var connection = queueConnectionFactory.Open();
-				connection.Insert(new QueueMessage
-				{
-					Author = request.Author,
-					Content = request.Content,
-					Readed = false
-				});
-			}
+				Author = request.Author,
+				Content = request.Content,
+				Readed = false
+			});
+			connection.Close();
 		}
 	}
 }
