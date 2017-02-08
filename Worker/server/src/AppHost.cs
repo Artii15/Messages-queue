@@ -47,7 +47,7 @@ namespace Server
 
             if (m_debugEnabled)
             {
-                config.DebugMode = true; //Show StackTraces in service responses during development
+                config.DebugMode = true;
                 config.WriteErrorsToResponse = true;
                 config.ReturnsInnerException = true;
             }
