@@ -83,6 +83,11 @@
     <Compile Include="src\AppHost.cs" />
     <Compile Include="src\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\Entities\Worker.cs" />
+    <Compile Include="src\Services\Workers\Register\RegisterWorker.cs" />
+    <Compile Include="src\Services\Workers\Register\RegisterWorkerResponse.cs" />
+    <Compile Include="src\Services\Workers\Register\RegisterWorkerService.cs" />
+    <Compile Include="src\Logic\Workers\RegisteringWorker.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -92,6 +97,16 @@
     </None>
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="src\Entities\" />
+    <Folder Include="src\Services\" />
+    <Folder Include="src\Services\Workers\" />
+    <Folder Include="src\Services\Queues\" />
+    <Folder Include="src\Services\Topics\" />
+    <Folder Include="src\Logic\" />
+    <Folder Include="src\Services\Workers\Register\" />
+    <Folder Include="src\Logic\Workers\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
