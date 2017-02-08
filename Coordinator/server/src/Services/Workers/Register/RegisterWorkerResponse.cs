@@ -1,10 +1,6 @@
-﻿using System;
-namespace Server
+﻿namespace Server
 {
 	public class RegisterWorkerResponse
 	{
-		public RegisterWorkerResponse()
-		{
-		}
 	}
 }
