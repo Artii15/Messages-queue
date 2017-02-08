@@ -3,6 +3,8 @@ using ServiceStack.MiniProfiler;
 using ServiceStack.MiniProfiler.Data;
 using ServiceStack.OrmLite;
 using ServiceStack.OrmLite.PostgreSQL;
+using ServiceStack.Redis;
+using ServiceStack.CacheAccess;
 using ServiceStack.ServiceInterface;
 using ServiceStack.ServiceInterface.Auth;
 using ServiceStack.ServiceInterface.Validation;
@@ -23,6 +25,8 @@ namespace Server
 		private const string ENV_PG_DB = "PG_DB";
 		private const string ENV_PG_PASS = "PG_PASS";
 		private const string ENV_PG_PORT = "PG_PORT";
+		private const string ENV_REDIS_IP = "REDIS_IP";
+		private const string ENV_REDIS_PORT = "REDIS_PORT";
 
 		string m_pgIp;
 		string m_pgUser;
@@ -30,6 +34,9 @@ namespace Server
 		string m_pgPass;
 		string m_pgPort;
 		string m_pgConnString;
+		string m_redisIp;
+		string m_redisPort;
+		string m_redisConnString;
 
         public AppHost ()
             : base ("Server HttpListener", typeof (AppHost).Assembly)
@@ -59,6 +66,13 @@ namespace Server
             Plugins.Add (new RegistrationFeature ());
 			Plugins.Add(new SessionFeature());
 			Plugins.Add(new RequestLogsFeature());
+
+			container.Register<IRedisClientsManager>(c =>
+				new PooledRedisClientManager(m_redisConnString));
+			container.Register<ICacheClient>(c =>
+				(ICacheClient)c.Resolve<IRedisClientsManager>()
+				.GetCacheClient())
+				.ReusedWithin(Funq.ReuseScope.None);
 
 			container.Register<IDbConnectionFactory>(
 				new OrmLiteConnectionFactory(m_pgConnString, PostgreSQLDialectProvider.Instance)
@@ -91,15 +105,20 @@ namespace Server
 			m_pgUser = Environment.GetEnvironmentVariable(ENV_PG_USER);
 			m_pgDb = Environment.GetEnvironmentVariable(ENV_PG_DB);
 			m_pgPass = Environment.GetEnvironmentVariable(ENV_PG_PASS);
-			m_pgPort = Environment.GetEnvironmentVariable(ENV_PG_PORT);*/
+			m_pgPort = Environment.GetEnvironmentVariable(ENV_PG_PORT);
+			m_redisIp = Environment.GetEnvironmentVariable (ENV_REDIS_IP);
+			m_redisPort = Environment.GetEnvironmentVariable (ENV_REDIS_PORT);*/
 			m_pgIp = "localhost";
 			m_pgUser = "test";
 			m_pgDb = "test";
 			m_pgPass = "test";
 			m_pgPort = "5432";
+			m_redisIp = "localhost";
+			m_redisPort = "6379";
 
 			m_pgConnString = string.Format("User ID={0};Password={1};Host={2};Port={3};Database={4};SSL=True",
 				m_pgUser, m_pgPass, m_pgIp, m_pgPort, m_pgDb);
+			m_redisConnString = string.Format("{0}:{1}", m_redisIp, m_redisPort);
 		}
 
 		private void CreateMissingTables(Container container)
