@@ -33,7 +33,7 @@ namespace Server.Logic
 
 		void CreateQueueFile(string queueName)
 		{
-			var queueDbConn = Connections.ConnectToQueue(queueName).Open();
+			var queueDbConn = Connections.ConnectToQueue(queueName);
 			queueDbConn.CreateTableIfNotExists<QueueMessage>();
 			queueDbConn.Close();
 		}

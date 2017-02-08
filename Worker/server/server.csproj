@@ -100,6 +100,7 @@
     <Compile Include="src\Services\Messages\Get\ReadMessageResponse.cs" />
     <Compile Include="src\Logic\ReadingMessage.cs" />
     <Compile Include="src\Logic\Connections.cs" />
+    <Compile Include="src\Logic\Locks.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

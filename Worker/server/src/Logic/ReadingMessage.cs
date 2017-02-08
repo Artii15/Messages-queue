@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Data;
 using System.Threading;
 using Server.Entities;
@@ -21,16 +20,12 @@ namespace Server.Logic
 
 		public string ReadNextFrom(string queueName)
 		{
-			if (Queues.TryGetValue(queueName, out queueConnectionFactory))
-			{
-				var connection = queueConnectionFactory.Open();
-				var queueLock = QueuesLocks.GetOrAdd(queueName, new object());
-				var message = ReadMessage(connection, queueLock);
-				connection.Close();
+			var connection = Connections.ConnectToInitializedQueue(queueName);
+			var queueLock = QueuesLocks.GetOrAdd(queueName, new object());
+			var message = ReadMessage(connection, queueLock);
+			connection.Close();
 
-				return message;
-			}
-			throw new ArgumentException("Specified queue not found");
+			return message;
 		}
 
 		string ReadMessage(IDbConnection connection, object queueLock)
