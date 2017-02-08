@@ -20,7 +20,7 @@ namespace Server.Logic
 			if (Queues.TryGetValue(request.QueueName, out queueConnectionFactory))
 			{
 				var connection = queueConnectionFactory.Open();
-				connection.Insert(new QueueMessage()
+				connection.Insert(new QueueMessage
 				{
 					Author = request.Author,
 					Content = request.Content,

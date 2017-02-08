@@ -86,9 +86,6 @@
     <Compile Include="src\AppHost.cs" />
     <Compile Include="src\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\Services\Hello\Hello.cs" />
-    <Compile Include="src\Services\Hello\HelloResponse.cs" />
-    <Compile Include="src\Services\Hello\HelloService.cs" />
     <Compile Include="src\Logic\CreatingQueue.cs" />
     <Compile Include="src\Entities\QueueMessage.cs" />
     <Compile Include="src\Services\Queues\Create\CreateQueue.cs" />
@@ -98,6 +95,10 @@
     <Compile Include="src\Services\Messages\Create\CreateMessageService.cs" />
     <Compile Include="src\Services\Messages\Create\CreateMessageResponse.cs" />
     <Compile Include="src\Logic\CreatingMessage.cs" />
+    <Compile Include="src\Services\Messages\Get\ReadMessage.cs" />
+    <Compile Include="src\Services\Messages\Get\ReadMessageService.cs" />
+    <Compile Include="src\Services\Messages\Get\ReadMessageResponse.cs" />
+    <Compile Include="src\Logic\ReadingMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -114,6 +115,7 @@
     <Folder Include="src\Services\Queues\Create\" />
     <Folder Include="src\Services\Messages\" />
     <Folder Include="src\Services\Messages\Create\" />
+    <Folder Include="src\Services\Messages\Get\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
