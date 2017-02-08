@@ -1,5 +1,4 @@
-﻿using System.Collections.Concurrent;
-using System.Data;
+﻿using System.Data;
 using System.Threading;
 using Server.Entities;
 using ServiceStack.OrmLite;
@@ -9,19 +8,19 @@ namespace Server.Logic
 	public class ReadingMessage
 	{
 		Connections Connections;
-		readonly ConcurrentDictionary<string, object> QueuesLocks;
+		readonly Locks Locks;
 
 		public ReadingMessage(Connections connections,
-		                      ConcurrentDictionary<string, object> queuesLocks)
+		                      Locks locks)
 		{
 			Connections = connections;
-			QueuesLocks = queuesLocks;
+			Locks = locks;
 		}
 
 		public string ReadNextFrom(string queueName)
 		{
 			var connection = Connections.ConnectToInitializedQueue(queueName);
-			var queueLock = QueuesLocks.GetOrAdd(queueName, new object());
+			var queueLock = Locks.TakeQueueLock(queueName);
 			var message = ReadMessage(connection, queueLock);
 			connection.Close();
 
