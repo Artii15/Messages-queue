@@ -9,19 +9,18 @@ namespace Server.Logic
 {
 	public class ReadingMessage
 	{
-		readonly ConcurrentDictionary<string, IDbConnectionFactory> Queues;
+		Connections Connections;
 		readonly ConcurrentDictionary<string, object> QueuesLocks;
 
-		public ReadingMessage(ConcurrentDictionary<string, IDbConnectionFactory> queues,
+		public ReadingMessage(Connections connections,
 		                      ConcurrentDictionary<string, object> queuesLocks)
 		{
-			Queues = queues;
+			Connections = connections;
 			QueuesLocks = queuesLocks;
 		}
 
 		public string ReadNextFrom(string queueName)
 		{
-			IDbConnectionFactory queueConnectionFactory;
 			if (Queues.TryGetValue(queueName, out queueConnectionFactory))
 			{
 				var connection = queueConnectionFactory.Open();
