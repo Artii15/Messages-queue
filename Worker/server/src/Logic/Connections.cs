@@ -29,9 +29,8 @@ namespace Server.Logic
 		public IDbConnection ConnectToQueue(string queueName)
 		{
 			var queueStoragePath = $"queues/{queueName}.sqlite";
-			return Queues.GetOrAdd(queueName,
-			                       new OrmLiteConnectionFactory($"Data Source={queueStoragePath};Version=3;",
-			                                                    SqliteOrmLiteDialectProvider.Instance)).Open();
+			return Queues.GetOrAdd(queueName, _ => new OrmLiteConnectionFactory($"Data Source={queueStoragePath};Version=3;",
+			                                                                    SqliteOrmLiteDialectProvider.Instance)).Open();
 		}
 	}
 }
