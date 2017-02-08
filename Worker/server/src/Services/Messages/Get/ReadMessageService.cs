@@ -5,7 +5,7 @@ namespace Server.Services.Messages.Get
 {
 	public class ReadMessageService: IService
 	{
-		ReadingMessage ReadingMessage;
+		readonly ReadingMessage ReadingMessage;
 
 		public ReadMessageService(ReadingMessage readingMessage)
 		{
