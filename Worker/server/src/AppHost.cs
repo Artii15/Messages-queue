@@ -1,15 +1,11 @@
 ﻿using Funq;
-using ServiceStack.OrmLite;
-using ServiceStack.ServiceInterface;
-using ServiceStack.ServiceInterface.Validation;
 using ServiceStack.Text;
 using ServiceStack.WebHost.Endpoints;
 using ServiceStack.ServiceInterface.Admin;
 using ServiceStack.Logging;
-using System.Collections.Concurrent;
 using System;
-using Server.Logic;
 using System.IO;
+using Server.Logic;
 
 namespace Server
 {
@@ -36,12 +32,9 @@ namespace Server
 			});
 
 			JsConfig.DateHandler = JsonDateHandler.ISO8601;
-			Plugins.Add(new SessionFeature());
 			Plugins.Add(new RequestLogsFeature());
 
 			ConfigureQueues(container);
-
-			Plugins.Add (new ValidationFeature ());
 
             var config = new EndpointHostConfig ();
 
@@ -57,14 +50,15 @@ namespace Server
 
 		void ConfigureQueues(Container container)
 		{
-			var queues = new ConcurrentDictionary<string, IDbConnectionFactory>();
-			var topics = new ConcurrentDictionary<string, IDbConnectionFactory>();
-
 			Directory.CreateDirectory("queues");
 			Directory.CreateDirectory("topics");
 
-			container.Register(new CreatingQueue(queues));
-			container.Register(new CreatingQueue(topics));
+			var locks = new Locks();
+			var connections = new Connections();
+
+			container.Register(new CreatingQueue(connections));
+			container.Register(new CreatingMessage(connections, locks));
+			container.Register(new ReadingMessage(connections, locks));
 		}
     }
 }
