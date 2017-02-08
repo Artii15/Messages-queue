@@ -19,7 +19,7 @@ namespace Server.Logic
 		public IDbConnection ConnectToInitializedQueue(string queueName)
 		{
 			var connection = ConnectToQueue(queueName);
-			if(connection.TableExists(typeof(QueueMessage).ToString()))
+			if(connection.TableExists(typeof(QueueMessage).Name))
 			{
 				return connection;
 			}
