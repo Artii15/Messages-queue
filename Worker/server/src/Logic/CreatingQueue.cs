@@ -1,20 +1,18 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using RestSharp;
 using Server.Entities;
 using Server.Services.Queues.Create;
 using ServiceStack.OrmLite;
-using ServiceStack.OrmLite.Sqlite;
 
 namespace Server.Logic
 {
 	public class CreatingQueue
 	{
-		readonly ConcurrentDictionary<string, IDbConnectionFactory> Queues;
+		Connections Connections;
 
-		public CreatingQueue(ConcurrentDictionary<string, IDbConnectionFactory> queues)
+		public CreatingQueue(Connections connections)
 		{
-			Queues = queues;
+			Connections = connections;
 		}
 
 		public void Create(CreateQueue request)
@@ -35,10 +33,7 @@ namespace Server.Logic
 
 		void CreateQueueFile(string queueName)
 		{
-			var queueStoragePath = $"queues/{queueName}.sqlite";
-			var queueDbConn = Queues.GetOrAdd(queueName,
-							new OrmLiteConnectionFactory($"Data Source={queueStoragePath};Version=3;",
-														 SqliteOrmLiteDialectProvider.Instance)).Open();
+			var queueDbConn = Connections.ConnectToQueue(queueName).Open();
 			queueDbConn.CreateTableIfNotExists<QueueMessage>();
 			queueDbConn.Close();
 		}

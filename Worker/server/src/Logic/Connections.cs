@@ -6,7 +6,7 @@ namespace Server.Logic
 {
 	public class Connections
 	{
-		ConcurrentDictionary<string, IDbConnectionFactory> Queues;
+		readonly ConcurrentDictionary<string, IDbConnectionFactory> Queues;
 
 		public Connections()
 		{
