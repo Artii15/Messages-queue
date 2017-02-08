@@ -82,18 +82,30 @@ namespace Server
             }
 
             SetConfig (config);
+			CreateMissingTables(container);
         }
 
 		void LoadConfigEnv()
 		{
-			m_pgIp = Environment.GetEnvironmentVariable(ENV_PG_IP);
+			/*m_pgIp = Environment.GetEnvironmentVariable(ENV_PG_IP);
 			m_pgUser = Environment.GetEnvironmentVariable(ENV_PG_USER);
 			m_pgDb = Environment.GetEnvironmentVariable(ENV_PG_DB);
 			m_pgPass = Environment.GetEnvironmentVariable(ENV_PG_PASS);
-			m_pgPort = Environment.GetEnvironmentVariable(ENV_PG_PORT);
+			m_pgPort = Environment.GetEnvironmentVariable(ENV_PG_PORT);*/
+			m_pgIp = "localhost";
+			m_pgUser = "test";
+			m_pgDb = "test";
+			m_pgPass = "test";
+			m_pgPort = "5432";
 
 			m_pgConnString = string.Format("User ID={0};Password={1};Host={2};Port={3};Database={4};SSL=True",
 				m_pgUser, m_pgPass, m_pgIp, m_pgPort, m_pgDb);
+		}
+
+		private void CreateMissingTables(Container container)
+		{
+			var authRepo = (OrmLiteAuthRepository)container.Resolve<IUserAuthRepository>();
+			authRepo.CreateMissingTables();
 		}
     }
 }
