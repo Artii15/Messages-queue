@@ -1,6 +1,4 @@
-﻿using System;
-using ServiceStack.ServiceHost;
-using ServiceStack.ServiceInterface;
+﻿using ServiceStack.ServiceInterface;
 using ServiceStack.OrmLite;
 
 namespace Server
@@ -18,6 +16,12 @@ namespace Server
 		public RegisterWorkerResponse Post(RegisterWorker request)
 		{
 			RegisteringWorker.Register(request);
+			return new RegisterWorkerResponse();
+		}
+
+		public RegisterWorkerResponse Put(RegisterWorker request)
+		{
+			RegisteringWorker.Revive(request);
 			return new RegisterWorkerResponse();
 		}
 	}

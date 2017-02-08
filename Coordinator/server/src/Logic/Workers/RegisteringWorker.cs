@@ -21,6 +21,15 @@ namespace Server
 			}
 		}
 
+		public void Revive(RegisterWorker request)
+		{ 
+			if (DBConnection.Exists<Worker>(new { Id = request.Id }))
+			{
+
+				DBConnection.Update<Worker>(new { Address = request.Address }, w => w.Id == request.Id);
+			}
+		}
+
 		void AddNewWorker(string address)
 		{
 			var worker = new Worker()
