@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using RestSharp;
 using Server.Entities;
 using Server.Services.Topics.Create;
