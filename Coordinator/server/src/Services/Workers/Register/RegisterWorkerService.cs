@@ -18,11 +18,5 @@ namespace Server
 			RegisteringWorker.Register(request);
 			return new RegisterWorkerResponse();
 		}
-
-		public RegisterWorkerResponse Put(RegisterWorker request)
-		{
-			RegisteringWorker.Revive(request);
-			return new RegisterWorkerResponse();
-		}
 	}
 }
