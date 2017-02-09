@@ -7,7 +7,9 @@ namespace Server.Entities
 	{
 		[AutoIncrement]
 		public int Id { get; set; }
+
 		public string Content { get; set; }
+
 		[Index]
 		public DateTime CreationTime { get; set; }
 	}

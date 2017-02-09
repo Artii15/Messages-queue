@@ -3,6 +3,7 @@ using ServiceStack.OrmLite;
 using System.Threading;
 using Server.Entities;
 using Server.Services.Announcements.Get;
+using Server.Queries;
 
 namespace Server.Logic
 {
@@ -24,8 +25,14 @@ namespace Server.Logic
 
 			Monitor.Enter(topicLock);
 
-			var topicSubscription = connection.FirstOrDefault<Subscription>(
-				subscription => subscription.SubscriberId == request.SubscriberId);
+			var topicSubscriber = connection.FirstOrDefault<Subscriber>(subscriber => 
+			                                                            subscriber.Id == request.SubscriberId);
+			if (topicSubscriber != null)
+			{
+				var query = (topicSubscriber.LastAnnouncementId.HasValue) 
+					? NextAnnouncementById.make(connection, topicSubscriber.LastAnnouncementId.Value) 
+				                          : NextAnnouncementByDate.make(connection, topicSubscriber.CreationTime);
+			}
 
 			Monitor.Exit(topicLock);
 

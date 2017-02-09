@@ -9,8 +9,8 @@ namespace Server.Queries
 		public static SqlExpressionVisitor<QueueMessage> make(IDbConnection connection)
 		{
 			return connection.CreateExpression<QueueMessage>()
-						  .Where(message => !message.Readed)
-						  .OrderByDescending(message => message.Id);
+				             .Where(message => !message.Readed)
+				             .OrderBy(message => message.Id);
 		}
 	}
 }

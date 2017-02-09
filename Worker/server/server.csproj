@@ -120,6 +120,8 @@
     <Compile Include="src\Services\Announcements\Get\ReadAnnouncementService.cs" />
     <Compile Include="src\Services\Announcements\Get\ReadAnnouncementResponse.cs" />
     <Compile Include="src\Logic\ReadingAnnouncement.cs" />
+    <Compile Include="src\Queries\NextAnnouncementByDate.cs" />
+    <Compile Include="src\Queries\NextAnnouncementById.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
