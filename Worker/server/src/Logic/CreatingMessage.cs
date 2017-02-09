@@ -2,6 +2,7 @@
 using Server.Services.Messages.Create;
 using ServiceStack.OrmLite;
 using System.Threading;
+using RestSharp;
 
 namespace Server.Logic
 {
@@ -34,6 +35,18 @@ namespace Server.Logic
 			Monitor.Exit(queueLock);
 
 			connection.Close();
+			PropagateRequest(request);
+		}
+
+		void PropagateRequest(CreateMessage request)
+		{
+			var client = new RestClient(request.Cooperator);
+
+			var requestToSend = new RestRequest($"queues/{request.QueueName}/messages", Method.POST);
+			requestToSend.AddParameter("Author", request.Author);
+			requestToSend.AddParameter("Content", request.Content);
+
+			client.Execute(requestToSend);
 		}
 	}
 }
