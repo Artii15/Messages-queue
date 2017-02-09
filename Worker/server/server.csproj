@@ -110,6 +110,7 @@
     <Compile Include="src\Services\Topics\Create\CreateTopicService.cs" />
     <Compile Include="src\Services\Topics\Create\CreateTopicResponse.cs" />
     <Compile Include="src\Logic\CreatingTopic.cs" />
+    <Compile Include="src\Entities\Announcement.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

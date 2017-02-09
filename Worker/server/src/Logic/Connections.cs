@@ -10,6 +10,7 @@ namespace Server.Logic
 	public class Connections
 	{
 		readonly ConcurrentDictionary<string, IDbConnectionFactory> Queues;
+		readonly ConcurrentDictionary<string, IDbConnectionFactory> Topics;
 
 		public Connections()
 		{
@@ -18,19 +19,43 @@ namespace Server.Logic
 
 		public IDbConnection ConnectToInitializedQueue(string queueName)
 		{
-			var connection = ConnectToQueue(queueName);
-			if(connection.TableExists(typeof(QueueMessage).Name))
-			{
-				return connection;
-			}
-			throw new ArgumentException($"Queue {queueName} not exists");
+			return Verify(ConnectToQueue(queueName), typeof(QueueMessage).Name);
 		}
 
 		public IDbConnection ConnectToQueue(string queueName)
 		{
-			var queueStoragePath = $"queues/{queueName}.sqlite";
-			return Queues.GetOrAdd(queueName, _ => new OrmLiteConnectionFactory($"Data Source={queueStoragePath};Version=3;",
-			                                                                    SqliteOrmLiteDialectProvider.Instance)).Open();
+			return Connect(Queues, "queues", queueName);
+		}
+
+		public IDbConnection ConnectToInitializedTopic(string topicName)
+		{
+			return Verify(ConnectToTopic(topicName), typeof(Announcement).Name);
+		}
+
+		public IDbConnection ConnectToTopic(string topicName)
+		{
+			return Connect(Topics, "topics", topicName);
+		}
+
+		IDbConnection Verify(IDbConnection connection, string requiredTable)
+		{
+			if (!connection.TableExists(requiredTable))
+			{
+				connection.Close();
+				throw new ArgumentException($"{requiredTable} not exists");
+			}
+			return connection;
+		}
+
+		IDbConnection Connect(ConcurrentDictionary<string, IDbConnectionFactory> collection, string directory, string dbName)
+		{
+			return collection.GetOrAdd(dbName, _ => MakeConnectionFactory(directory, dbName)).Open();
+		}
+
+		OrmLiteConnectionFactory MakeConnectionFactory(string dbDirectory, string dbName)
+		{
+			return new OrmLiteConnectionFactory($"Data Source={dbDirectory}/{dbName}.sqlite;Version=3;",
+												SqliteOrmLiteDialectProvider.Instance);
 		}
 	}
 }
