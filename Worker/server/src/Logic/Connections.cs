@@ -15,6 +15,7 @@ namespace Server.Logic
 		public Connections()
 		{
 			Queues = new ConcurrentDictionary<string, IDbConnectionFactory>();
+			Topics = new ConcurrentDictionary<string, IDbConnectionFactory>();
 		}
 
 		public IDbConnection ConnectToInitializedQueue(string queueName)

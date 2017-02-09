@@ -60,6 +60,7 @@ namespace Server
 			container.Register(new CreatingMessage(connections, locks));
 			container.Register(new ReadingMessage(connections, locks));
 			container.Register(new DeletingMessage(connections, locks));
+			container.Register(new CreatingTopic(connections, locks));
 		}
     }
 }
