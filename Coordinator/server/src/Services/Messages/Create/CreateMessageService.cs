@@ -1,6 +1,4 @@
 ﻿using ServiceStack.Common.Web;
-using ServiceStack.Common;
-using ServiceStack.OrmLite;
 using ServiceStack.ServiceInterface;
 using System.Net;
 
