@@ -88,6 +88,11 @@
     <Compile Include="src\Services\Workers\Register\RegisterWorkerResponse.cs" />
     <Compile Include="src\Services\Workers\Register\RegisterWorkerService.cs" />
     <Compile Include="src\Logic\Workers\RegisteringWorker.cs" />
+    <Compile Include="src\Services\Queues\Create\CreateQueue.cs" />
+    <Compile Include="src\Services\Queues\Create\CreateQueueResponse.cs" />
+    <Compile Include="src\Services\Queues\Create\CreateQueueService.cs" />
+    <Compile Include="src\Logic\Queues\CreatingQueue.cs" />
+    <Compile Include="src\Entities\Queue.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -106,6 +111,8 @@
     <Folder Include="src\Logic\" />
     <Folder Include="src\Services\Workers\Register\" />
     <Folder Include="src\Logic\Workers\" />
+    <Folder Include="src\Services\Queues\Create\" />
+    <Folder Include="src\Logic\Queues\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
