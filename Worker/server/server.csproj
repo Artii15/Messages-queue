@@ -105,6 +105,7 @@
     <Compile Include="src\Services\Messages\Delete\DeleteMessageService.cs" />
     <Compile Include="src\Services\Messages\Delete\DeleteMessageResponse.cs" />
     <Compile Include="src\Logic\DeletingMessage.cs" />
+    <Compile Include="src\Queries\FirstMessageQuery.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -123,6 +124,7 @@
     <Folder Include="src\Services\Messages\Create\" />
     <Folder Include="src\Services\Messages\Get\" />
     <Folder Include="src\Services\Messages\Delete\" />
+    <Folder Include="src\Queries\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

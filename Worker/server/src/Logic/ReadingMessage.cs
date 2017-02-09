@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using System.Threading;
 using Server.Entities;
+using Server.Queries;
 using ServiceStack.OrmLite;
 
 namespace Server.Logic
@@ -44,10 +45,7 @@ namespace Server.Logic
 
 		QueueMessage ReadFromDb(IDbConnection connection)
 		{
-			var query = connection.CreateExpression<QueueMessage>()
-						  .Where(message => !message.Readed)
-						  .OrderByDescending(message => message.Id);
-			return connection.FirstOrDefault(query);
+			return connection.FirstOrDefault(FirstMessageQuery.make(connection));
 		}
 	}
 }
