@@ -1,5 +1,4 @@
-﻿using System;
-namespace Server
+﻿namespace Server.Entities
 {
 	public class Announcement
 	{

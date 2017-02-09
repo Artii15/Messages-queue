@@ -111,6 +111,7 @@
     <Compile Include="src\Services\Topics\Create\CreateTopicResponse.cs" />
     <Compile Include="src\Logic\CreatingTopic.cs" />
     <Compile Include="src\Entities\Announcement.cs" />
+    <Compile Include="src\Entities\Subscription.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
