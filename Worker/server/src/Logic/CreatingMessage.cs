@@ -26,7 +26,6 @@ namespace Server.Logic
 
 			connection.Insert(new QueueMessage
 			{
-				Author = request.Author,
 				Content = request.Content,
 				Readed = false
 			});
@@ -43,7 +42,6 @@ namespace Server.Logic
 			var client = new RestClient(request.Cooperator);
 
 			var requestToSend = new RestRequest($"queues/{request.QueueName}/messages", Method.POST);
-			requestToSend.AddParameter("Author", request.Author);
 			requestToSend.AddParameter("Content", request.Content);
 
 			client.Execute(requestToSend);

@@ -18,7 +18,7 @@ namespace Server.Logic
 			Locks = locks;
 		}
 
-		public string ReadNextFrom(string queueName)
+		public QueueMessage ReadNextFrom(string queueName)
 		{
 			var connection = Connections.ConnectToInitializedQueue(queueName);
 			var queueLock = Locks.TakeQueueLock(queueName);
@@ -28,7 +28,7 @@ namespace Server.Logic
 			return message;
 		}
 
-		string ReadMessage(IDbConnection connection, object queueLock)
+		QueueMessage ReadMessage(IDbConnection connection, object queueLock)
 		{
 			Monitor.Enter(queueLock);
 
@@ -40,7 +40,7 @@ namespace Server.Logic
 			}
 			Monitor.Exit(queueLock);
 
-			return messageToReturn.Content;
+			return messageToReturn;
 		}
 
 		QueueMessage ReadFromDb(IDbConnection connection)

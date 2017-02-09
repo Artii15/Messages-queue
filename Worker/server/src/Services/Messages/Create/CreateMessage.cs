@@ -7,7 +7,6 @@ namespace Server.Services.Messages.Create
 	{
 		public string QueueName { get; set; }
 		public string Content { get; set; }
-		public int Author { get; set; }
 		public string Cooperator { get; set; }
 	}
 }

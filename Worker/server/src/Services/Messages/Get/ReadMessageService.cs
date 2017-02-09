@@ -15,7 +15,7 @@ namespace Server.Services.Messages.Get
 		public ReadMessageResponse Get(ReadMessage request)
 		{
 			var nextMessage = ReadingMessage.ReadNextFrom(request.QueueName);
-			return new ReadMessageResponse { Content = nextMessage };
+			return new ReadMessageResponse { Content = nextMessage.Content, Id = nextMessage.Id };
 		}
 	}
 }

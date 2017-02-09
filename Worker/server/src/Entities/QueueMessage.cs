@@ -7,7 +7,6 @@ namespace Server.Entities
 		[AutoIncrement]
 		public int Id { get; set; }
 		public string Content { get; set; }
-		public int Author { get; set; }
 		public bool Readed { get; set; }
 	}
 }
