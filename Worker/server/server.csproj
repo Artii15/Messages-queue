@@ -104,6 +104,7 @@
     <Compile Include="src\Services\Messages\Delete\DeleteMessage.cs" />
     <Compile Include="src\Services\Messages\Delete\DeleteMessageService.cs" />
     <Compile Include="src\Services\Messages\Delete\DeleteMessageResponse.cs" />
+    <Compile Include="src\Logic\DeletingMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
