@@ -1,9 +1,11 @@
-﻿namespace Server.Services.Topics.Create
+﻿using ServiceStack.ServiceHost;
+
+namespace Server.Services.Topics.Create
 {
+	[Route("/topics", "post")]
 	public class CreateTopic
 	{
-		public CreateTopic()
-		{
-		}
+		public string Name { get; set; }
+		public string Cooperator { get; set; }
 	}
 }
