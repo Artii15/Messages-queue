@@ -122,6 +122,10 @@
     <Compile Include="src\Logic\ReadingAnnouncement.cs" />
     <Compile Include="src\Queries\NextAnnouncementByDate.cs" />
     <Compile Include="src\Queries\NextAnnouncementById.cs" />
+    <Compile Include="src\Services\Subscriptions\Create\CreateSubscription.cs" />
+    <Compile Include="src\Services\Subscriptions\Create\CreateSubscriptionService.cs" />
+    <Compile Include="src\Services\Subscriptions\Create\CreateSubscriptionResponse.cs" />
+    <Compile Include="src\Logic\CreatingSubscription.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -146,6 +150,8 @@
     <Folder Include="src\Services\Announcements\" />
     <Folder Include="src\Services\Announcements\Create\" />
     <Folder Include="src\Services\Announcements\Get\" />
+    <Folder Include="src\Services\Subscriptions\" />
+    <Folder Include="src\Services\Subscriptions\Create\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
