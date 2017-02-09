@@ -93,6 +93,9 @@
     <Compile Include="src\Services\Queues\Create\CreateQueueService.cs" />
     <Compile Include="src\Logic\Queues\CreatingQueue.cs" />
     <Compile Include="src\Entities\Queue.cs" />
+    <Compile Include="src\Exceptions\QueueAlreadyExists.cs" />
+    <Compile Include="src\Queries\WorkerQueries.cs" />
+    <Compile Include="src\Queries\QueuesQueries.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -113,6 +116,8 @@
     <Folder Include="src\Logic\Workers\" />
     <Folder Include="src\Services\Queues\Create\" />
     <Folder Include="src\Logic\Queues\" />
+    <Folder Include="src\Exceptions\" />
+    <Folder Include="src\Queries\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
