@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Threading;
 using RestSharp;
 using Server.Entities;
 using Server.Services.Queues.Create;
@@ -9,25 +9,24 @@ namespace Server.Logic
 	public class CreatingQueue
 	{
 		Connections Connections;
+		Locks Locks;
 
-		public CreatingQueue(Connections connections)
+		public CreatingQueue(Connections connections, Locks locks)
 		{
 			Connections = connections;
+			Locks = locks;
 		}
 
 		public void Create(CreateQueue request)
 		{
-			try
+			var queueLock = Locks.TakeQueueLock(request.Name);
+			Monitor.Enter(queueLock);
+			CreateQueueFile(request.Name);
+			Monitor.Exit(queueLock);
+
+			if (!string.IsNullOrEmpty(request.Cooperator))
 			{
-				if (!string.IsNullOrEmpty(request.Cooperator))
-				{
-					PropagateRequestToCo(request);
-				}
-				CreateQueueFile(request.Name);
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine(e.StackTrace);
+				PropagateRequestToCo(request);
 			}
 		}
 

@@ -106,6 +106,22 @@
     <Compile Include="src\Services\Messages\Delete\DeleteMessageResponse.cs" />
     <Compile Include="src\Logic\DeletingMessage.cs" />
     <Compile Include="src\Queries\FirstMessageQuery.cs" />
+    <Compile Include="src\Services\Topics\Create\CreateTopic.cs" />
+    <Compile Include="src\Services\Topics\Create\CreateTopicService.cs" />
+    <Compile Include="src\Services\Topics\Create\CreateTopicResponse.cs" />
+    <Compile Include="src\Logic\CreatingTopic.cs" />
+    <Compile Include="src\Entities\Announcement.cs" />
+    <Compile Include="src\Entities\Subscriber.cs" />
+    <Compile Include="src\Services\Announcements\Create\CreateAnnouncement.cs" />
+    <Compile Include="src\Services\Announcements\Create\CreateAnnouncementService.cs" />
+    <Compile Include="src\Services\Announcements\Create\CreateAnnouncementResponse.cs" />
+    <Compile Include="src\Logic\CreatingAnnouncement.cs" />
+    <Compile Include="src\Services\Announcements\Get\ReadAnnouncement.cs" />
+    <Compile Include="src\Services\Announcements\Get\ReadAnnouncementService.cs" />
+    <Compile Include="src\Services\Announcements\Get\ReadAnnouncementResponse.cs" />
+    <Compile Include="src\Logic\ReadingAnnouncement.cs" />
+    <Compile Include="src\Queries\NextAnnouncementByDate.cs" />
+    <Compile Include="src\Queries\NextAnnouncementById.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -125,6 +141,11 @@
     <Folder Include="src\Services\Messages\Get\" />
     <Folder Include="src\Services\Messages\Delete\" />
     <Folder Include="src\Queries\" />
+    <Folder Include="src\Services\Topics\" />
+    <Folder Include="src\Services\Topics\Create\" />
+    <Folder Include="src\Services\Announcements\" />
+    <Folder Include="src\Services\Announcements\Create\" />
+    <Folder Include="src\Services\Announcements\Get\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

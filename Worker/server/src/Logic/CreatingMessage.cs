@@ -34,7 +34,10 @@ namespace Server.Logic
 			Monitor.Exit(queueLock);
 
 			connection.Close();
-			PropagateRequest(request);
+			if (!string.IsNullOrEmpty(request.Cooperator))
+			{
+				PropagateRequest(request);
+			}
 		}
 
 		void PropagateRequest(CreateMessage request)
