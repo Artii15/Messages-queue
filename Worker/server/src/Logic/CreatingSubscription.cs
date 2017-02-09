@@ -8,12 +8,10 @@ namespace Server.Logic
 	public class CreatingSubscription
 	{
 		readonly Connections Connections;
-		readonly Locks Locks;
 
-		public CreatingSubscription(Connections connections, Locks locks)
+		public CreatingSubscription(Connections connections)
 		{
 			Connections = connections;
-			Locks = locks;
 		}
 
 		public void Create(CreateSubscription request)
