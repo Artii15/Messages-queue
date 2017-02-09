@@ -14,7 +14,7 @@ namespace Server.Services.Messages.Delete
 
 		public DeleteMessageResponse Delete(DeleteMessage request)
 		{
-			DeletingMessage.Delete(request.QueueName, request.MessageId);
+			DeletingMessage.Delete(request);
 			return new DeleteMessageResponse();
 		}
 	}

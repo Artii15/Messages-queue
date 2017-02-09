@@ -7,5 +7,6 @@ namespace Server.Services.Messages.Delete
 	{
 		public string QueueName { get; set; }
 		public int MessageId { get; set; }
+		public string Cooperator { get; set; }
 	}
 }
