@@ -14,5 +14,11 @@ namespace Server
 		{
 			dbConnection.Insert(new Queue { Name = name, Worker = worker, Cooperator = coworker });
 		}
+
+		public static Queue getQueueByName(IDbConnection dbConnection, string queueName)
+		{
+			var exp = dbConnection.CreateExpression<Queue>().Where(queue => queue.Name == queueName);
+			return dbConnection.FirstOrDefault(exp);
+		}
 	}
 }

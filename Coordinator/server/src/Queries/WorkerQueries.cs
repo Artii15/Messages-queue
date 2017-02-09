@@ -17,5 +17,12 @@ namespace Server
 			                      .Limit(skip: (int)position, rows: 1);
 			return dbConnection.FirstOrDefault(exp);
 		}
+
+		public static Worker GetWorkerById(IDbConnection dbConnection, long id)
+		{
+			var exp = dbConnection.CreateExpression<Worker>()
+			                      .Where(worker => worker.Id == id);
+			return dbConnection.FirstOrDefault(exp);
+		}
 	}
 }
