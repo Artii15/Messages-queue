@@ -7,11 +7,12 @@ namespace Server.Entities
 	public class Subscription
 	{
 		[AutoIncrement]
-		public int Id;
-		public int SubscriberId;
-		public int TopicId;
-		public DateTime CreationTime;
+		public int Id { get; set; }
+		public int SubscriberId { get; set; }
+		public int TopicId { get; set; }
+		[Index]
+		public DateTime CreationTime { get; set; }
 		[References(typeof(Announcement))]
-		public int? LastAnnouncementId;
+		public int? LastAnnouncementId { get; set; }
 	}
 }

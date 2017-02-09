@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using Server.Entities;
 using Server.Services.Topics.Create;
 using ServiceStack.OrmLite;
@@ -22,9 +23,12 @@ namespace Server.Logic
 			var topicLock = Locks.TakeTopicLock(request.Name);
 
 			Monitor.Enter(topicLock);
+
 			connection.CreateTableIfNotExists<Announcement>();
 			connection.CreateTableIfNotExists<Subscription>();
+
 			Monitor.Exit(topicLock);
+			connection.Close();
 		}
 	}
 }
