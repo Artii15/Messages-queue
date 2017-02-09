@@ -1,6 +1,6 @@
 ﻿using System.Data;
-using ServiceStack.OrmLite;
 using RestSharp;
+using System;
 
 namespace Server
 {
@@ -22,7 +22,6 @@ namespace Server
 				Worker worker, coworker;
 				CalculateQueueWorkers(request.Name, out worker, out coworker);
 				QueuesQueries.CreateQueue(DBConnection, request.Name, worker.Id, coworker.Id);
-
 				var client = new RestClient(worker.Address);
 				client.Timeout = 30 * 1000;
 				var requestToSend = new RestRequest("queues", Method.POST);
@@ -42,7 +41,7 @@ namespace Server
 		void CalculateQueueWorkers(string queueName, out Worker worker, out Worker coworker)
 		{
 			var workerCount = WorkerQueries.GetWorkersCount(DBConnection);
-			var nameHash = queueName.GetHashCode();
+			var nameHash = Math.Abs(queueName.GetHashCode());
 			var workerPosition = nameHash % workerCount;
 			var coworkerPosition = (nameHash + 1) % workerCount;
 			worker = WorkerQueries.GetWorker(DBConnection, workerPosition);

@@ -12,7 +12,7 @@ namespace Server
 
 		public static void CreateQueue(IDbConnection dbConnection, string name, long worker, long coworker)
 		{
-			dbConnection.Insert<Queue>(new Queue { Name = name, Worker = worker, Cooperator = coworker });
+			dbConnection.Insert(new Queue { Name = name, Worker = worker, Cooperator = coworker });
 		}
 	}
 }
