@@ -7,6 +7,7 @@ namespace Server
 	public class CreatingQueue
 	{
 		readonly IDbConnection DBConnection;
+		const int TIMEOUT = 30000;
 
 		public CreatingQueue(IDbConnection dbConnection)
 		{
@@ -22,15 +23,16 @@ namespace Server
 				Worker worker, coworker;
 				CalculateQueueWorkers(request.Name, out worker, out coworker);
 				QueuesQueries.CreateQueue(DBConnection, request.Name, worker.Id, coworker.Id);
-				var client = new RestClient(worker.Address);
-				client.Timeout = 30 * 1000;
+				var client = new RestClient("http://" + worker.Address);
+				client.Timeout = TIMEOUT;
 				var requestToSend = new RestRequest("queues", Method.POST);
 				requestToSend.AddParameter("Name", request.Name);
 				requestToSend.AddParameter("Cooperator", coworker.Address);
 				var response = client.Execute(requestToSend);
-				if (response.ResponseStatus == ResponseStatus.TimedOut)
+				if (response.ResponseStatus == ResponseStatus.TimedOut || 
+				    response.ResponseStatus == ResponseStatus.Error)
 				{
-					var coworkerClient = new RestClient(coworker.Address);
+					var coworkerClient = new RestClient("http://" + coworker.Address);
 					var coworkerRequestToSend = new RestRequest("queues", Method.POST);
 					coworkerRequestToSend.AddParameter("Name", request.Name);
 					coworkerClient.Execute(requestToSend);
