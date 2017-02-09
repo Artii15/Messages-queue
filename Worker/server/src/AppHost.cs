@@ -59,6 +59,7 @@ namespace Server
 			container.Register(new CreatingQueue(connections));
 			container.Register(new CreatingMessage(connections, locks));
 			container.Register(new ReadingMessage(connections, locks));
+			container.Register(new DeletingMessage(connections, locks));
 		}
     }
 }
