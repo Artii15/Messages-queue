@@ -1,10 +1,10 @@
-﻿using System;
+﻿using ServiceStack.ServiceHost;
+
 namespace Server
 {
+	[Route("/queues", "post")]
 	public class CreateQueue
 	{
-		public CreateQueue()
-		{
-		}
+		public string Name { get; set;}
 	}
 }

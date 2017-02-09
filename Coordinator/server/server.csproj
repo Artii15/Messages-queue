@@ -78,6 +78,9 @@
     <Reference Include="ServiceStack.ServiceInterface">
       <HintPath>..\packages\ServiceStack.3.9.59\lib\net35\ServiceStack.ServiceInterface.dll</HintPath>
     </Reference>
+    <Reference Include="RestSharp">
+      <HintPath>..\packages\RestSharp.105.2.3\lib\net4\RestSharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\AppHost.cs" />
@@ -93,7 +96,7 @@
     <Compile Include="src\Services\Queues\Create\CreateQueueService.cs" />
     <Compile Include="src\Logic\Queues\CreatingQueue.cs" />
     <Compile Include="src\Entities\Queue.cs" />
-    <Compile Include="src\Exceptions\QueueAlreadyExists.cs" />
+    <Compile Include="src\Exceptions\QueueAlreadyExistsException.cs" />
     <Compile Include="src\Queries\WorkerQueries.cs" />
     <Compile Include="src\Queries\QueuesQueries.cs" />
   </ItemGroup>
