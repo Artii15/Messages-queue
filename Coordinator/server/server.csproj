@@ -99,6 +99,11 @@
     <Compile Include="src\Exceptions\QueueAlreadyExistsException.cs" />
     <Compile Include="src\Queries\WorkerQueries.cs" />
     <Compile Include="src\Queries\QueuesQueries.cs" />
+    <Compile Include="src\Exceptions\QueueNotExistsException.cs" />
+    <Compile Include="src\Services\Messages\Create\CreateMessage.cs" />
+    <Compile Include="src\Services\Messages\Create\CreateMessageResponse.cs" />
+    <Compile Include="src\Services\Messages\Create\CreateMessageService.cs" />
+    <Compile Include="src\Logic\Messages\CreatingMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -121,6 +126,9 @@
     <Folder Include="src\Logic\Queues\" />
     <Folder Include="src\Exceptions\" />
     <Folder Include="src\Queries\" />
+    <Folder Include="src\Services\Messages\" />
+    <Folder Include="src\Logic\Messages\" />
+    <Folder Include="src\Services\Messages\Create\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
