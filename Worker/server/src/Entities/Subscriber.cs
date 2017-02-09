@@ -3,13 +3,10 @@ using ServiceStack.DataAnnotations;
 
 namespace Server.Entities
 {
-	[CompositeIndex(true, new[] {"SubscriberId", "TopicId"})]
-	public class Subscription
+	public class Subscriber
 	{
-		[AutoIncrement]
-		public int Id { get; set; }
+		[PrimaryKey]
 		public int SubscriberId { get; set; }
-		public int TopicId { get; set; }
 		[Index]
 		public DateTime CreationTime { get; set; }
 		[References(typeof(Announcement))]

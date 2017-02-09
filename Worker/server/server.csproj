@@ -111,7 +111,7 @@
     <Compile Include="src\Services\Topics\Create\CreateTopicResponse.cs" />
     <Compile Include="src\Logic\CreatingTopic.cs" />
     <Compile Include="src\Entities\Announcement.cs" />
-    <Compile Include="src\Entities\Subscription.cs" />
+    <Compile Include="src\Entities\Subscriber.cs" />
     <Compile Include="src\Services\Announcements\Create\CreateAnnouncement.cs" />
     <Compile Include="src\Services\Announcements\Create\CreateAnnouncementService.cs" />
     <Compile Include="src\Services\Announcements\Create\CreateAnnouncementResponse.cs" />

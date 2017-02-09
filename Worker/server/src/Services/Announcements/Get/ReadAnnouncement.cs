@@ -6,6 +6,6 @@ namespace Server.Services.Announcements.Get
 	public class ReadAnnouncement
 	{
 		public string TopicName { get; set; }
-		public string SubscriberId { get; set; }
+		public int SubscriberId { get; set; }
 	}
 }

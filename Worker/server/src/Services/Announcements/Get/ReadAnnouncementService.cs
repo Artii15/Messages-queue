@@ -5,7 +5,7 @@ namespace Server.Services.Announcements.Get
 {
 	public class ReadAnnouncementService: IService
 	{
-		ReadingAnnouncement ReadingAnnouncement;
+		readonly ReadingAnnouncement ReadingAnnouncement;
 
 		public ReadAnnouncementService(ReadingAnnouncement readingAnnouncement)
 		{

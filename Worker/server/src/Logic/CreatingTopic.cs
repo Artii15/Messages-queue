@@ -25,7 +25,7 @@ namespace Server.Logic
 			Monitor.Enter(topicLock);
 
 			connection.CreateTableIfNotExists<Announcement>();
-			connection.CreateTableIfNotExists<Subscription>();
+			connection.CreateTableIfNotExists<Subscriber>();
 
 			Monitor.Exit(topicLock);
 			connection.Close();
