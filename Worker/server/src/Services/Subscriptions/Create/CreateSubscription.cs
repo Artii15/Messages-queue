@@ -1,4 +1,5 @@
-﻿using ServiceStack.ServiceHost;
+﻿using System;
+using ServiceStack.ServiceHost;
 
 namespace Server.Services.Subscriptions.Create
 {
@@ -7,5 +8,7 @@ namespace Server.Services.Subscriptions.Create
 	{
 		public string TopicName { get; set; }
 		public int SubscriberId { get; set; }
+		public DateTime? CreationTime { get; set; }
+		public string Cooperator { get; set; }
 	}
 }
