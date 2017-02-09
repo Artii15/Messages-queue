@@ -78,6 +78,9 @@
     <Reference Include="ServiceStack.ServiceInterface">
       <HintPath>..\packages\ServiceStack.3.9.59\lib\net35\ServiceStack.ServiceInterface.dll</HintPath>
     </Reference>
+    <Reference Include="RestSharp">
+      <HintPath>..\packages\RestSharp.105.2.3\lib\net4\RestSharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\AppHost.cs" />
@@ -88,6 +91,24 @@
     <Compile Include="src\Services\Workers\Register\RegisterWorkerResponse.cs" />
     <Compile Include="src\Services\Workers\Register\RegisterWorkerService.cs" />
     <Compile Include="src\Logic\Workers\RegisteringWorker.cs" />
+    <Compile Include="src\Services\Queues\Create\CreateQueue.cs" />
+    <Compile Include="src\Services\Queues\Create\CreateQueueResponse.cs" />
+    <Compile Include="src\Services\Queues\Create\CreateQueueService.cs" />
+    <Compile Include="src\Logic\Queues\CreatingQueue.cs" />
+    <Compile Include="src\Entities\Queue.cs" />
+    <Compile Include="src\Exceptions\QueueAlreadyExistsException.cs" />
+    <Compile Include="src\Queries\WorkerQueries.cs" />
+    <Compile Include="src\Queries\QueuesQueries.cs" />
+    <Compile Include="src\Exceptions\QueueNotExistsException.cs" />
+    <Compile Include="src\Services\Messages\Create\CreateMessage.cs" />
+    <Compile Include="src\Services\Messages\Create\CreateMessageResponse.cs" />
+    <Compile Include="src\Services\Messages\Create\CreateMessageService.cs" />
+    <Compile Include="src\Logic\Messages\CreatingMessage.cs" />
+    <Compile Include="src\Logic\Messages\GettingMessage.cs" />
+    <Compile Include="src\Services\Messages\Get\GetMessage.cs" />
+    <Compile Include="src\Services\Messages\Get\GetMessageResponse.cs" />
+    <Compile Include="src\Services\Messages\Get\GetMessageService.cs" />
+    <Compile Include="src\Entities\Message.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -106,6 +127,14 @@
     <Folder Include="src\Logic\" />
     <Folder Include="src\Services\Workers\Register\" />
     <Folder Include="src\Logic\Workers\" />
+    <Folder Include="src\Services\Queues\Create\" />
+    <Folder Include="src\Logic\Queues\" />
+    <Folder Include="src\Exceptions\" />
+    <Folder Include="src\Queries\" />
+    <Folder Include="src\Services\Messages\" />
+    <Folder Include="src\Logic\Messages\" />
+    <Folder Include="src\Services\Messages\Create\" />
+    <Folder Include="src\Services\Messages\Get\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

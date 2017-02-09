@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using ServiceStack.OrmLite;
 
 namespace Server
@@ -19,14 +18,19 @@ namespace Server
 			{
 				AddNewWorker(request.Address);
 			}
+			else
+			{
+				Revive(request);
+			}
 		}
 
-		public void Revive(RegisterWorker request)
+		void Revive(RegisterWorker request)
 		{ 
-			if (DBConnection.Exists<Worker>(new { Id = request.Id }))
+			if (DBConnection.Select<Worker>(w => w.Id == request.Id).Count == 1)
 			{
 
-				DBConnection.Update<Worker>(new { Address = request.Address }, w => w.Id == request.Id);
+				DBConnection.Update(new Worker{Id = request.Id.Value, Address = request.Address, Alive = true }, 
+				                    w => w.Id == request.Id);
 			}
 		}
 
