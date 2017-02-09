@@ -56,7 +56,7 @@ namespace Server
 			var locks = new Locks();
 			var connections = new Connections();
 
-			container.Register(new CreatingQueue(connections));
+			container.Register(new CreatingQueue(connections, locks));
 			container.Register(new CreatingMessage(connections, locks));
 			container.Register(new ReadingMessage(connections, locks));
 			container.Register(new DeletingMessage(connections, locks));
