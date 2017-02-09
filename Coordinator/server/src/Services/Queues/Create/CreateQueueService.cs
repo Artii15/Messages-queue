@@ -1,5 +1,8 @@
-﻿using ServiceStack.OrmLite;
+﻿using ServiceStack.Common.Web;
+using ServiceStack.Common;
+using ServiceStack.OrmLite;
 using ServiceStack.ServiceInterface;
+using System.Net;
 
 namespace Server
 {
@@ -14,10 +17,26 @@ namespace Server
 			Db.CreateTableIfNotExists<Queue>();
 		}
 
-		public CreateQueueResponse Post(CreateQueue request)
+		public object Post(CreateQueue request)
 		{
-			CreatingQueue.Create(request);
-			return new CreateQueueResponse();
+			try
+			{
+				CreatingQueue.Create(request);
+			}
+			catch (QueueAlreadyExistsException)
+			{
+				return new HttpError(HttpStatusCode.Conflict, 
+				                     string.Format("Queue {0} already exists", request.Name));
+			}
+
+			return new HttpResult(new CreateQueueResponse())
+			{
+				StatusCode = HttpStatusCode.Created,
+				Headers =
+							   {
+					{HttpHeaders.Location, base.Request.AbsoluteUri.CombineWith(request.Name)}
+							   }
+			};
 		}
 	}
 }
