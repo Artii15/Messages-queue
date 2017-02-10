@@ -139,6 +139,10 @@
     <Compile Include="src\Services\Queues\Delete\DeleteQueueService.cs" />
     <Compile Include="src\Services\Queues\Delete\DeleteQueueResponse.cs" />
     <Compile Include="src\Logic\DeletingQueue.cs" />
+    <Compile Include="src\Services\Topics\Delete\DeleteTopic.cs" />
+    <Compile Include="src\Services\Topics\Delete\DeleteTopicService.cs" />
+    <Compile Include="src\Services\Topics\Delete\DeleteTopicResponse.cs" />
+    <Compile Include="src\Logic\DeletingTopic.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -168,6 +172,7 @@
     <Folder Include="src\Services\Announcements\Delete\" />
     <Folder Include="src\Services\Subscriptions\Delete\" />
     <Folder Include="src\Services\Queues\Delete\" />
+    <Folder Include="src\Services\Topics\Delete\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

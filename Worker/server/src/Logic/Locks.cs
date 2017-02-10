@@ -21,5 +21,11 @@ namespace Server.Logic
 			object removed;
 			QueuesLocks.TryRemove(queueName, out removed);
 		}
+
+		public void RemoveTopicLock(string topicName)
+		{
+			object removed;
+			TopicsLocks.TryRemove(topicName, out removed);
+		}
 	}
 }
