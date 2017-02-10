@@ -15,23 +15,18 @@ namespace Server
 		public void Register(RegisterWorker request)
 		{
 			if (request.Id == null)
-			{
 				AddNewWorker(request.Address);
-			}
 			else
-			{
 				Revive(request);
-			}
 		}
 
 		void Revive(RegisterWorker request)
-		{ 
-			if (DBConnection.Select<Worker>(w => w.Id == request.Id).Count == 1)
-			{
+		{
+			if (WorkerQueries.WorkerExists(DBConnection, request.Id.Value))
+				WorkerQueries.ReviveWorker(DBConnection, request);
+			else
+				AddNewWorker(request.Address);
 
-				DBConnection.Update(new Worker{Id = request.Id.Value, Address = request.Address, Alive = true }, 
-				                    w => w.Id == request.Id);
-			}
 		}
 
 		void AddNewWorker(string address)
@@ -41,7 +36,7 @@ namespace Server
 				Address = address,
 				Alive = true
 			};
-			DBConnection.Insert(worker);
+			WorkerQueries.AddNewWorker(DBConnection, worker);
 		}
 			
 	}
