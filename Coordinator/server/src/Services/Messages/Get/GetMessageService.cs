@@ -24,8 +24,7 @@ namespace Server
 			}
 			catch (QueueNotExistsException)
 			{
-				return new HttpError(HttpStatusCode.NotFound,
-									 string.Format("Queue {0} not exists", request.QueueName));
+				return new HttpError(HttpStatusCode.NotFound, $"Queue {request.QueueName} not exists");
 			}
 
 			return new GetMessageResponse()

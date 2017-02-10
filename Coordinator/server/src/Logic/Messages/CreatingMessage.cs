@@ -36,7 +36,7 @@ namespace Server
 
 		IRestResponse PropagateRequest(CreateMessage request, Worker worker, Worker coworker)
 		{
-			var client = new RestClient("http://" + worker.Address);
+			var client = new RestClient($"http://{worker.Address}");
 			client.Timeout = TIMEOUT;
 			var requestToSend = new RestRequest($"queues/{request.QueueName}/messages", Method.POST);
 			requestToSend.AddParameter("Content", request.Content);
@@ -46,7 +46,7 @@ namespace Server
 
 		void PropagateRequestToCoworker(CreateMessage request, Worker coworker)
 		{
-			var coworkerClient = new RestClient("http://" + coworker.Address);
+			var coworkerClient = new RestClient($"http://{coworker.Address}");
 			var coworkerRequestToSend = new RestRequest($"queues/{request.QueueName}/messages", Method.POST);
 			coworkerRequestToSend.AddParameter("Content", request.Content);
 			coworkerClient.Execute(coworkerRequestToSend);

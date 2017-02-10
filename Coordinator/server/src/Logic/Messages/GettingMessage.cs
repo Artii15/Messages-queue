@@ -40,7 +40,7 @@ namespace Server
 
 		IRestResponse<Message> PropagateRequest(GetMessage request, Worker worker, Worker coworker)
 		{
-			var client = new RestClient("http://" + worker.Address);
+			var client = new RestClient($"http://{worker.Address}");
 			client.Timeout = TIMEOUT;
 			var requestToSend = new RestRequest($"queues/{request.QueueName}/messages", Method.GET);
 			requestToSend.AddParameter("Cooperator", coworker.Address);
@@ -49,7 +49,7 @@ namespace Server
 
 		IRestResponse<Message> PropagateRequestToCoworker(GetMessage request, Worker coworker)
 		{
-			var coworkerClient = new RestClient("http://" + coworker.Address);
+			var coworkerClient = new RestClient($"http://{coworker.Address}");
 			var coworkerRequestToSend = new RestRequest($"queues/{request.QueueName}/messages", Method.GET);
 			return coworkerClient.Execute<Message>(coworkerRequestToSend);
 		}

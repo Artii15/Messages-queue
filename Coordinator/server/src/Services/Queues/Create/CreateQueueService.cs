@@ -25,8 +25,7 @@ namespace Server
 			}
 			catch (QueueAlreadyExistsException)
 			{
-				return new HttpError(HttpStatusCode.Conflict, 
-				                     string.Format("Queue {0} already exists", request.Name));
+				return new HttpError(HttpStatusCode.Conflict, $"Queue {request.Name} already exists");
 			}
 
 			return new HttpResult(new CreateQueueResponse())
