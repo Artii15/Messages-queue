@@ -14,10 +14,14 @@ namespace Server
 
 		public void Register(RegisterWorker request)
 		{
-			if (request.Id == null)
-				AddNewWorker(request.Address);
-			else
-				Revive(request);
+			using (IDbTransaction transaction = DBConnection.OpenTransaction())
+			{
+				if (request.Id == null)
+					AddNewWorker(request.Address);
+				else
+					Revive(request);
+				transaction.Commit();
+			}
 		}
 
 		void Revive(RegisterWorker request)
