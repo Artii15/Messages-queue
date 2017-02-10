@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using RestSharp;
 using Server.Services.Queues.Delete;
 
 namespace Server.Logic
@@ -19,9 +20,22 @@ namespace Server.Logic
 			var queueLock = Locks.TakeQueueLock(request.QueueName);
 			lock(queueLock)
 			{
+				Propagate(request);
 				Connections.RemoveQueue(request.QueueName);
 				Monitor.PulseAll(queueLock);
 				Locks.RemoveQueueLock(request.QueueName);
+			}
+		}
+
+		void Propagate(DeleteQueue request)
+		{
+			if (!string.IsNullOrEmpty(request.Cooperator))
+			{
+				var client = new RestClient(request.Cooperator);
+
+				var requestToSend = new RestRequest($"queues/{request.QueueName}", Method.DELETE);
+
+				client.Execute(requestToSend);
 			}
 		}
 	}

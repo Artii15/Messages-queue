@@ -67,6 +67,7 @@ namespace Server
 			container.Register(new DeletingAnnouncement(connections));
 			container.Register(new DeletingSubscription(connections));
 			container.Register(new DeletingQueue(connections, locks));
+			container.Register(new DeletingTopic(connections, locks));
 		}
     }
 }
