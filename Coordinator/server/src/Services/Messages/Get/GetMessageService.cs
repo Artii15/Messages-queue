@@ -17,7 +17,6 @@ namespace Server
 
 		public object Get(GetMessage request)
 		{
-			Console.WriteLine("hej");
 			Message message;
 			try
 			{

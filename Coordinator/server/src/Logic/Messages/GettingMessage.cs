@@ -29,9 +29,7 @@ namespace Server
 				client.Timeout = TIMEOUT;
 				var requestToSend = new RestRequest($"queues/{request.QueueName}/messages", Method.GET);
 				requestToSend.AddParameter("Cooperator", coworker.Address);
-				Console.WriteLine("hej2");
 				var response = client.Execute<Message>(requestToSend);
-				Console.WriteLine("hej3");
 				if (response.ResponseStatus == ResponseStatus.TimedOut ||
 					response.ResponseStatus == ResponseStatus.Error)
 				{
