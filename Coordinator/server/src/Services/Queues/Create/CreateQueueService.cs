@@ -3,6 +3,7 @@ using ServiceStack.Common;
 using ServiceStack.OrmLite;
 using ServiceStack.ServiceInterface;
 using System.Net;
+using System.Data;
 
 namespace Server
 {
@@ -19,6 +20,7 @@ namespace Server
 
 		public object Post(CreateQueue request)
 		{
+			IDbTransaction transaction = Db.OpenTransaction();
 			try
 			{
 				CreatingQueue.Create(request);
@@ -26,6 +28,10 @@ namespace Server
 			catch (QueueAlreadyExistsException)
 			{
 				return new HttpError(HttpStatusCode.Conflict, $"Queue {request.Name} already exists");
+			}
+			finally
+			{
+				transaction.Commit();
 			}
 
 			return new HttpResult(new CreateQueueResponse())
