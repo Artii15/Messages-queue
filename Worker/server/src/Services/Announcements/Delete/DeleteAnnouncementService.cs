@@ -5,7 +5,7 @@ namespace Server.Services.Announcements.Delete
 {
 	public class DeleteAnnouncementService: IService
 	{
-		DeletingAnnouncement DeletingAnnouncement;
+		readonly DeletingAnnouncement DeletingAnnouncement;
 
 		public DeleteAnnouncementService(DeletingAnnouncement deletingAnnouncement)
 		{
