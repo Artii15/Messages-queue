@@ -109,6 +109,13 @@
     <Compile Include="src\Services\Messages\Get\GetMessageResponse.cs" />
     <Compile Include="src\Services\Messages\Get\GetMessageService.cs" />
     <Compile Include="src\Entities\Message.cs" />
+    <Compile Include="src\Services\Topics\Create\CreateTopic.cs" />
+    <Compile Include="src\Services\Topics\Create\CreateTopicResponse.cs" />
+    <Compile Include="src\Services\Topics\Create\CreateTopicService.cs" />
+    <Compile Include="src\Logic\Topics\CreatingTopic.cs" />
+    <Compile Include="src\Entities\Topic.cs" />
+    <Compile Include="src\Exceptions\TopicAlreadyExistsException.cs" />
+    <Compile Include="src\Exceptions\TopicNotExistsException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -135,6 +142,8 @@
     <Folder Include="src\Logic\Messages\" />
     <Folder Include="src\Services\Messages\Create\" />
     <Folder Include="src\Services\Messages\Get\" />
+    <Folder Include="src\Services\Topics\Create\" />
+    <Folder Include="src\Logic\Topics\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
