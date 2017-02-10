@@ -24,5 +24,28 @@ namespace Server
 			                      .Where(worker => worker.Id == id);
 			return dbConnection.FirstOrDefault(exp);
 		}
+
+		public static bool IsWorkerAlive(IDbConnection dbConnection, long id)
+		{
+			var exp = dbConnection.CreateExpression<Worker>()
+			                      .Where(worker => worker.Id == id);
+			return dbConnection.FirstOrDefault(exp).Alive;
+		}
+
+		public static void AddNewWorker(IDbConnection dbConnection, Worker worker)
+		{
+			dbConnection.Insert(worker);
+		}
+
+		public static void ReviveWorker(IDbConnection dbConnection, RegisterWorker request)
+		{
+			dbConnection.Update(new Worker { Id = request.Id.Value, Address = request.Address, Alive = true },
+									w => w.Id == request.Id);
+		}
+
+		public static bool WorkerExists(IDbConnection dbConnection, long workerId)
+		{
+			return dbConnection.Select<Worker>(w => w.Id == workerId).Count == 1;
+		}
 	}
 }

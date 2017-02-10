@@ -23,20 +23,15 @@ namespace Server
 				Worker worker, coworker;
 				CalculateQueueWorkers(request.Name, out worker, out coworker);
 				QueuesQueries.CreateQueue(DBConnection, request.Name, worker.Id, coworker.Id);
-				var client = new RestClient("http://" + worker.Address);
-				client.Timeout = TIMEOUT;
-				var requestToSend = new RestRequest("queues", Method.POST);
-				requestToSend.AddParameter("Name", request.Name);
-				requestToSend.AddParameter("Cooperator", coworker.Address);
-				var response = client.Execute(requestToSend);
-				if (response.ResponseStatus == ResponseStatus.TimedOut || 
-				    response.ResponseStatus == ResponseStatus.Error)
+				if (worker.Alive)
 				{
-					var coworkerClient = new RestClient("http://" + coworker.Address);
-					var coworkerRequestToSend = new RestRequest("queues", Method.POST);
-					coworkerRequestToSend.AddParameter("Name", request.Name);
-					coworkerClient.Execute(requestToSend);
+					var response = PropagateRequest(request, worker, coworker);
+					if (response.ResponseStatus == ResponseStatus.TimedOut ||
+						response.ResponseStatus == ResponseStatus.Error)
+						PropagateRequestToCoworker(request, coworker);
 				}
+				else
+					PropagateRequestToCoworker(request, coworker);
 			}
 		}
 
@@ -48,6 +43,24 @@ namespace Server
 			var coworkerPosition = (nameHash + 1) % workerCount;
 			worker = WorkerQueries.GetWorker(DBConnection, workerPosition);
 			coworker = WorkerQueries.GetWorker(DBConnection, coworkerPosition);
+		}
+
+		IRestResponse PropagateRequest(CreateQueue request, Worker worker, Worker coworker)
+		{
+			var client = new RestClient($"http://{worker.Address}");
+			client.Timeout = TIMEOUT;
+			var requestToSend = new RestRequest("queues", Method.POST);
+			requestToSend.AddParameter("Name", request.Name);
+			requestToSend.AddParameter("Cooperator", coworker.Address);
+			return client.Execute(requestToSend);
+		}
+
+		void PropagateRequestToCoworker(CreateQueue request, Worker coworker)
+		{
+			var coworkerClient = new RestClient($"http://{coworker.Address}");
+			var coworkerRequestToSend = new RestRequest("queues", Method.POST);
+			coworkerRequestToSend.AddParameter("Name", request.Name);
+			coworkerClient.Execute(coworkerRequestToSend);
 		}
 	}
 }

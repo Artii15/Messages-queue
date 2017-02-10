@@ -1,5 +1,7 @@
 ﻿using ServiceStack.ServiceInterface;
 using ServiceStack.OrmLite;
+using ServiceStack.Common.Web;
+using System.Net;
 
 namespace Server
 {
@@ -13,10 +15,10 @@ namespace Server
 			Db.CreateTableIfNotExists<Worker>();
 		}
 
-		public RegisterWorkerResponse Post(RegisterWorker request)
+		public object Post(RegisterWorker request)
 		{
 			RegisteringWorker.Register(request);
-			return new RegisterWorkerResponse();
+			return new HttpResult(new RegisterWorkerResponse(), HttpStatusCode.Created);
 		}
 	}
 }
