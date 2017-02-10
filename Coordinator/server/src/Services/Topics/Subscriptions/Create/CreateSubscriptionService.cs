@@ -1,9 +1,7 @@
 ﻿using ServiceStack.Common.Web;
 using ServiceStack.Common;
-using ServiceStack.OrmLite;
 using ServiceStack.ServiceInterface;
 using System.Net;
-using System.Data;
 
 namespace Server
 {
@@ -21,11 +19,12 @@ namespace Server
 		{
 			try
 			{
-				CreatingSubscription.Create(request);
+				var subscriberId = this.GetSession().UserAuthId.ToInt();
+				CreatingSubscription.Create(request, subscriberId);
 			}
 			catch (TopicNotExistsException)
 			{
-				return new HttpError(HttpStatusCode.NotFound, $"Queue {request.TopicName} not exists");
+				return new HttpError(HttpStatusCode.NotFound, $"Topic {request.TopicName} not exists");
 			}
 
 			return new HttpResult(new CreateSubscriptionResponse(), HttpStatusCode.Created);

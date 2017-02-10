@@ -15,7 +15,7 @@ namespace Server
 			dbConnection.Insert(new Topic { Name = name, Worker = worker, Cooperator = coworker });
 		}
 
-		public static Topic getQueueByName(IDbConnection dbConnection, string topicName)
+		public static Topic getTopicByName(IDbConnection dbConnection, string topicName)
 		{
 			var exp = dbConnection.CreateExpression<Topic>().Where(topic => topic.Name == topicName);
 			return dbConnection.FirstOrDefault(exp);
