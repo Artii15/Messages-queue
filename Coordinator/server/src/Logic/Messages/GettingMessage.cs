@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using RestSharp;
 
 namespace Server
@@ -20,26 +19,39 @@ namespace Server
 				throw new QueueNotExistsException();
 			else
 			{
-				Console.WriteLine("hej");
 				var queue = QueuesQueries.getQueueByName(DBConnection, request.QueueName);
 				var worker = WorkerQueries.GetWorkerById(DBConnection, queue.Worker);
 				var coworker = WorkerQueries.GetWorkerById(DBConnection, queue.Cooperator);
+				IRestResponse<Message> response;
 
-				var client = new RestClient("http://" + worker.Address);
-				client.Timeout = TIMEOUT;
-				var requestToSend = new RestRequest($"queues/{request.QueueName}/messages", Method.GET);
-				requestToSend.AddParameter("Cooperator", coworker.Address);
-				var response = client.Execute<Message>(requestToSend);
-				if (response.ResponseStatus == ResponseStatus.TimedOut ||
-					response.ResponseStatus == ResponseStatus.Error)
+				if (worker.Alive)
 				{
-					var coworkerClient = new RestClient("http://" + coworker.Address);
-					var coworkerRequestToSend = new RestRequest($"queues/{request.QueueName}/messages", Method.GET);
-					response = coworkerClient.Execute<Message>(coworkerRequestToSend);
+					response = PropagateRequest(request, worker, coworker);
+					if (response.ResponseStatus == ResponseStatus.TimedOut ||
+						response.ResponseStatus == ResponseStatus.Error)
+						response = PropagateRequestToCoworker(request, coworker);
 				}
+				else
+					response = PropagateRequestToCoworker(request, coworker);
 
 				return response.Data;
 			}
+		}
+
+		IRestResponse<Message> PropagateRequest(GetMessage request, Worker worker, Worker coworker)
+		{
+			var client = new RestClient("http://" + worker.Address);
+			client.Timeout = TIMEOUT;
+			var requestToSend = new RestRequest($"queues/{request.QueueName}/messages", Method.GET);
+			requestToSend.AddParameter("Cooperator", coworker.Address);
+			return client.Execute<Message>(requestToSend);
+		}
+
+		IRestResponse<Message> PropagateRequestToCoworker(GetMessage request, Worker coworker)
+		{
+			var coworkerClient = new RestClient("http://" + coworker.Address);
+			var coworkerRequestToSend = new RestRequest($"queues/{request.QueueName}/messages", Method.GET);
+			return coworkerClient.Execute<Message>(coworkerRequestToSend);
 		}
 	}
 }

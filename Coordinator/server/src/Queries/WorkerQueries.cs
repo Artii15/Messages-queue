@@ -24,5 +24,12 @@ namespace Server
 			                      .Where(worker => worker.Id == id);
 			return dbConnection.FirstOrDefault(exp);
 		}
+
+		public static bool IsWorkerAlive(IDbConnection dbConnection, long id)
+		{
+			var exp = dbConnection.CreateExpression<Worker>()
+			                      .Where(worker => worker.Id == id);
+			return dbConnection.FirstOrDefault(exp).Alive;
+		}
 	}
 }
