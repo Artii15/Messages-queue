@@ -41,9 +41,7 @@ namespace Server.Logic
 
 			Monitor.Enter(topicLock);
 
-			var query = (subscriber.LastAnnouncementId.HasValue)
-				? NextAnnouncementById.make(connection, subscriber.LastAnnouncementId.Value)
-			                          : NextAnnouncementByDate.make(connection, subscriber.CreationTime.ToUniversalTime());
+			var query = NextAnnouncement.make(connection, subscriber);
 			var announcement = connection.FirstOrDefault(query);
 			while (announcement == null)
 			{

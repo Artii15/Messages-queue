@@ -130,6 +130,7 @@
     <Compile Include="src\Services\Announcements\Delete\DeleteAnnouncementService.cs" />
     <Compile Include="src\Services\Announcements\Delete\DeleteAnnouncementResponse.cs" />
     <Compile Include="src\Logic\DeletingAnnouncement.cs" />
+    <Compile Include="src\Queries\NextAnnouncement.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
