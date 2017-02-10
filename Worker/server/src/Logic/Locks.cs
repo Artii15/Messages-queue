@@ -15,5 +15,11 @@ namespace Server.Logic
 		{
 			return TopicsLocks.GetOrAdd(topicName, new object());
 		}
+
+		public void RemoveQueueLock(string queueName)
+		{
+			object removed;
+			QueuesLocks.TryRemove(queueName, out removed);
+		}
 	}
 }

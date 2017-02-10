@@ -1,11 +1,12 @@
-﻿using Server.Services.Queues.Delete;
+﻿using System.Threading;
+using Server.Services.Queues.Delete;
 
 namespace Server.Logic
 {
 	public class DeletingQueue
 	{
 		readonly Connections Connections;
-		Locks Locks;
+		readonly Locks Locks;
 
 		public DeletingQueue(Connections connections, Locks locks)
 		{
@@ -15,8 +16,13 @@ namespace Server.Logic
 
 		public void Delete(DeleteQueue request)
 		{
-			var connection = Connections.ConnectToInitializedQueue(request.QueueName);
-			connection.Close();
+			var queueLock = Locks.TakeQueueLock(request.QueueName);
+			lock(queueLock)
+			{
+				Connections.RemoveQueue(request.QueueName);
+				Monitor.PulseAll(queueLock);
+				Locks.RemoveQueueLock(request.QueueName);
+			}
 		}
 	}
 }
