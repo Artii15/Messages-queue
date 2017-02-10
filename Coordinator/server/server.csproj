@@ -100,15 +100,31 @@
     <Compile Include="src\Queries\WorkerQueries.cs" />
     <Compile Include="src\Queries\QueuesQueries.cs" />
     <Compile Include="src\Exceptions\QueueNotExistsException.cs" />
-    <Compile Include="src\Services\Messages\Create\CreateMessage.cs" />
-    <Compile Include="src\Services\Messages\Create\CreateMessageResponse.cs" />
-    <Compile Include="src\Services\Messages\Create\CreateMessageService.cs" />
-    <Compile Include="src\Logic\Messages\CreatingMessage.cs" />
-    <Compile Include="src\Logic\Messages\GettingMessage.cs" />
-    <Compile Include="src\Services\Messages\Get\GetMessage.cs" />
-    <Compile Include="src\Services\Messages\Get\GetMessageResponse.cs" />
-    <Compile Include="src\Services\Messages\Get\GetMessageService.cs" />
     <Compile Include="src\Entities\Message.cs" />
+    <Compile Include="src\Services\Topics\Create\CreateTopic.cs" />
+    <Compile Include="src\Services\Topics\Create\CreateTopicResponse.cs" />
+    <Compile Include="src\Services\Topics\Create\CreateTopicService.cs" />
+    <Compile Include="src\Logic\Topics\CreatingTopic.cs" />
+    <Compile Include="src\Entities\Topic.cs" />
+    <Compile Include="src\Exceptions\TopicAlreadyExistsException.cs" />
+    <Compile Include="src\Exceptions\TopicNotExistsException.cs" />
+    <Compile Include="src\Queries\TopicsQueries.cs" />
+    <Compile Include="src\Logic\Queues\Messages\CreatingMessage.cs" />
+    <Compile Include="src\Logic\Queues\Messages\GettingMessage.cs" />
+    <Compile Include="src\Services\Queues\Messages\Create\CreateMessage.cs" />
+    <Compile Include="src\Services\Queues\Messages\Create\CreateMessageResponse.cs" />
+    <Compile Include="src\Services\Queues\Messages\Create\CreateMessageService.cs" />
+    <Compile Include="src\Services\Queues\Messages\Get\GetMessage.cs" />
+    <Compile Include="src\Services\Queues\Messages\Get\GetMessageResponse.cs" />
+    <Compile Include="src\Services\Queues\Messages\Get\GetMessageService.cs" />
+    <Compile Include="src\Services\Topics\Subscriptions\Create\CreateSubscription.cs" />
+    <Compile Include="src\Services\Topics\Subscriptions\Create\CreateSubscriptionResponse.cs" />
+    <Compile Include="src\Services\Topics\Subscriptions\Create\CreateSubscriptionService.cs" />
+    <Compile Include="src\Logic\Topics\Subscriptions\CreatingSubscription.cs" />
+    <Compile Include="src\Services\Topics\Subscriptions\Delete\DeleteSubscription.cs" />
+    <Compile Include="src\Services\Topics\Subscriptions\Delete\DeleteSubscriptionResponse.cs" />
+    <Compile Include="src\Services\Topics\Subscriptions\Delete\DeleteSubscriptionService.cs" />
+    <Compile Include="src\Logic\Topics\Subscriptions\DeletingSubscription.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -131,10 +147,14 @@
     <Folder Include="src\Logic\Queues\" />
     <Folder Include="src\Exceptions\" />
     <Folder Include="src\Queries\" />
-    <Folder Include="src\Services\Messages\" />
-    <Folder Include="src\Logic\Messages\" />
-    <Folder Include="src\Services\Messages\Create\" />
-    <Folder Include="src\Services\Messages\Get\" />
+    <Folder Include="src\Services\Topics\Create\" />
+    <Folder Include="src\Logic\Topics\" />
+    <Folder Include="src\Logic\Queues\Messages\" />
+    <Folder Include="src\Services\Queues\Messages\" />
+    <Folder Include="src\Services\Topics\Subscriptions\" />
+    <Folder Include="src\Services\Topics\Subscriptions\Create\" />
+    <Folder Include="src\Services\Topics\Subscriptions\Delete\" />
+    <Folder Include="src\Logic\Topics\Subscriptions\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
