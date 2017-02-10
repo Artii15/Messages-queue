@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Timers;
 
 namespace Server
 {
@@ -23,10 +24,28 @@ namespace Server
             var listeningOn = string.Format ("http://*:{0}/", port);
             appHost.Start (listeningOn);
 
+			BeginHeartbeat();
+
             Console.WriteLine ("AppHost Created at {0}, listening on {1}", DateTime.Now, listeningOn);
 			Console.WriteLine("Press <ENTER> key to exit...");
 			Console.ReadLine();
 			appHost.Stop();
         }
+
+		static void BeginHeartbeat()
+		{
+			var heartbeatInterval = 10000; //TODO read interval from config or env variable
+			var timer = new Timer(heartbeatInterval);
+			timer.AutoReset = true;
+			timer.Elapsed += (sender, e) => SendHeartbeat();
+			SendHeartbeat();
+			timer.Start();
+		}
+
+		static void SendHeartbeat()
+		{
+			//TODO Implement heartbeat sending here
+			Console.WriteLine("heartbeat");
+		}
     }
 }
