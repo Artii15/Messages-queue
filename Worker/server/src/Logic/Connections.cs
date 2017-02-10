@@ -4,6 +4,7 @@ using ServiceStack.OrmLite.Sqlite;
 using Server.Entities;
 using System.Data;
 using System;
+using System.IO;
 
 namespace Server.Logic
 {
@@ -11,6 +12,9 @@ namespace Server.Logic
 	{
 		readonly ConcurrentDictionary<string, IDbConnectionFactory> Queues;
 		readonly ConcurrentDictionary<string, IDbConnectionFactory> Topics;
+
+		const string QUEUES_DIR = "queues";
+		const string TOPICS_DIR = "topics";
 
 		public Connections()
 		{
@@ -25,7 +29,7 @@ namespace Server.Logic
 
 		public IDbConnection ConnectToQueue(string queueName)
 		{
-			return Connect(Queues, "queues", queueName);
+			return Connect(Queues, QUEUES_DIR, queueName);
 		}
 
 		public IDbConnection ConnectToInitializedTopic(string topicName)
@@ -35,7 +39,7 @@ namespace Server.Logic
 
 		public IDbConnection ConnectToTopic(string topicName)
 		{
-			return Connect(Topics, "topics", topicName);
+			return Connect(Topics, TOPICS_DIR, topicName);
 		}
 
 		IDbConnection Verify(IDbConnection connection, string requiredTable)
@@ -55,8 +59,28 @@ namespace Server.Logic
 
 		OrmLiteConnectionFactory MakeConnectionFactory(string dbDirectory, string dbName)
 		{
-			return new OrmLiteConnectionFactory($"Data Source={dbDirectory}/{dbName}.sqlite;Version=3;",
+			return new OrmLiteConnectionFactory($"Data Source={PathToDbFile(dbDirectory, dbName)};Version=3;",
 												SqliteOrmLiteDialectProvider.Instance);
+		}
+
+		public void RemoveTopic(string topicName)
+		{
+			Remove(TOPICS_DIR, topicName);
+		}
+
+		public void RemoveQueue(string queueName)
+		{
+			Remove(QUEUES_DIR, queueName);
+		}
+
+		void Remove(string dbDirectory, string dbName)
+		{
+			File.Delete(PathToDbFile(dbDirectory, dbName));
+		}
+
+		string PathToDbFile(string dbDir, string dbName)
+		{
+			return $"{dbDir}/{dbName}.sqlite";
 		}
 	}
 }
