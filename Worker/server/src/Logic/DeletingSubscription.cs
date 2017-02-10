@@ -21,7 +21,6 @@ namespace Server.Logic
 			{
 				connection.DeleteById<Subscriber>(request.SubscriberId);
 			}
-
 		}
 
 		void Propagate(DeleteSubscription request)
