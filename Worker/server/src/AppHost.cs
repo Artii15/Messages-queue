@@ -46,6 +46,7 @@ namespace Server
             }
 
             SetConfig (config);
+			RequestQueuesAndTopicsList(container);
         }
 
 		void ConfigureQueues(Container container)
@@ -68,6 +69,12 @@ namespace Server
 			container.Register(new DeletingSubscription(connections));
 			container.Register(new DeletingQueue(connections, locks));
 			container.Register(new DeletingTopic(connections, locks));
+		}
+
+		void RequestQueuesAndTopicsList(Container container)
+		{
+			//TODO implement real request
+
 		}
     }
 }

@@ -143,6 +143,9 @@
     <Compile Include="src\Services\Topics\Delete\DeleteTopicService.cs" />
     <Compile Include="src\Services\Topics\Delete\DeleteTopicResponse.cs" />
     <Compile Include="src\Logic\DeletingTopic.cs" />
+    <Compile Include="src\Entities\OwnedQueuesAndTopics.cs" />
+    <Compile Include="src\Entities\OwnedQueue.cs" />
+    <Compile Include="src\Entities\OwnedTopic.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
