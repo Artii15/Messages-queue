@@ -121,6 +121,10 @@
     <Compile Include="src\Services\Topics\Subscriptions\Create\CreateSubscriptionResponse.cs" />
     <Compile Include="src\Services\Topics\Subscriptions\Create\CreateSubscriptionService.cs" />
     <Compile Include="src\Logic\Topics\Subscriptions\CreatingSubscription.cs" />
+    <Compile Include="src\Services\Topics\Subscriptions\Delete\DeleteSubscription.cs" />
+    <Compile Include="src\Services\Topics\Subscriptions\Delete\DeleteSubscriptionResponse.cs" />
+    <Compile Include="src\Services\Topics\Subscriptions\Delete\DeleteSubscriptionService.cs" />
+    <Compile Include="src\Logic\Topics\Subscriptions\DeletingSubscription.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
