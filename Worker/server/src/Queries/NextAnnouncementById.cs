@@ -10,7 +10,7 @@ namespace Server
 		{
 			return connection.CreateExpression<Announcement>()
 				             .Where(announcement => announcement.Id > lastId)
-							 .OrderByDescending(announcement => announcement.CreationTime);
+							 .OrderBy(announcement => announcement.CreationTime);
 		}
 	}
 }

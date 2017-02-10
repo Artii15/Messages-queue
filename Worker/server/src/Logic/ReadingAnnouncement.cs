@@ -43,7 +43,7 @@ namespace Server.Logic
 
 			var query = (subscriber.LastAnnouncementId.HasValue)
 				? NextAnnouncementById.make(connection, subscriber.LastAnnouncementId.Value)
-			                          : NextAnnouncementByDate.make(connection, subscriber.CreationTime);
+			                          : NextAnnouncementByDate.make(connection, subscriber.CreationTime.ToUniversalTime());
 			var announcement = connection.FirstOrDefault(query);
 			while (announcement == null)
 			{
