@@ -23,13 +23,12 @@ namespace Server.Logic
 				var subscriber = connection.GetById<Subscriber>(request.SubscriberId);
 				var announcement = connection.First(NextAnnouncement.make(connection, subscriber));
 
-				Propagate(request);
-
 				if (announcement.Id != request.AnnouncementId)
 				{
 					throw new ArgumentException("Invalid announcement");
 				}
 
+				Propagate(request);
 				connection.UpdateOnly(new Subscriber { LastAnnouncementId = announcement.Id },
 									  subscription => new { subscription.LastAnnouncementId },
 									  subscription => subscription.Id == subscriber.Id);
