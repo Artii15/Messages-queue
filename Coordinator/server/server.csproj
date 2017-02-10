@@ -116,6 +116,7 @@
     <Compile Include="src\Entities\Topic.cs" />
     <Compile Include="src\Exceptions\TopicAlreadyExistsException.cs" />
     <Compile Include="src\Exceptions\TopicNotExistsException.cs" />
+    <Compile Include="src\Queries\TopicsQueries.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
