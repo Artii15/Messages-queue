@@ -25,7 +25,8 @@ namespace Server.Logic
 				PathToDbFile = Connections.PathToDbFile(Connections.QueuesDir, request.Name),
 				DbLock = Locks.TakeQueueLock(request.Name),
 				CooperatorAddress = request.Cooperator,
-				RecoveryCategory = "queues"
+				RecoveryCategory = "queues",
+				DbName = request.Name
 			});
 		}
 
@@ -36,7 +37,8 @@ namespace Server.Logic
 				PathToDbFile = Connections.PathToDbFile(Connections.TopicsDir, request.Name),
 				DbLock = Locks.TakeTopicLock(request.Name),
 				CooperatorAddress = request.Cooperator,
-				RecoveryCategory = "topics"
+				RecoveryCategory = "topics",
+				DbName = request.Name
 			});
 		}
 
@@ -51,7 +53,7 @@ namespace Server.Logic
 				lock (failureDescriptor.DbLock)
 				{
 					var client = new RestClient(failureDescriptor.CooperatorAddress);
-					var request = new RestRequest($"recoveries/{failureDescriptor.RecoveryCategory}", Method.POST);
+					var request = new RestRequest($"databases/{failureDescriptor.RecoveryCategory}/{failureDescriptor.DbName}", Method.PUT);
 					request.RequestFormat = DataFormat.Json;
 					request.AddHeader("Content-Type", "multipart/form-data");
 					request.AddFile("database", Path.GetFullPath(failureDescriptor.PathToDbFile));
@@ -67,5 +69,6 @@ namespace Server.Logic
 		public object DbLock { get; set; }
 		public string CooperatorAddress { get; set; }
 		public string RecoveryCategory { get; set; }
+		public string DbName { get; set; }
 	}
 }
