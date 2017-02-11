@@ -1,4 +1,4 @@
-﻿using System.Threading;
+﻿using System;
 using RestSharp;
 using Server.Entities;
 using Server.Services.Queues.Create;
@@ -20,21 +20,27 @@ namespace Server.Logic
 		public void Create(CreateQueue request)
 		{
 			var queueLock = Locks.TakeQueueLock(request.Name);
-			Monitor.Enter(queueLock);
-			CreateQueueFile(request.Name);
-			Monitor.Exit(queueLock);
-
-			if (!string.IsNullOrEmpty(request.Cooperator))
+			lock(queueLock)
 			{
-				PropagateRequestToCo(request);
+				if (Locks.QueuesRecoveryLocks.ContainsKey(request.Name))
+				{
+					throw new Exception($"Queue {request.Name} is inconsistent");
+				}
+
+				if (!string.IsNullOrEmpty(request.Cooperator))
+				{
+					PropagateRequestToCo(request);
+				}
+				CreateQueueFile(request.Name);
 			}
 		}
 
 		void CreateQueueFile(string queueName)
 		{
-			var queueDbConn = Connections.ConnectToQueue(queueName);
-			queueDbConn.CreateTableIfNotExists<QueueMessage>();
-			queueDbConn.Close();
+			using (var queueDbConn = Connections.ConnectToQueue(queueName))
+			{
+				queueDbConn.CreateTableIfNotExists<QueueMessage>();
+			}
 		}
 
 		void PropagateRequestToCo(CreateQueue request)
