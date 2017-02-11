@@ -7,7 +7,6 @@ using System;
 using System.IO;
 using Server.Logic;
 using Server.Entities;
-using System.Threading;
 
 namespace Server
 {
