@@ -14,8 +14,9 @@ namespace Server
     public class AppHost : AppHostHttpListenerBase
     {
 		readonly bool m_debugEnabled = true;
+		readonly QueuesAndTopics QueuesAndTopicsToRecover = new QueuesAndTopics();
 
-        public AppHost ()
+		public AppHost ()
             : base ("Server HttpListener", typeof (AppHost).Assembly)
         {
         }
@@ -58,10 +59,10 @@ namespace Server
 			var locks = new Locks();
 			var connections = new Connections();
 
-			var queuesAndTopicsToRecover = RequestQueuesAndTopicsList();
+			RequestQueuesAndTopicsList();
 
-			LockAllQueuesToRecover(locks, queuesAndTopicsToRecover);
-			LockAllTopicsToRecover(locks, queuesAndTopicsToRecover);
+			LockAllQueuesToRecover(locks);
+			LockAllTopicsToRecover(locks);
 
 			container.Register(new CreatingQueue(connections, locks));
 			container.Register(new CreatingMessage(connections, locks));
@@ -77,23 +78,22 @@ namespace Server
 			container.Register(new DeletingTopic(connections, locks));
 		}
 
-		QueuesAndTopics RequestQueuesAndTopicsList()
+		void RequestQueuesAndTopicsList()
 		{
 			//TODO implement real request
-			return new QueuesAndTopics(); //This object will be fetched from coordinator
 		}
 
-		void LockAllQueuesToRecover(Locks locks, QueuesAndTopics queuesAndTopics)
+		void LockAllQueuesToRecover(Locks locks)
 		{
-			foreach (var queue in queuesAndTopics.Queues)
+			foreach (var queue in QueuesAndTopicsToRecover.Queues)
 			{
 				Monitor.Enter(locks.TakeQueueLock(queue.Value.Name));
 			}
 		}
 
-		void LockAllTopicsToRecover(Locks locks, QueuesAndTopics queuesAndTopics)
+		void LockAllTopicsToRecover(Locks locks)
 		{
-			foreach (var topic in queuesAndTopics.Topics)
+			foreach (var topic in QueuesAndTopicsToRecover.Topics)
 			{
 				Monitor.Enter(locks.TakeTopicLock(topic.Value.Name));
 			}
