@@ -13,8 +13,8 @@ namespace Server
 				Console.Error.WriteLine ("Usage: server <listen_address>");
 				Environment.Exit(1);
 			}
-			var addressPattern = new Regex(@"^(http|https)://.+(:d+)?$");
-			string listenAddress = args[0];
+			var addressPattern = new Regex(@"^(http|https)://.+(:d+)?/?$");
+			var listenAddress = string.Concat(args[0].TrimEnd(new char[] {'/'}), "/");
 			if (!addressPattern.IsMatch(listenAddress))
 			{
 				Console.Error.WriteLine ("Invalid address format");
