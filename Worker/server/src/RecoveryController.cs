@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using RestSharp;
 using Server.Entities;
 
@@ -13,14 +14,16 @@ namespace Server
 		{
 			QueuesAndTopicsToRecover = queuesAndTopicsToRecover;
 			Workers = new Dictionary<string, RestClient>();
-
 		}
 
 		void RecoverQueues()
 		{
 			foreach (var queue in QueuesAndTopicsToRecover.Queues)
 			{
-				RecoverMessagesContainer(queue.Value, "queues");
+				RecoverMessagesContainer(queue.Value, "queues", response =>
+				{
+
+				});
 			}
 		}
 
@@ -28,19 +31,23 @@ namespace Server
 		{
 			foreach (var topic in QueuesAndTopicsToRecover.Topics)
 			{
-				RecoverMessagesContainer(topic.Value, "topics");
+				RecoverMessagesContainer(topic.Value, "topics", response =>
+				{
+
+				});
 			}
 		}
 
-		void RecoverMessagesContainer(MessagesContainer container, string address)
+		void RecoverMessagesContainer(MessagesContainer container, string address, Action<IRestResponse> onRecover)
 		{
 			var workerAddress = container.GetCooperator();
 			var worker = Workers.ContainsKey(workerAddress) ? Workers[workerAddress] : new RestClient(workerAddress);
 			Workers[workerAddress] = worker;
 
-			var request = new RestRequest($"failures/{address}", Method.POST);
+			var request = new RestRequest($"recovieries/{address}", Method.POST);
+			request.RequestFormat = DataFormat.Json;
 			request.AddBody(new { Name = container.GetName() });
-			worker.Execute(request);
+			worker.ExecuteAsync<MessagesContainer>(request, (response, _) => onRecover(response));
 		}
 	}
 }
