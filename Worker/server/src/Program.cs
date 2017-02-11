@@ -23,7 +23,7 @@ namespace Server
             appHost.Init ();            
             var listeningOn = string.Format ("http://*:{0}/", port);
             appHost.Start (listeningOn);
-
+			appHost.BeginRecovery();
 			BeginHeartbeat();
 
             Console.WriteLine ("AppHost Created at {0}, listening on {1}", DateTime.Now, listeningOn);

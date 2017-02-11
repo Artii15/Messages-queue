@@ -146,6 +146,8 @@
     <Compile Include="src\Entities\QueuesAndTopics.cs" />
     <Compile Include="src\Entities\Queue.cs" />
     <Compile Include="src\Entities\Topic.cs" />
+    <Compile Include="src\Entities\MessagesContainer.cs" />
+    <Compile Include="src\RecoveryController.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -8,6 +8,8 @@ using System.IO;
 using Server.Logic;
 using Server.Entities;
 using System.Threading;
+using System.Collections.Generic;
+using RestSharp;
 
 namespace Server
 {
@@ -97,6 +99,12 @@ namespace Server
 			{
 				Monitor.Enter(locks.TakeTopicLock(topic.Value.Name));
 			}
+		}
+
+		public void BeginRecovery()
+		{
+			var recoveryController = new RecoveryController();
+			recoveryController.BeginRecovery(QueuesAndTopicsToRecover);
 		}
     }
 }
