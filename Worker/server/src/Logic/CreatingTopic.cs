@@ -1,4 +1,4 @@
-﻿using System.Threading;
+﻿using System;
 using RestSharp;
 using Server.Entities;
 using Server.Services.Topics.Create;
@@ -19,20 +19,24 @@ namespace Server.Logic
 
 		public void Create(CreateTopic request)
 		{
-			var connection = Connections.ConnectToTopic(request.Name);
 			var topicLock = Locks.TakeTopicLock(request.Name);
-
-			Monitor.Enter(topicLock);
-
-			connection.CreateTableIfNotExists<Announcement>();
-			connection.CreateTableIfNotExists<Subscriber>();
-
-			Monitor.Exit(topicLock);
-			connection.Close();
-
-			if (!string.IsNullOrEmpty(request.Cooperator))
+			lock (topicLock)
 			{
-				PropagateRequest(request);
+				if (Locks.TopicsRecoveryLocks.ContainsKey(request.Name))
+				{
+					throw new Exception($"Topic {request.Name} is inconsistent");
+				}
+
+				if (!string.IsNullOrEmpty(request.Cooperator))
+				{
+					PropagateRequest(request);
+				}
+
+				using (var connection = Connections.ConnectToTopic(request.Name))
+				{
+					connection.CreateTableIfNotExists<Announcement>();
+					connection.CreateTableIfNotExists<Subscriber>();
+				}
 			}
 		}
 
