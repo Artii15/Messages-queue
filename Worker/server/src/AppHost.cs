@@ -89,7 +89,7 @@ namespace Server
 			var queuesRecoveryLocks = Locks.QueuesRecoveryLocks;
 			foreach (var queue in QueuesAndTopicsToRecover.Queues)
 			{
-				queuesRecoveryLocks.TryAdd(queue.Value.Name, new ManualResetEventSlim(false));
+				queuesRecoveryLocks.TryAdd(queue.Value.Name, new byte());
 			}
 		}
 
@@ -98,7 +98,7 @@ namespace Server
 			var topicsRecoveryLocks = Locks.TopicsRecoveryLocks;
 			foreach (var topic in QueuesAndTopicsToRecover.Topics)
 			{
-				topicsRecoveryLocks.TryAdd(topic.Value.Name, new ManualResetEventSlim(false));
+				topicsRecoveryLocks.TryAdd(topic.Value.Name, new byte());
 			}
 		}
 

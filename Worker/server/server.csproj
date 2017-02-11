@@ -161,6 +161,7 @@
     <Compile Include="src\Services\Databases\Topics\TopicDatabase.cs" />
     <Compile Include="src\Services\Databases\Topics\TopicDatabaseService.cs" />
     <Compile Include="src\Services\Databases\Topics\TopicDatabaseResponse.cs" />
+    <Compile Include="src\Logic\DatabaseRecovery.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

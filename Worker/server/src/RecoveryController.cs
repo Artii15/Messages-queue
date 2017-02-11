@@ -1,5 +1,4 @@
 ﻿using System.Collections.Concurrent;
-using System.Threading;
 using RestSharp;
 using Server.Entities;
 using Server.Logic;
@@ -45,15 +44,12 @@ namespace Server
 			}
 		}
 
-		void HandleResponse(IRestResponse response, ConcurrentDictionary<string, ManualResetEventSlim> recoveryLocks, string containerName)
+		void HandleResponse(IRestResponse response, ConcurrentDictionary<string, byte> recoveryLocks, string containerName)
 		{
 			if (response.StatusCode != System.Net.HttpStatusCode.OK)
 			{
-				ManualResetEventSlim recoveryLock;
-				if (recoveryLocks.TryRemove(containerName, out recoveryLock))
-				{
-					recoveryLock.Set();
-				}
+				byte recoveryLock;
+				recoveryLocks.TryRemove(containerName, out recoveryLock);
 			}
 		}
 

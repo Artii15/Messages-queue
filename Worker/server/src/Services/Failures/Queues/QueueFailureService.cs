@@ -14,7 +14,7 @@ namespace Server.Services.Failures.Queues
 
 		public QueueFailureResponse Post(QueueFailure request)
 		{
-			FailureReporting.ReportQueueFailure(request);
+			FailureReporting.Report(request);
 			return new QueueFailureResponse();
 		}
 	}

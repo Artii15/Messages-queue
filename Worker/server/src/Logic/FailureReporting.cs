@@ -16,7 +16,7 @@ namespace Server.Logic
 			Locks = locks;
 		}
 
-		public void ReportQueueFailure(QueueFailure request)
+		public void Report(QueueFailure request)
 		{
 			HandleFailure(new FailureDescriptor 
 			{ 
@@ -28,7 +28,7 @@ namespace Server.Logic
 			});
 		}
 
-		public void ReportTopicFailure(TopicFailure request)
+		public void Report(TopicFailure request)
 		{
 			HandleFailure(new FailureDescriptor
 			{

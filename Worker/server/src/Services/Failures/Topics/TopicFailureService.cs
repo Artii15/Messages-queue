@@ -13,7 +13,7 @@ namespace Server.Services.Failures.Topics
 
 		public TopicFailureResponse Post(TopicFailure request)
 		{
-			FailureReporting.ReportTopicFailure(request);
+			FailureReporting.Report(request);
 			return new TopicFailureResponse();
 		}
 	}

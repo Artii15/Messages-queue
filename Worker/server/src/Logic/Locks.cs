@@ -1,12 +1,11 @@
 ﻿using System.Collections.Concurrent;
-using System.Threading;
 
 namespace Server.Logic
 {
 	public class Locks
 	{
-		public readonly ConcurrentDictionary<string, ManualResetEventSlim> QueuesRecoveryLocks = new ConcurrentDictionary<string, ManualResetEventSlim>();
-		public readonly ConcurrentDictionary<string, ManualResetEventSlim> TopicsRecoveryLocks = new ConcurrentDictionary<string, ManualResetEventSlim>();
+		public readonly ConcurrentDictionary<string, byte> QueuesRecoveryLocks = new ConcurrentDictionary<string, byte>();
+		public readonly ConcurrentDictionary<string, byte> TopicsRecoveryLocks = new ConcurrentDictionary<string, byte>();
 
 		readonly ConcurrentDictionary<string, object> QueuesLocks = new ConcurrentDictionary<string, object>();
 		readonly ConcurrentDictionary<string, object> TopicsLocks = new ConcurrentDictionary<string, object>();
