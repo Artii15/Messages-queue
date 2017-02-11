@@ -4,6 +4,7 @@ using ServiceStack.OrmLite;
 using System.Threading;
 using RestSharp;
 using System;
+using System.Data;
 
 namespace Server.Logic
 {
@@ -30,19 +31,24 @@ namespace Server.Logic
 
 				using (var connection = Connections.ConnectToInitializedQueue(request.QueueName))
 				{
-					if (!string.IsNullOrEmpty(request.Cooperator))
-					{
-						PropagateRequest(request);
-					}
-
-					connection.Insert(new QueueMessage
-					{
-						Content = request.Content,
-						Readed = false
-					});
+					Create(connection, request);		
 					Monitor.PulseAll(queueLock);
 				}
 			}
+		}
+
+		void Create(IDbConnection connection, CreateMessage request)
+		{
+			if (!string.IsNullOrEmpty(request.Cooperator))
+			{
+				PropagateRequest(request);
+			}
+
+			connection.Insert(new QueueMessage
+			{
+				Content = request.Content,
+				Readed = false
+			});
 		}
 
 		void PropagateRequest(CreateMessage request)
