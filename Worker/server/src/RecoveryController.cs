@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Concurrent;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using RestSharp;
@@ -27,15 +28,7 @@ namespace Server
 			foreach (var queue in QueuesAndTopicsToRecover.Queues)
 			{
 				var queueToRecover = queue.Value;
-				RecoverMessagesContainer(queueToRecover, "queues").ContinueWith(_ => 
-				{
-					var recoveryLocks = Locks.QueuesRecoveryLocks;
-					ManualResetEventSlim recoveryLock;
-					if (recoveryLocks.TryRemove(queueToRecover.Name, out recoveryLock))
-					{
-						recoveryLock.Set();
-					}
-				});
+				RecoverMessagesContainer(queueToRecover, "queues").ContinueWith(_ => Recover(queueToRecover, Locks.QueuesRecoveryLocks));
 			}
 		}
 
@@ -43,10 +36,17 @@ namespace Server
 		{
 			foreach (var topic in QueuesAndTopicsToRecover.Topics)
 			{
-				RecoverMessagesContainer(topic.Value, "topics", response =>
-				{
+				var topicToRecover = topic.Value;
+				RecoverMessagesContainer(topicToRecover, "topics").ContinueWith(_ => Recover(topicToRecover, Locks.TopicsRecoveryLocks));
+			}
+		}
 
-				});
+		void Recover(MessagesContainer container, ConcurrentDictionary<string, ManualResetEventSlim> recoveryLocks)
+		{
+			ManualResetEventSlim recoveryLock;
+			if (recoveryLocks.TryRemove(container.GetName(), out recoveryLock))
+			{
+				recoveryLock.Set();
 			}
 		}
 

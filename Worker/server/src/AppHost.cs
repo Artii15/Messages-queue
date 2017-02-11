@@ -17,6 +17,8 @@ namespace Server
     {
 		readonly bool m_debugEnabled = true;
 		readonly QueuesAndTopics QueuesAndTopicsToRecover = new QueuesAndTopics();
+		readonly Locks Locks = new Locks();
+		readonly Connections Connections = new Connections();
 
 		public AppHost ()
             : base ("Server HttpListener", typeof (AppHost).Assembly)
@@ -58,26 +60,22 @@ namespace Server
 			Directory.CreateDirectory("queues");
 			Directory.CreateDirectory("topics");
 
-			var locks = new Locks();
-			var connections = new Connections();
-
 			RequestQueuesAndTopicsList();
+			LockAllQueuesToRecover();
+			LockAllTopicsToRecover();
 
-			LockAllQueuesToRecover(locks);
-			LockAllTopicsToRecover(locks);
-
-			container.Register(new CreatingQueue(connections, locks));
-			container.Register(new CreatingMessage(connections, locks));
-			container.Register(new ReadingMessage(connections, locks));
-			container.Register(new DeletingMessage(connections, locks));
-			container.Register(new CreatingTopic(connections, locks));
-			container.Register(new CreatingAnnouncement(connections, locks));
-			container.Register(new ReadingAnnouncement(connections, locks));
-			container.Register(new CreatingSubscription(connections));
-			container.Register(new DeletingAnnouncement(connections));
-			container.Register(new DeletingSubscription(connections));
-			container.Register(new DeletingQueue(connections, locks));
-			container.Register(new DeletingTopic(connections, locks));
+			container.Register(new CreatingQueue(Connections, Locks));
+			container.Register(new CreatingMessage(Connections, Locks));
+			container.Register(new ReadingMessage(Connections, Locks));
+			container.Register(new DeletingMessage(Connections, Locks));
+			container.Register(new CreatingTopic(Connections, Locks));
+			container.Register(new CreatingAnnouncement(Connections, Locks));
+			container.Register(new ReadingAnnouncement(Connections, Locks));
+			container.Register(new CreatingSubscription(Connections));
+			container.Register(new DeletingAnnouncement(Connections));
+			container.Register(new DeletingSubscription(Connections));
+			container.Register(new DeletingQueue(Connections, Locks));
+			container.Register(new DeletingTopic(Connections, Locks));
 		}
 
 		void RequestQueuesAndTopicsList()
@@ -85,18 +83,18 @@ namespace Server
 			//TODO implement real request
 		}
 
-		void LockAllQueuesToRecover(Locks locks)
+		void LockAllQueuesToRecover()
 		{
-			var queuesRecoveryLocks = locks.QueuesRecoveryLocks;
+			var queuesRecoveryLocks = Locks.QueuesRecoveryLocks;
 			foreach (var queue in QueuesAndTopicsToRecover.Queues)
 			{
 				queuesRecoveryLocks.TryAdd(queue.Value.Name, new ManualResetEventSlim(false));
 			}
 		}
 
-		void LockAllTopicsToRecover(Locks locks)
+		void LockAllTopicsToRecover()
 		{
-			var topicsRecoveryLocks = locks.TopicsRecoveryLocks;
+			var topicsRecoveryLocks = Locks.TopicsRecoveryLocks;
 			foreach (var topic in QueuesAndTopicsToRecover.Topics)
 			{
 				topicsRecoveryLocks.TryAdd(topic.Value.Name, new ManualResetEventSlim(false));
@@ -105,7 +103,7 @@ namespace Server
 
 		public void BeginRecovery()
 		{
-			var recoveryController = new RecoveryController();
+			var recoveryController = new RecoveryController(Locks);
 			recoveryController.BeginRecovery(QueuesAndTopicsToRecover);
 		}
     }
