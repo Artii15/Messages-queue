@@ -87,17 +87,19 @@ namespace Server
 
 		void LockAllQueuesToRecover(Locks locks)
 		{
+			var queuesRecoveryLocks = locks.QueuesRecoveryLocks;
 			foreach (var queue in QueuesAndTopicsToRecover.Queues)
 			{
-				Monitor.Enter(locks.TakeQueueLock(queue.Value.Name));
+				queuesRecoveryLocks.TryAdd(queue.Value.Name, new ManualResetEventSlim(false));
 			}
 		}
 
 		void LockAllTopicsToRecover(Locks locks)
 		{
+			var topicsRecoveryLocks = locks.TopicsRecoveryLocks;
 			foreach (var topic in QueuesAndTopicsToRecover.Topics)
 			{
-				Monitor.Enter(locks.TakeTopicLock(topic.Value.Name));
+				topicsRecoveryLocks.TryAdd(topic.Value.Name, new ManualResetEventSlim(false));
 			}
 		}
 

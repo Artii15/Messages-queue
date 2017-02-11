@@ -1,15 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using RestSharp;
 using Server.Entities;
+using Server.Logic;
 
 namespace Server
 {
 	public class RecoveryController
 	{
 		QueuesAndTopics QueuesAndTopicsToRecover;
+		Locks Locks;
+
+		public RecoveryController(Locks locks)
+		{
+			Locks = locks;
+		}
 
 		public void BeginRecovery(QueuesAndTopics queuesAndTopicsToRecover)
 		{
@@ -20,8 +26,16 @@ namespace Server
 		{
 			foreach (var queue in QueuesAndTopicsToRecover.Queues)
 			{
-				var recoveryTask = RecoverMessagesContainer(queue.Value, "queues");
-				recoveryTask.ContinueWith(_ => { });
+				var queueToRecover = queue.Value;
+				RecoverMessagesContainer(queueToRecover, "queues").ContinueWith(_ => 
+				{
+					var recoveryLocks = Locks.QueuesRecoveryLocks;
+					ManualResetEventSlim recoveryLock;
+					if (recoveryLocks.TryRemove(queueToRecover.Name, out recoveryLock))
+					{
+						recoveryLock.Set();
+					}
+				});
 			}
 		}
 
