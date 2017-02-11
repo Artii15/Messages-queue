@@ -17,10 +17,12 @@ namespace Server
 		readonly QueuesAndTopics QueuesAndTopicsToRecover = new QueuesAndTopics();
 		readonly Locks Locks = new Locks();
 		readonly Connections Connections = new Connections();
+		readonly string ListenAddress;
 
-		public AppHost ()
+		public AppHost (string listenAddress)
             : base ("Server HttpListener", typeof (AppHost).Assembly)
         {
+			ListenAddress = listenAddress;
         }
 
 		public override void Configure (Container container)
@@ -74,7 +76,7 @@ namespace Server
 			container.Register(new DeletingSubscription(Connections));
 			container.Register(new DeletingQueue(Connections, Locks));
 			container.Register(new DeletingTopic(Connections, Locks));
-			container.Register(new FailureReporting(Connections, Locks));
+			container.Register(new FailureReporting(Locks));
 		}
 
 		void RequestQueuesAndTopicsList()
@@ -102,7 +104,7 @@ namespace Server
 
 		public void BeginRecovery()
 		{
-			var recoveryController = new RecoveryController(Locks);
+			var recoveryController = new RecoveryController(ListenAddress, Locks);
 			recoveryController.BeginRecovery(QueuesAndTopicsToRecover);
 		}
     }

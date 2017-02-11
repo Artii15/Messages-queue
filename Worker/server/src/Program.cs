@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Timers;
 
 namespace Server
@@ -7,26 +8,26 @@ namespace Server
     {
 		static void Main (string[] args)
         {
-			if (args.Length > 1) 
+			if (args.Length != 1) 
 			{
-				Console.Error.WriteLine ("Usage: server <port_number>");
+				Console.Error.WriteLine ("Usage: server <listen_address>");
 				Environment.Exit(1);
 			}
-			ushort port = 8888;
-			if (args.Length == 1 && !ushort.TryParse(args[0], out port))
+			var addressPattern = new Regex(@"^(http|https)://.+(:d+)?$");
+			string listenAddress = args[0];
+			if (!addressPattern.IsMatch(listenAddress))
 			{
-				Console.Error.WriteLine ("Wrong port number");
+				Console.Error.WriteLine ("Invalid address format");
 				Environment.Exit(2);
 			}
 
-			var appHost = new AppHost();
+			var appHost = new AppHost(listenAddress);
             appHost.Init ();            
-            var listeningOn = string.Format ("http://*:{0}/", port);
-            appHost.Start (listeningOn);
+			appHost.Start (listenAddress);
 			appHost.BeginRecovery();
 			BeginHeartbeat();
 
-            Console.WriteLine ("AppHost Created at {0}, listening on {1}", DateTime.Now, listeningOn);
+			Console.WriteLine ("AppHost Created at {0}, listening on {1}", DateTime.Now, listenAddress);
 			Console.WriteLine("Press <ENTER> key to exit...");
 			Console.ReadLine();
 			appHost.Stop();

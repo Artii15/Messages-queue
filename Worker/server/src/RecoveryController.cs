@@ -1,7 +1,5 @@
 ﻿using System.Collections.Concurrent;
-using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
 using RestSharp;
 using Server.Entities;
 using Server.Logic;
@@ -12,15 +10,19 @@ namespace Server
 	{
 		QueuesAndTopics QueuesAndTopicsToRecover;
 		Locks Locks;
+		readonly string ServerAddress;
 
-		public RecoveryController(Locks locks)
+		public RecoveryController(string serverAddress, Locks locks)
 		{
+			ServerAddress = serverAddress;
 			Locks = locks;
 		}
 
 		public void BeginRecovery(QueuesAndTopics queuesAndTopicsToRecover)
 		{
 			QueuesAndTopicsToRecover = queuesAndTopicsToRecover;
+			RecoverQueues();
+			RecoverTopics();
 		}
 
 		void RecoverQueues()
@@ -28,7 +30,8 @@ namespace Server
 			foreach (var queue in QueuesAndTopicsToRecover.Queues)
 			{
 				var queueToRecover = queue.Value;
-				RecoverMessagesContainer(queueToRecover, "queues").ContinueWith(_ => Recover(queueToRecover, Locks.QueuesRecoveryLocks));
+				var recoveryResponse = RecoverMessagesContainer(queueToRecover, "queues");
+				HandleResponse(recoveryResponse, Locks.QueuesRecoveryLocks, queueToRecover.Name);
 			}
 		}
 
@@ -37,33 +40,31 @@ namespace Server
 			foreach (var topic in QueuesAndTopicsToRecover.Topics)
 			{
 				var topicToRecover = topic.Value;
-				RecoverMessagesContainer(topicToRecover, "topics").ContinueWith(_ => Recover(topicToRecover, Locks.TopicsRecoveryLocks));
+				var recoveryResponse = RecoverMessagesContainer(topicToRecover, "topics");
+				HandleResponse(recoveryResponse, Locks.TopicsRecoveryLocks, topicToRecover.Name);
 			}
 		}
 
-		void Recover(MessagesContainer container, ConcurrentDictionary<string, ManualResetEventSlim> recoveryLocks)
+		void HandleResponse(IRestResponse response, ConcurrentDictionary<string, ManualResetEventSlim> recoveryLocks, string containerName)
 		{
-			ManualResetEventSlim recoveryLock;
-			if (recoveryLocks.TryRemove(container.GetName(), out recoveryLock))
+			if (response.StatusCode != System.Net.HttpStatusCode.OK)
 			{
-				recoveryLock.Set();
-			}
-		}
-
-		Task RecoverMessagesContainer(MessagesContainer container, string category)
-		{
-			var dbFilePath = $"{category}/{container.GetName()}.sqlite";
-			File.Delete(dbFilePath);
-			return Task.Factory.StartNew(() =>
-			{
-				using (var dbFile = File.OpenWrite(dbFilePath))
+				ManualResetEventSlim recoveryLock;
+				if (recoveryLocks.TryRemove(containerName, out recoveryLock))
 				{
-					var worker = new RestClient(container.GetCooperator());
-					var request = new RestRequest($"databases/{category}/{container.GetName()}", Method.GET);
-					request.ResponseWriter = db => db.CopyTo(dbFile);
-					worker.DownloadData(request);
+					recoveryLock.Set();
 				}
-			});
+			}
+		}
+
+		IRestResponse RecoverMessagesContainer(MessagesContainer container, string category)
+		{
+			var worker = new RestClient(container.GetCooperator());
+			var request = new RestRequest($"failures/{category}", Method.POST);
+			request.RequestFormat = DataFormat.Json;
+			request.AddJsonBody(new { Name = container.GetName(), Cooperator = ServerAddress });
+
+			return worker.Execute(request);
 		}
 	}
 }

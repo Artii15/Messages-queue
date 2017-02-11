@@ -78,7 +78,7 @@ namespace Server.Logic
 			File.Delete(PathToDbFile(dbDirectory, dbName));
 		}
 
-		public string PathToDbFile(string dbDir, string dbName)
+		public static string PathToDbFile(string dbDir, string dbName)
 		{
 			return $"{dbDir}/{dbName}.sqlite";
 		}

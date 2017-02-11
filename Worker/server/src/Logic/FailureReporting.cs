@@ -9,12 +9,10 @@ namespace Server.Logic
 {
 	public class FailureReporting
 	{
-		readonly Connections Connections;
 		Locks Locks;
 
-		public FailureReporting(Connections connections, Locks locks)
+		public FailureReporting(Locks locks)
 		{
-			Connections = connections;
 			Locks = locks;
 		}
 
@@ -56,7 +54,7 @@ namespace Server.Logic
 					var request = new RestRequest($"databases/{failureDescriptor.RecoveryCategory}/{failureDescriptor.DbName}", Method.PUT);
 					request.RequestFormat = DataFormat.Json;
 					request.AddHeader("Content-Type", "multipart/form-data");
-					request.AddFile("database", Path.GetFullPath(failureDescriptor.PathToDbFile));
+					request.AddFile("DatabaseFile", Path.GetFullPath(failureDescriptor.PathToDbFile));
 					client.Execute(request);
 				}
 			});
