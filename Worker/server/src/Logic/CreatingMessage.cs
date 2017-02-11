@@ -3,6 +3,7 @@ using Server.Services.Messages.Create;
 using ServiceStack.OrmLite;
 using System.Threading;
 using RestSharp;
+using System;
 
 namespace Server.Logic
 {
@@ -19,24 +20,28 @@ namespace Server.Logic
 
 		public void Create(CreateMessage request)
 		{
-			var connection = Connections.ConnectToInitializedQueue(request.QueueName);
 			var queueLock = Locks.TakeQueueLock(request.QueueName);
-
-			Monitor.Enter(queueLock);
-
-			connection.Insert(new QueueMessage
+			lock (queueLock)
 			{
-				Content = request.Content,
-				Readed = false
-			});
+				if (Locks.QueuesRecoveryLocks.ContainsKey(request.QueueName))
+				{
+					throw new Exception($"Queue {request.QueueName} is inconsistent");
+				}
 
-			Monitor.PulseAll(queueLock);
-			Monitor.Exit(queueLock);
+				using (var connection = Connections.ConnectToInitializedQueue(request.QueueName))
+				{
+					if (!string.IsNullOrEmpty(request.Cooperator))
+					{
+						PropagateRequest(request);
+					}
 
-			connection.Close();
-			if (!string.IsNullOrEmpty(request.Cooperator))
-			{
-				PropagateRequest(request);
+					connection.Insert(new QueueMessage
+					{
+						Content = request.Content,
+						Readed = false
+					});
+					Monitor.PulseAll(queueLock);
+				}
 			}
 		}
 
