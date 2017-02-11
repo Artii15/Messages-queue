@@ -8,8 +8,6 @@ using System.IO;
 using Server.Logic;
 using Server.Entities;
 using System.Threading;
-using System.Collections.Generic;
-using RestSharp;
 
 namespace Server
 {
