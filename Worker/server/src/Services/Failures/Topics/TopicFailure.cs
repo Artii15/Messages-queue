@@ -6,5 +6,6 @@ namespace Server.Services.Failures.Topics
 	public class TopicFailure
 	{
 		public string Name { get; set; }
+		public string Cooperator { get; set; }
 	}
 }
