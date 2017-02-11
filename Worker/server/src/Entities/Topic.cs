@@ -1,8 +1,8 @@
 ﻿namespace Server.Entities
 {
-	public class OwnedQueue
+	public class Topic
 	{
-		public string QueueName { get; set; }
+		public string Name { get; set; }
 		public string Cooperator { get; set; }
 	}
 }
