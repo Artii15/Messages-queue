@@ -155,6 +155,12 @@
     <Compile Include="src\Services\Failures\Topics\TopicFailureService.cs" />
     <Compile Include="src\Services\Failures\Topics\TopicFailureResponse.cs" />
     <Compile Include="src\Logic\FailureReporting.cs" />
+    <Compile Include="src\Services\Databases\Queues\QueueDatabase.cs" />
+    <Compile Include="src\Services\Databases\Queues\QueueDatabaseService.cs" />
+    <Compile Include="src\Services\Databases\Queues\QueueDatabaseResponse.cs" />
+    <Compile Include="src\Services\Databases\Topics\TopicDatabase.cs" />
+    <Compile Include="src\Services\Databases\Topics\TopicDatabaseService.cs" />
+    <Compile Include="src\Services\Databases\Topics\TopicDatabaseResponse.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -188,6 +194,9 @@
     <Folder Include="src\Services\Failures\" />
     <Folder Include="src\Services\Failures\Queues\" />
     <Folder Include="src\Services\Failures\Topics\" />
+    <Folder Include="src\Services\Databases\" />
+    <Folder Include="src\Services\Databases\Queues\" />
+    <Folder Include="src\Services\Databases\Topics\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
