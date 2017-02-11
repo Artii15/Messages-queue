@@ -24,6 +24,11 @@ namespace Server.Logic
 			var topicLock = Locks.TakeTopicLock(request.TopicName);
 			lock (topicLock)
 			{
+				if (Locks.TopicsRecoveryLocks.ContainsKey(request.TopicName))
+				{
+					throw new Exception($"Topic {request.TopicName} is inconsistent");
+				}
+
 				using (var connection = Connections.ConnectToInitializedTopic(request.TopicName))
 				{
 					Create(connection, request);
