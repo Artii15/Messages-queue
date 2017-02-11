@@ -40,7 +40,7 @@ namespace Server
 
 			var request = new RestRequest($"failures/{address}", Method.POST);
 			request.AddBody(new { Name = container.GetName() });
-			worker.ExecuteAsync(request, (arg1, arg2) => { });
+			worker.Execute(request);
 		}
 	}
 }
