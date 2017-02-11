@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using RestSharp;
 using Server.Entities;
 using Server.Queries;
@@ -10,29 +11,45 @@ namespace Server.Logic
 	public class DeletingAnnouncement
 	{
 		readonly Connections Connections;
+		readonly Locks Locks;
 
-		public DeletingAnnouncement(Connections connections)
+		public DeletingAnnouncement(Connections connections, Locks locks)
 		{
 			Connections = connections;
+			Locks = locks;
 		}
 
 		public void Delete(DeleteAnnouncement request)
 		{
-			using (var connection = Connections.ConnectToInitializedTopic(request.TopicName))
+			var topicLock = Locks.TakeTopicLock(request.TopicName);
+			lock (topicLock)
 			{
-				var subscriber = connection.GetById<Subscriber>(request.SubscriberId);
-				var announcement = connection.First(NextAnnouncement.make(connection, subscriber));
-
-				if (announcement.Id != request.AnnouncementId)
+				if (Locks.TopicsRecoveryLocks.ContainsKey(request.TopicName))
 				{
-					throw new ArgumentException("Invalid announcement");
+					throw new Exception($"Topic {request.TopicName} is inconsistent");
 				}
 
-				Propagate(request);
-				connection.UpdateOnly(new Subscriber { LastAnnouncementId = announcement.Id },
-									  subscription => new { subscription.LastAnnouncementId },
-									  subscription => subscription.Id == subscriber.Id);
+				using (var connection = Connections.ConnectToInitializedTopic(request.TopicName))
+				{
+					Delete(connection, request);
+				}
 			}
+		}
+
+		void Delete(IDbConnection connection, DeleteAnnouncement request)
+		{
+			var subscriber = connection.GetById<Subscriber>(request.SubscriberId);
+			var announcement = connection.First(NextAnnouncement.make(connection, subscriber));
+
+			if (announcement.Id != request.AnnouncementId)
+			{
+				throw new ArgumentException("Invalid announcement");
+			}
+
+			Propagate(request);
+			connection.UpdateOnly(new Subscriber { LastAnnouncementId = announcement.Id },
+								  subscription => new { subscription.LastAnnouncementId },
+								  subscription => subscription.Id == subscriber.Id);
 		}
 
 		void Propagate(DeleteAnnouncement request)
