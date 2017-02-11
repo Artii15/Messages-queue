@@ -13,8 +13,8 @@ namespace Server.Logic
 		readonly ConcurrentDictionary<string, IDbConnectionFactory> Queues;
 		readonly ConcurrentDictionary<string, IDbConnectionFactory> Topics;
 
-		const string QUEUES_DIR = "queues";
-		const string TOPICS_DIR = "topics";
+		public const string QueuesDir = "queues";
+		public const string TopicsDir = "topics";
 
 		public Connections()
 		{
@@ -29,7 +29,7 @@ namespace Server.Logic
 
 		public IDbConnection ConnectToQueue(string queueName)
 		{
-			return Connect(Queues, QUEUES_DIR, queueName);
+			return Connect(Queues, QueuesDir, queueName);
 		}
 
 		public IDbConnection ConnectToInitializedTopic(string topicName)
@@ -39,7 +39,7 @@ namespace Server.Logic
 
 		public IDbConnection ConnectToTopic(string topicName)
 		{
-			return Connect(Topics, TOPICS_DIR, topicName);
+			return Connect(Topics, TopicsDir, topicName);
 		}
 
 		IDbConnection Verify(IDbConnection connection, string requiredTable)
@@ -65,12 +65,12 @@ namespace Server.Logic
 
 		public void RemoveTopic(string topicName)
 		{
-			Remove(TOPICS_DIR, topicName);
+			Remove(TopicsDir, topicName);
 		}
 
 		public void RemoveQueue(string queueName)
 		{
-			Remove(QUEUES_DIR, queueName);
+			Remove(QueuesDir, queueName);
 		}
 
 		void Remove(string dbDirectory, string dbName)
@@ -78,7 +78,7 @@ namespace Server.Logic
 			File.Delete(PathToDbFile(dbDirectory, dbName));
 		}
 
-		string PathToDbFile(string dbDir, string dbName)
+		public string PathToDbFile(string dbDir, string dbName)
 		{
 			return $"{dbDir}/{dbName}.sqlite";
 		}

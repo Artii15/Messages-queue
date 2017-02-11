@@ -74,6 +74,7 @@ namespace Server
 			container.Register(new DeletingSubscription(Connections));
 			container.Register(new DeletingQueue(Connections, Locks));
 			container.Register(new DeletingTopic(Connections, Locks));
+			container.Register(new FailureReporting(Connections, Locks));
 		}
 
 		void RequestQueuesAndTopicsList()
