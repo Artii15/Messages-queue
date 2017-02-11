@@ -148,6 +148,12 @@
     <Compile Include="src\Entities\Topic.cs" />
     <Compile Include="src\Entities\MessagesContainer.cs" />
     <Compile Include="src\RecoveryController.cs" />
+    <Compile Include="src\Services\Failures\Queues\QueueFailure.cs" />
+    <Compile Include="src\Services\Failures\Queues\QueueFailureService.cs" />
+    <Compile Include="src\Services\Failures\Queues\QueueFailureResponse.cs" />
+    <Compile Include="src\Services\Failures\Topics\TopicFailure.cs" />
+    <Compile Include="src\Services\Failures\Topics\TopicFailureService.cs" />
+    <Compile Include="src\Services\Failures\Topics\TopicFailureResponse.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -179,6 +185,8 @@
     <Folder Include="src\Services\Queues\Delete\" />
     <Folder Include="src\Services\Topics\Delete\" />
     <Folder Include="src\Services\Failures\" />
+    <Folder Include="src\Services\Failures\Queues\" />
+    <Folder Include="src\Services\Failures\Topics\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
