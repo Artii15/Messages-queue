@@ -62,6 +62,8 @@ namespace Server
 
 			var queuesAndTopicsToRecover = RequestQueuesAndTopicsList();
 
+			LockAllQueuesToRecover(locks, queuesAndTopicsToRecover);
+			LockAllTopicsToRecover(locks, queuesAndTopicsToRecover);
 
 			container.Register(new CreatingQueue(connections, locks));
 			container.Register(new CreatingMessage(connections, locks));
