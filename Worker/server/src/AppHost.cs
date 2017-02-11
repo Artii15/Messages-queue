@@ -14,12 +14,10 @@ namespace Server
     public class AppHost : AppHostHttpListenerBase
     {
 		readonly bool m_debugEnabled = true;
-		readonly string ServerAddress;
 
-        public AppHost (string serverAddress)
+        public AppHost ()
             : base ("Server HttpListener", typeof (AppHost).Assembly)
         {
-			ServerAddress = serverAddress;
         }
 
 		public override void Configure (Container container)
