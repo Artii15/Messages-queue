@@ -1,9 +1,10 @@
-﻿namespace Server.Services.Failures.Topics
+﻿using ServiceStack.ServiceHost;
+
+namespace Server.Services.Failures.Topics
 {
+	[Route("/failures/topics", "post")]
 	public class TopicFailure
 	{
-		public TopicFailure()
-		{
-		}
+		public string Name { get; set; }
 	}
 }
