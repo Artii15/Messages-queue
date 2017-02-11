@@ -154,6 +154,7 @@
     <Compile Include="src\Services\Failures\Topics\TopicFailure.cs" />
     <Compile Include="src\Services\Failures\Topics\TopicFailureService.cs" />
     <Compile Include="src\Services\Failures\Topics\TopicFailureResponse.cs" />
+    <Compile Include="src\Logic\FailureReporting.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

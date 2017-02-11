@@ -2,8 +2,5 @@
 {
 	public class QueueFailureResponse
 	{
-		public QueueFailureResponse()
-		{
-		}
 	}
 }
