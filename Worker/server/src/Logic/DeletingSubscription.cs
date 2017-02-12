@@ -10,11 +10,13 @@ namespace Server.Logic
 	{
 		readonly Connections Connections;
 		Locks Locks;
+		Propagators Propagators;
 
-		public DeletingSubscription(Connections connections, Locks locks)
+		public DeletingSubscription(Connections connections, Locks locks, Propagators propagators)
 		{
 			Connections = connections;
 			Locks = locks;
+			Propagators = propagators;
 		}
 
 		public void Delete(DeleteSubscription request)
@@ -29,9 +31,10 @@ namespace Server.Logic
 
 				using (var connection = Connections.ConnectToInitializedTopic(request.TopicName))
 				{
-					Propagate(request);
 					connection.DeleteById<Subscriber>(request.SubscriberId);
 				}
+
+				Propagators.ScheduleTopicOperation(request.TopicName, () => Propagate(request));
 			}
 
 		}
