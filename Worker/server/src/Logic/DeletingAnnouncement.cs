@@ -12,11 +12,13 @@ namespace Server.Logic
 	{
 		readonly Connections Connections;
 		readonly Locks Locks;
+		Propagators Propagators;
 
-		public DeletingAnnouncement(Connections connections, Locks locks)
+		public DeletingAnnouncement(Connections connections, Locks locks, Propagators propagators)
 		{
 			Connections = connections;
 			Locks = locks;
+			Propagators = propagators;
 		}
 
 		public void Delete(DeleteAnnouncement request)
@@ -46,10 +48,10 @@ namespace Server.Logic
 				throw new ArgumentException("Invalid announcement");
 			}
 
-			Propagate(request);
 			connection.UpdateOnly(new Subscriber { LastAnnouncementId = announcement.Id },
 								  subscription => new { subscription.LastAnnouncementId },
 								  subscription => subscription.Id == subscriber.Id);
+			Propagators.ScheduleTopicOperation(request.TopicName, () => Propagate(request));
 		}
 
 		void Propagate(DeleteAnnouncement request)
