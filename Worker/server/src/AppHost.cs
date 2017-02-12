@@ -7,13 +7,15 @@ using System;
 using System.IO;
 using Server.Logic;
 using Server.Entities;
+using RestSharp;
+using System.Configuration;
 
 namespace Server
 {
     public class AppHost : AppHostHttpListenerBase
     {
 		readonly bool m_debugEnabled = true;
-		readonly QueuesAndTopics QueuesAndTopicsToRecover = new QueuesAndTopics();
+		QueuesAndTopics QueuesAndTopicsToRecover = new QueuesAndTopics();
 		readonly Locks Locks = new Locks();
 		readonly Connections Connections = new Connections();
 		readonly string ListenAddress;
@@ -80,7 +82,14 @@ namespace Server
 
 		void RequestQueuesAndTopicsList()
 		{
-			//TODO implement real request
+			var client = new RestClient(ConfigurationManager.AppSettings["CoordinatorAddress"]);
+			var request = new RestRequest(ConfigurationManager.AppSettings["QueuesAndTopicsPath"], Method.GET);
+			request.AddQueryParameter("WorkerId", ConfigurationManager.AppSettings["Id"]);
+			request.RequestFormat = DataFormat.Json;
+			var response = client.Execute(request);
+
+			var deserializer = new RestSharp.Deserializers.JsonDeserializer();
+			QueuesAndTopicsToRecover = deserializer.Deserialize<QueuesAndTopics>(response);
 		}
 
 		void LockAllQueuesToRecover()

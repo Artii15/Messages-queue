@@ -1,10 +1,11 @@
-﻿using System.Collections.Concurrent;
+﻿
+using System.Collections.Generic;
 
 namespace Server.Entities
 {
 	public class QueuesAndTopics
 	{
-		public ConcurrentDictionary<string, Queue> Queues { get; set; } = new ConcurrentDictionary<string, Queue>();
-		public ConcurrentDictionary<string, Topic> Topics { get; set; } = new ConcurrentDictionary<string, Topic>();
+		public Dictionary<string, Queue> Queues { get; set; } = new Dictionary<string, Queue>();
+		public Dictionary<string, Topic> Topics { get; set; } = new Dictionary<string, Topic>();
 	}
 }
