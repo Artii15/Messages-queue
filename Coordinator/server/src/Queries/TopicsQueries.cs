@@ -15,6 +15,11 @@ namespace Server
 			dbConnection.Insert(new Topic { Name = name, Worker = worker, Cooperator = coworker });
 		}
 
+		public static void DeleteTopic(IDbConnection dbConnection, string name)
+		{
+			dbConnection.Delete<Topic>(topic => topic.Name == name);
+		}
+
 		public static Topic getTopicByName(IDbConnection dbConnection, string topicName)
 		{
 			var exp = dbConnection.CreateExpression<Topic>().Where(topic => topic.Name == topicName);
