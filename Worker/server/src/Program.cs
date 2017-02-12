@@ -60,9 +60,7 @@ namespace Server
 
 		static void SendHeartbeat(RestClient client, RestRequest request)
 		{
-			Console.WriteLine("Trying to send");
 			client.Execute(request);
-			Console.WriteLine("sent");
 		}
     }
 }
