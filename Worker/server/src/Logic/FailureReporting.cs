@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Threading.Tasks;
 using RestSharp;
 using Server.Services.Failures.Queues;
 using Server.Services.Failures.Topics;
@@ -10,15 +9,17 @@ namespace Server.Logic
 	public class FailureReporting
 	{
 		Locks Locks;
+		Propagators Propagators;
 
-		public FailureReporting(Locks locks)
+		public FailureReporting(Locks locks, Propagators propagators)
 		{
 			Locks = locks;
+			Propagators = propagators;
 		}
 
 		public void Report(QueueFailure request)
 		{
-			HandleFailure(new FailureDescriptor 
+			var recoveryAction = HandleFailure(new FailureDescriptor 
 			{ 
 				PathToDbFile = Connections.PathToDbFile(Connections.QueuesDir, request.Name),
 				DbLock = Locks.TakeQueueLock(request.Name),
@@ -26,11 +27,12 @@ namespace Server.Logic
 				RecoveryCategory = "queues",
 				DbName = request.Name
 			});
+			Propagators.ScheduleQueueOperation(request.Name, recoveryAction);
 		}
 
 		public void Report(TopicFailure request)
 		{
-			HandleFailure(new FailureDescriptor
+			var recoveryAction = HandleFailure(new FailureDescriptor
 			{
 				PathToDbFile = Connections.PathToDbFile(Connections.TopicsDir, request.Name),
 				DbLock = Locks.TakeTopicLock(request.Name),
@@ -38,15 +40,17 @@ namespace Server.Logic
 				RecoveryCategory = "topics",
 				DbName = request.Name
 			});
+			Propagators.ScheduleTopicOperation(request.Name, recoveryAction);
 		}
 
-		void HandleFailure(FailureDescriptor failureDescriptor)
+		Action HandleFailure(FailureDescriptor failureDescriptor)
 		{
 			if (!File.Exists(failureDescriptor.PathToDbFile))
 			{
 				throw new ArgumentException();
 			}
-			Task.Factory.StartNew(() => 
+
+			return () => 
 			{
 				lock (failureDescriptor.DbLock)
 				{
@@ -57,7 +61,7 @@ namespace Server.Logic
 					request.AddFile("DatabaseFile", Path.GetFullPath(failureDescriptor.PathToDbFile));
 					client.Execute(request);
 				}
-			});
+			};
 		}
 	}
 
