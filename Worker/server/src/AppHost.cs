@@ -86,10 +86,9 @@ namespace Server
 			var request = new RestRequest(ConfigurationManager.AppSettings["QueuesAndTopicsPath"], Method.GET);
 			request.AddQueryParameter("WorkerId", ConfigurationManager.AppSettings["Id"]);
 			request.RequestFormat = DataFormat.Json;
-			var response = client.Execute(request);
-
 			var deserializer = new RestSharp.Deserializers.JsonDeserializer();
-			QueuesAndTopicsToRecover = deserializer.Deserialize<QueuesAndTopics>(response);
+
+			QueuesAndTopicsToRecover = deserializer.Deserialize<QueuesAndTopics>(client.Execute(request));
 		}
 
 		void LockAllQueuesToRecover()
