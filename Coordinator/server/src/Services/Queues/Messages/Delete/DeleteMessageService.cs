@@ -7,21 +7,21 @@ using System.Data;
 namespace Server
 {
 	[Authenticate]
-	public class DeleteQueueService : Service
+	public class DeleteMessageService : Service
 	{
-		readonly DeletingQueue DeletingQueue;
+		readonly DeletingMessage DeletingMessage;
 
-		public DeleteQueueService()
+		public DeleteMessageService()
 		{
-			DeletingQueue = new DeletingQueue(Db);
+			DeletingMessage = new DeletingMessage(Db);
 		}
 
-		public object Delete(DeleteQueue request)
+		public object Delete(DeleteMessage request)
 		{
 			IDbTransaction transaction = Db.OpenTransaction();
 			try
 			{
-				DeletingQueue.Delete(request);
+				DeletingMessage.Delete(request);
 			}
 			catch (QueueNotExistsException)
 			{
@@ -32,7 +32,7 @@ namespace Server
 				transaction.Commit();
 			}
 
-			return new HttpResult(new DeleteQueueResponse(), HttpStatusCode.NoContent);
+			return new HttpResult(new DeleteMessageResponse(), HttpStatusCode.NoContent);
 		}
 	}
 }
