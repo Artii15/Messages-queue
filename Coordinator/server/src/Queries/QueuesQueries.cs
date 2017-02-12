@@ -15,6 +15,11 @@ namespace Server
 			dbConnection.Insert(new Queue { Name = name, Worker = worker, Cooperator = coworker });
 		}
 
+		public static void DeleteQueue(IDbConnection dbConnection, string name)
+		{
+			dbConnection.Delete<Queue>(queue => queue.Name == name);
+		}
+
 		public static Queue getQueueByName(IDbConnection dbConnection, string queueName)
 		{
 			var exp = dbConnection.CreateExpression<Queue>().Where(queue => queue.Name == queueName);

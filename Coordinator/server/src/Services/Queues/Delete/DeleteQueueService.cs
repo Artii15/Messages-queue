@@ -7,6 +7,7 @@ using System.Data;
 
 namespace Server
 {
+	[Authenticate]
 	public class DeleteQueueService : Service
 	{
 		readonly DeletingQueue DeletingQueue;
@@ -16,7 +17,7 @@ namespace Server
 			DeletingQueue = new DeletingQueue(Db);
 		}
 
-		public object Post(CreateQueue request)
+		public object Delete(DeleteQueue request)
 		{
 			IDbTransaction transaction = Db.OpenTransaction();
 			try
@@ -25,7 +26,7 @@ namespace Server
 			}
 			catch (QueueNotExistsException)
 			{
-				return new HttpError(HttpStatusCode.NotFound, $"Queue {request.Name} not exists");
+				return new HttpError(HttpStatusCode.NotFound, $"Queue {request.QueueName} not exists");
 			}
 			finally
 			{
