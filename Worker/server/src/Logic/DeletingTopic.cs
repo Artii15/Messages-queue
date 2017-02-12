@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using RestSharp;
 using Server.Services.Topics.Delete;
 
@@ -18,8 +19,13 @@ namespace Server.Logic
 		public void Delete(DeleteTopic request)
 		{
 			var topicLock = Locks.TakeTopicLock(request.TopicName);
-			lock(topicLock)
+			lock (topicLock)
 			{
+				if (Locks.TopicsRecoveryLocks.ContainsKey(request.TopicName))
+				{
+					throw new Exception($"Topic {request.TopicName} is inconsistent");
+				}
+
 				Propagate(request);
 				Connections.RemoveTopic(request.TopicName);
 				Monitor.PulseAll(topicLock);

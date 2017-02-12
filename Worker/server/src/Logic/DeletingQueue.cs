@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using RestSharp;
 using Server.Services.Queues.Delete;
 
@@ -18,8 +19,13 @@ namespace Server.Logic
 		public void Delete(DeleteQueue request)
 		{
 			var queueLock = Locks.TakeQueueLock(request.QueueName);
-			lock(queueLock)
+			lock (queueLock)
 			{
+				if (Locks.QueuesRecoveryLocks.ContainsKey(request.QueueName))
+				{
+					throw new Exception($"Queue {request.QueueName} is inconsistent");
+				}
+
 				Propagate(request);
 				Connections.RemoveQueue(request.QueueName);
 				Monitor.PulseAll(queueLock);

@@ -20,27 +20,25 @@ namespace Server.Logic
 
 		public QueueMessage ReadNextFrom(string queueName)
 		{
-			var connection = Connections.ConnectToInitializedQueue(queueName);
-			var queueLock = Locks.TakeQueueLock(queueName);
-			var message = ReadMessage(connection, queueLock);
-			connection.Close();
-
-			return message;
+			using (var connection = Connections.ConnectToInitializedQueue(queueName))
+			{
+				return ReadMessage(connection, Locks.TakeQueueLock(queueName));
+			}
 		}
 
 		QueueMessage ReadMessage(IDbConnection connection, object queueLock)
 		{
-			Monitor.Enter(queueLock);
-
-			var messageToReturn = ReadFromDb(connection);
-			while (messageToReturn == null)
+			lock (queueLock)
 			{
-				Monitor.Wait(queueLock);
-				messageToReturn = ReadFromDb(connection);
-			}
-			Monitor.Exit(queueLock);
+				var messageToReturn = ReadFromDb(connection);
+				while (messageToReturn == null)
+				{
+					Monitor.Wait(queueLock);
+					messageToReturn = ReadFromDb(connection);
+				}
 
-			return messageToReturn;
+				return messageToReturn;
+			}
 		}
 
 		QueueMessage ReadFromDb(IDbConnection connection)
