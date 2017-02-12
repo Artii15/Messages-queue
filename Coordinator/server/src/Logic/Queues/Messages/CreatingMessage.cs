@@ -40,8 +40,7 @@ namespace Server
 			client.Timeout = TIMEOUT;
 			var requestToSend = new RestRequest($"queues/{request.QueueName}/messages", Method.POST);
 			requestToSend.AddParameter("Content", request.Content);
-			if(coworker.Alive)
-				requestToSend.AddParameter("Cooperator", coworker.Address);
+			requestToSend.AddParameter("Cooperator", coworker.Address);
 			return client.Execute(requestToSend);
 		}
 

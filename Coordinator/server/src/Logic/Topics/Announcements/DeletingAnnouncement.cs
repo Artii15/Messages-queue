@@ -41,8 +41,7 @@ namespace Server
 			client.Timeout = TIMEOUT;
 			var requestToSend = new RestRequest($"/topics/{request.TopicName}/announcements/{request.AnnouncementId}", Method.DELETE);
 			requestToSend.AddParameter("SubscriberId", subscriberId);
-			if (coworker.Alive)
-				requestToSend.AddParameter("Cooperator", coworker.Address);
+			requestToSend.AddParameter("Cooperator", coworker.Address);
 			return client.Execute(requestToSend);
 		}
 

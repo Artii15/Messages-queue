@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using ServiceStack.OrmLite;
 
 namespace Server
@@ -12,33 +13,31 @@ namespace Server
 			DBConnection = dbConnection;
 		}
 
-		public void Register(RegisterWorker request)
+		public void Register(WorkerHeartbeat request)
 		{
 			using (IDbTransaction transaction = DBConnection.OpenTransaction())
 			{
-				if (request.Id == null)
-					AddNewWorker(request.Address);
+				if (!WorkerQueries.WorkerExists(DBConnection, request.Id))
+					AddNewWorker(request);
 				else
 					Revive(request);
 				transaction.Commit();
 			}
 		}
 
-		void Revive(RegisterWorker request)
+		void Revive(WorkerHeartbeat request)
 		{
-			if (WorkerQueries.WorkerExists(DBConnection, request.Id.Value))
-				WorkerQueries.ReviveWorker(DBConnection, request);
-			else
-				AddNewWorker(request.Address);
-
+			WorkerQueries.ReviveWorker(DBConnection, request);
 		}
 
-		void AddNewWorker(string address)
+		void AddNewWorker(WorkerHeartbeat request)
 		{
 			var worker = new Worker()
 			{
-				Address = address,
-				Alive = true
+				Id = request.Id,
+				Address = request.Address,
+				Alive = true,
+				LastHeartbeat = DateTime.UtcNow
 			};
 			WorkerQueries.AddNewWorker(DBConnection, worker);
 		}

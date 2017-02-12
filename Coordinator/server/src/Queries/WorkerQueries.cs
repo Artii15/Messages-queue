@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using ServiceStack.OrmLite;
 
 namespace Server
@@ -37,9 +38,9 @@ namespace Server
 			dbConnection.Insert(worker);
 		}
 
-		public static void ReviveWorker(IDbConnection dbConnection, RegisterWorker request)
+		public static void ReviveWorker(IDbConnection dbConnection, WorkerHeartbeat request)
 		{
-			dbConnection.Update(new Worker { Id = request.Id.Value, Address = request.Address, Alive = true },
+			dbConnection.Update(new Worker { Id = request.Id, Address = request.Address, Alive = true, LastHeartbeat = DateTime.UtcNow },
 									w => w.Id == request.Id);
 		}
 

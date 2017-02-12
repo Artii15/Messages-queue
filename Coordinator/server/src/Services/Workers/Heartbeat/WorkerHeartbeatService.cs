@@ -5,20 +5,20 @@ using System.Net;
 
 namespace Server
 {
-	public class RegisterWorkerService : Service
+	public class WorkerHeartbeatService : Service
 	{
 		readonly RegisteringWorker RegisteringWorker;
 
-		public RegisterWorkerService()
+		public WorkerHeartbeatService()
 		{
 			RegisteringWorker = new RegisteringWorker(Db);
 			Db.CreateTableIfNotExists<Worker>();
 		}
 
-		public object Post(RegisterWorker request)
+		public object Post(WorkerHeartbeat request)
 		{
 			RegisteringWorker.Register(request);
-			return new HttpResult(new RegisterWorkerResponse(), HttpStatusCode.Created);
+			return new HttpResult(new WorkerHeartbeatResponse(), HttpStatusCode.Created);
 		}
 	}
 }

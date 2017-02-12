@@ -40,8 +40,7 @@ namespace Server
 			var client = new RestClient($"http://{worker.Address}");
 			client.Timeout = TIMEOUT;
 			var requestToSend = new RestRequest($"/queues/{request.QueueName}/messages/{request.MessageId}", Method.DELETE);
-			if (coworker.Alive)
-				requestToSend.AddParameter("Cooperator", coworker.Address);
+			requestToSend.AddParameter("Cooperator", coworker.Address);
 			return client.Execute(requestToSend);
 		}
 

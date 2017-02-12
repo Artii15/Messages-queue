@@ -2,11 +2,11 @@
 
 namespace Server
 {
-	[Route("/workers", "post")]
+	[Route("/workers/heartbeat", "post")]
 	[Restrict(InternalOnly = true)]
-	public class RegisterWorker
+	public class WorkerHeartbeat
 	{
-		public int? Id { get; set; }
+		public int Id { get; set; }
 		public string Address { get; set; }
 	}
 }
