@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Text.RegularExpressions;
 using System.Timers;
 
@@ -43,7 +44,7 @@ namespace Server
 
 		static void BeginHeartbeat()
 		{
-			var heartbeatInterval = 10000; //TODO read interval from config or env variable
+			var heartbeatInterval = double.Parse(ConfigurationManager.AppSettings["HeartbeatInterval"]);
 			var timer = new Timer(heartbeatInterval);
 			timer.AutoReset = true;
 			timer.Elapsed += (sender, e) => SendHeartbeat();
