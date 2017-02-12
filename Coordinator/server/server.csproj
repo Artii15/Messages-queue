@@ -137,6 +137,10 @@
     <Compile Include="src\Services\Topics\Delete\DeleteTopic.cs" />
     <Compile Include="src\Services\Topics\Delete\DeleteTopicResponse.cs" />
     <Compile Include="src\Services\Topics\Delete\DeleteTopicService.cs" />
+    <Compile Include="src\Logic\Topics\Announcements\CreatingAnnouncement.cs" />
+    <Compile Include="src\Services\Topics\Announcements\Create\CreateAnnouncement.cs" />
+    <Compile Include="src\Services\Topics\Announcements\Create\CreateAnnouncementResponse.cs" />
+    <Compile Include="src\Services\Topics\Announcements\Create\CreateAnnouncementService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -170,6 +174,11 @@
     <Folder Include="src\Services\Queues\Delete\" />
     <Folder Include="src\Services\Queues\Messages\Delete\" />
     <Folder Include="src\Services\Topics\Delete\" />
+    <Folder Include="src\Services\Topics\Announcements\" />
+    <Folder Include="src\Logic\Topics\Announcements\" />
+    <Folder Include="src\Services\Topics\Announcements\Create\" />
+    <Folder Include="src\Services\Topics\Announcements\Get\" />
+    <Folder Include="src\Services\Topics\Announcements\Delete\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
