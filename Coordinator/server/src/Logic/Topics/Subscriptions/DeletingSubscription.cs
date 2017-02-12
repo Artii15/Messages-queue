@@ -41,7 +41,8 @@ namespace Server
 			var client = new RestClient($"http://{worker.Address}");
 			client.Timeout = TIMEOUT;
 			var requestToSend = new RestRequest($"topics/{request.TopicName}/subscriptions/{subscriberId}", Method.DELETE);
-			requestToSend.AddParameter("Cooperator", coworker.Address);
+			if (coworker.Alive)
+				requestToSend.AddParameter("Cooperator", coworker.Address);
 			return client.Execute(requestToSend);
 		}
 

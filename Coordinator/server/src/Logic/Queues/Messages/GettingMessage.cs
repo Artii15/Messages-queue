@@ -43,7 +43,6 @@ namespace Server
 			var client = new RestClient($"http://{worker.Address}");
 			client.Timeout = TIMEOUT;
 			var requestToSend = new RestRequest($"queues/{request.QueueName}/messages", Method.GET);
-			requestToSend.AddParameter("Cooperator", coworker.Address);
 			return client.Execute<Message>(requestToSend);
 		}
 
