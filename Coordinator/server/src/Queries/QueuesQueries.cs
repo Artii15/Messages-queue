@@ -26,6 +26,7 @@ namespace Server
 			var exp = dbConnection.CreateExpression<Queue>().Where(queue => queue.Name == queueName);
 			return dbConnection.FirstOrDefault(exp);
 		}
+
 		public static List<string> getQueuesNames(IDbConnection dbConnection)
 		{
 			return new List<string>(dbConnection.List<string>("select Name from Queue"));

@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System.Collections.Generic;
+using System.Data;
 using ServiceStack.OrmLite;
 
 namespace Server
@@ -24,6 +25,11 @@ namespace Server
 		{
 			var exp = dbConnection.CreateExpression<Topic>().Where(topic => topic.Name == topicName);
 			return dbConnection.FirstOrDefault(exp);
+		}
+
+		public static List<string> getTopicsNames(IDbConnection dbConnection)
+		{
+			return new List<string>(dbConnection.List<string>("select Name from Topic"));
 		}
 	}
 }

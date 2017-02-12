@@ -15,6 +15,7 @@ namespace Server
 
 		public IList<String> Get()
 		{
+			return TopicsQueries.getTopicsNames(DBConnection);
 		}
 	}
 }
