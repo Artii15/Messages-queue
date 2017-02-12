@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace Server
@@ -14,6 +15,7 @@ namespace Server
 
 		public IList<String> Get()
 		{
+			return QueuesQueries.getQueuesNames(DBConnection);
 		}
 	}
 }
