@@ -65,19 +65,21 @@ namespace Server
 			LockAllQueuesToRecover();
 			LockAllTopicsToRecover();
 
-			container.Register(new CreatingQueue(Connections, Locks));
-			container.Register(new CreatingMessage(Connections, Locks));
+			var propagators = new Propagators();
+
+			container.Register(new CreatingQueue(Connections, Locks, propagators));
+			container.Register(new CreatingMessage(Connections, Locks, propagators));
 			container.Register(new ReadingMessage(Connections, Locks));
-			container.Register(new DeletingMessage(Connections, Locks));
-			container.Register(new CreatingTopic(Connections, Locks));
-			container.Register(new CreatingAnnouncement(Connections, Locks));
+			container.Register(new DeletingMessage(Connections, Locks, propagators));
+			container.Register(new CreatingTopic(Connections, Locks, propagators));
+			container.Register(new CreatingAnnouncement(Connections, Locks, propagators));
 			container.Register(new ReadingAnnouncement(Connections, Locks));
-			container.Register(new CreatingSubscription(Connections, Locks));
-			container.Register(new DeletingAnnouncement(Connections, Locks));
-			container.Register(new DeletingSubscription(Connections, Locks));
-			container.Register(new DeletingQueue(Connections, Locks));
-			container.Register(new DeletingTopic(Connections, Locks));
-			container.Register(new FailureReporting(Locks));
+			container.Register(new CreatingSubscription(Connections, Locks, propagators));
+			container.Register(new DeletingAnnouncement(Connections, Locks, propagators));
+			container.Register(new DeletingSubscription(Connections, Locks, propagators));
+			container.Register(new DeletingQueue(Connections, Locks, propagators));
+			container.Register(new DeletingTopic(Connections, Locks, propagators));
+			container.Register(new FailureReporting(Locks, propagators));
 		}
 
 		void RequestQueuesAndTopicsList()

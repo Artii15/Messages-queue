@@ -12,11 +12,13 @@ namespace Server.Logic
 	{
 		readonly Connections Connections;
 		Locks Locks;
+		Propagators Propagators;
 
-		public DeletingMessage(Connections connections, Locks locks)
+		public DeletingMessage(Connections connections, Locks locks, Propagators propagators)
 		{
 			Connections = connections;
 			Locks = locks;
+			Propagators = propagators;
 		}
 
 		public void Delete(DeleteMessage request)
@@ -61,9 +63,9 @@ namespace Server.Logic
 			{
 				throw new ArgumentException("Provided message was not first in queue");
 			}
-			PropagateRequest(request);
 			firstMessageInQueue.Readed = true;
 			connection.Update(firstMessageInQueue);
+			Propagators.ScheduleQueueOperation(request.QueueName, () => PropagateRequest(request));
 		}
 
 		void PropagateRequest(DeleteMessage request)

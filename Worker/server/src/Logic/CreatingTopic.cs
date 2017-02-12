@@ -10,11 +10,13 @@ namespace Server.Logic
 	{
 		readonly Connections Connections;
 		readonly Locks Locks;
+		Propagators Propagators;
 
-		public CreatingTopic(Connections connections, Locks locks)
+		public CreatingTopic(Connections connections, Locks locks, Propagators propagators)
 		{
 			Connections = connections;
 			Locks = locks;
+			Propagators = propagators;
 		}
 
 		public void Create(CreateTopic request)
@@ -27,15 +29,15 @@ namespace Server.Logic
 					throw new Exception($"Topic {request.Name} is inconsistent");
 				}
 
-				if (!string.IsNullOrEmpty(request.Cooperator))
-				{
-					PropagateRequest(request);
-				}
-
 				using (var connection = Connections.ConnectToTopic(request.Name))
 				{
 					connection.CreateTableIfNotExists<Announcement>();
 					connection.CreateTableIfNotExists<Subscriber>();
+				}
+
+				if (!string.IsNullOrEmpty(request.Cooperator))
+				{
+					Propagators.ScheduleTopicOperation(request.Name, () => PropagateRequest(request));
 				}
 			}
 		}

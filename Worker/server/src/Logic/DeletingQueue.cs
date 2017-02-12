@@ -9,11 +9,13 @@ namespace Server.Logic
 	{
 		readonly Connections Connections;
 		readonly Locks Locks;
+		Propagators Propagators;
 
-		public DeletingQueue(Connections connections, Locks locks)
+		public DeletingQueue(Connections connections, Locks locks, Propagators propagators)
 		{
 			Connections = connections;
 			Locks = locks;
+			Propagators = propagators;
 		}
 
 		public void Delete(DeleteQueue request)
@@ -26,9 +28,9 @@ namespace Server.Logic
 					throw new Exception($"Queue {request.QueueName} is inconsistent");
 				}
 
-				Propagate(request);
 				Connections.RemoveQueue(request.QueueName);
 				Monitor.PulseAll(queueLock);
+				Propagators.ScheduleQueueOperation(request.QueueName, () => Propagate(request));
 				Locks.RemoveQueueLock(request.QueueName);
 			}
 		}

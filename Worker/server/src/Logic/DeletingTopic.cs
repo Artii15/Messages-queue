@@ -9,11 +9,13 @@ namespace Server.Logic
 	{
 		Connections Connections;
 		Locks Locks;
+		Propagators Propagators;
 
-		public DeletingTopic(Connections connections, Locks locks)
+		public DeletingTopic(Connections connections, Locks locks, Propagators propagators)
 		{
 			Connections = connections;
 			Locks = locks;
+			Propagators = propagators;
 		}
 
 		public void Delete(DeleteTopic request)
@@ -26,9 +28,9 @@ namespace Server.Logic
 					throw new Exception($"Topic {request.TopicName} is inconsistent");
 				}
 
-				Propagate(request);
 				Connections.RemoveTopic(request.TopicName);
 				Monitor.PulseAll(topicLock);
+				Propagators.ScheduleTopicOperation(request.TopicName, () => Propagate(request));
 				Locks.RemoveTopicLock(request.TopicName);
 			}
 		}

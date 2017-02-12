@@ -12,11 +12,13 @@ namespace Server.Logic
 	{
 		readonly Connections Connections;
 		readonly Locks Locks;
+		readonly Propagators Propagators;
 
-		public CreatingAnnouncement(Connections connections, Locks locks)
+		public CreatingAnnouncement(Connections connections, Locks locks, Propagators propagators)
 		{
 			Connections = connections;
 			Locks = locks;
+			Propagators = propagators;
 		}
 
 		public void Create(CreateAnnouncement request)
@@ -40,12 +42,12 @@ namespace Server.Logic
 		void Create(IDbConnection connection, CreateAnnouncement request)
 		{
 			var announcement = new Announcement { Content = request.Content, CreationTime = DateTime.UtcNow };
+			connection.Insert(announcement);
 			if (!string.IsNullOrEmpty(request.Cooperator))
 			{
 				request.CreationTime = announcement.CreationTime;
-				PropagateToCo(request);
+				Propagators.ScheduleTopicOperation(request.TopicName, () => PropagateToCo(request));
 			}
-			connection.Insert(announcement);
 		}
 
 		void PropagateToCo(CreateAnnouncement request)
