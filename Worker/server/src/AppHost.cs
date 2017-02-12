@@ -87,8 +87,11 @@ namespace Server
 			request.AddQueryParameter("WorkerId", ConfigurationManager.AppSettings["Id"]);
 			request.RequestFormat = DataFormat.Json;
 			var deserializer = new RestSharp.Deserializers.JsonDeserializer();
-
-			QueuesAndTopicsToRecover = deserializer.Deserialize<QueuesAndTopics>(client.Execute(request));
+			var response = client.Execute(request);
+			if (response.StatusCode == System.Net.HttpStatusCode.OK)
+			{
+				QueuesAndTopicsToRecover = deserializer.Deserialize<QueuesAndTopics>(response);
+			}
 		}
 
 		void LockAllQueuesToRecover()
