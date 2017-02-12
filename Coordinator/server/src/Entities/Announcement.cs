@@ -2,7 +2,7 @@
 {
 	public class Announcement
 	{
-		public int Id { get; set; }
+		public int AnnouncementId { get; set; }
 		public string Content { get; set; }
 	}
 }

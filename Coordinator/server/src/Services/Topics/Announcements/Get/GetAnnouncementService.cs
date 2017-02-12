@@ -30,7 +30,7 @@ namespace Server
 
 			return new GetAnnouncementResponse()
 			{
-				Id = announcement.Id,
+				Id = announcement.AnnouncementId,
 				Content = announcement.Content
 			};
 		}
