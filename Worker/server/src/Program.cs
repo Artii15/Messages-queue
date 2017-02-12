@@ -2,6 +2,7 @@
 using System.Configuration;
 using System.Text.RegularExpressions;
 using System.Timers;
+using RestSharp;
 
 namespace Server
 {
@@ -34,7 +35,7 @@ namespace Server
             appHost.Init ();            
 			appHost.Start (listenAddress);
 			appHost.BeginRecovery();
-			BeginHeartbeat();
+			BeginHeartbeat(listenAddress);
 
 			Console.WriteLine ("AppHost Created at {0}, listening on {1}", DateTime.Now, listenAddress);
 			Console.WriteLine("Press <ENTER> key to exit...");
@@ -42,20 +43,24 @@ namespace Server
 			appHost.Stop();
         }
 
-		static void BeginHeartbeat()
+		static void BeginHeartbeat(string ownAddress)
 		{
+			var heartbeatClient = new RestClient(ConfigurationManager.AppSettings["CoordinatorAddress"]);
+			var heartbeatRequest = new RestRequest(ConfigurationManager.AppSettings["HeartbeatPath"], Method.POST);
+			heartbeatRequest.RequestFormat = DataFormat.Json;
+			heartbeatRequest.AddJsonBody(new { Address = ownAddress, Id = int.Parse(ConfigurationManager.AppSettings["Id"]) });
+
 			var heartbeatInterval = double.Parse(ConfigurationManager.AppSettings["HeartbeatInterval"]);
 			var timer = new Timer(heartbeatInterval);
 			timer.AutoReset = true;
-			timer.Elapsed += (sender, e) => SendHeartbeat();
-			SendHeartbeat();
+			timer.Elapsed += (sender, e) => SendHeartbeat(heartbeatClient, heartbeatRequest);
+			SendHeartbeat(heartbeatClient, heartbeatRequest);
 			timer.Start();
 		}
 
-		static void SendHeartbeat()
+		static void SendHeartbeat(RestClient client, RestRequest request)
 		{
-			//TODO Implement heartbeat sending here
-			Console.WriteLine("heartbeat");
+			client.Execute(request);
 		}
     }
 }
