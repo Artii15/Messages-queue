@@ -12,11 +12,13 @@ namespace Server.Logic
 	{
 		readonly Connections Connections;
 		readonly Locks Locks;
+		readonly Propagators Propagators;
 
-		public CreatingMessage(Connections connections, Locks locks)
+		public CreatingMessage(Connections connections, Locks locks, Propagators propagators)
 		{
 			Connections = connections;
 			Locks = locks;
+			Propagators = propagators;
 		}
 
 		public void Create(CreateMessage request)
@@ -39,16 +41,15 @@ namespace Server.Logic
 
 		void Create(IDbConnection connection, CreateMessage request)
 		{
-			if (!string.IsNullOrEmpty(request.Cooperator))
-			{
-				PropagateRequest(request);
-			}
-
 			connection.Insert(new QueueMessage
 			{
 				Content = request.Content,
 				Readed = false
 			});
+			if (!string.IsNullOrEmpty(request.Cooperator))
+			{
+				Propagators.ScheduleQueueOperation(request.QueueName, () => PropagateRequest(request));
+			}
 		}
 
 		void PropagateRequest(CreateMessage request)
