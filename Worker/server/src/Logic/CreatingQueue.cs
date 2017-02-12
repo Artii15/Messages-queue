@@ -10,11 +10,13 @@ namespace Server.Logic
 	{
 		Connections Connections;
 		Locks Locks;
+		Propagators Propagators;
 
-		public CreatingQueue(Connections connections, Locks locks)
+		public CreatingQueue(Connections connections, Locks locks, Propagators propagators)
 		{
 			Connections = connections;
 			Locks = locks;
+			Propagators = propagators;
 		}
 
 		public void Create(CreateQueue request)
@@ -27,11 +29,11 @@ namespace Server.Logic
 					throw new Exception($"Queue {request.Name} is inconsistent");
 				}
 
+				CreateQueueFile(request.Name);
 				if (!string.IsNullOrEmpty(request.Cooperator))
 				{
-					PropagateRequestToCo(request);
+					Propagators.ScheduleQueueOperation(request.Name, () => PropagateRequestToCo(request));
 				}
-				CreateQueueFile(request.Name);
 			}
 		}
 
