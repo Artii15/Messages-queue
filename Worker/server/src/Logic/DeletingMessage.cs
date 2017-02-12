@@ -1,5 +1,4 @@
 ﻿using System.Data;
-using System.Threading;
 using Server.Queries;
 using ServiceStack.OrmLite;
 using System;
@@ -22,19 +21,25 @@ namespace Server.Logic
 
 		public void Delete(DeleteMessage request)
 		{
-			var connection = Connections.ConnectToInitializedQueue(request.QueueName);
 			var queueLock = Locks.TakeQueueLock(request.QueueName);
-
-			Monitor.Enter(queueLock);
-
-			var onDeleteCallback = IsDeleteDecisionImposedByCooperator(request)
-				? ForceDelete(connection, request)
-				: TryDelete(connection, request);
-
-			Monitor.Exit(queueLock);
-			connection.Close();
-
-			onDeleteCallback();
+			lock (queueLock)
+			{
+				if (Locks.QueuesRecoveryLocks.ContainsKey(request.QueueName))
+				{
+					throw new Exception($"Queue {request.QueueName} is inconsistent");
+				}
+				using (var connection = Connections.ConnectToInitializedQueue(request.QueueName))
+				{
+					if (IsDeleteDecisionImposedByCooperator(request))
+					{
+						ForceDelete(connection, request);
+					}
+					else
+					{
+						TryDelete(connection, request);
+					}
+				}
+			}
 		}
 
 		bool IsDeleteDecisionImposedByCooperator(DeleteMessage request)
@@ -42,24 +47,23 @@ namespace Server.Logic
 			return string.IsNullOrEmpty(request.Cooperator);
 		}
 
-		Action ForceDelete(IDbConnection connection, DeleteMessage request)
+		void ForceDelete(IDbConnection connection, DeleteMessage request)
 		{
 			connection.UpdateOnly(new QueueMessage { Readed = true },
 			                      message => new { message.Readed },
 			                      message => message.Id == request.MessageId);
-			return () => { };
 		}
 
-		Action TryDelete(IDbConnection connection, DeleteMessage request)
+		void TryDelete(IDbConnection connection, DeleteMessage request)
 		{
 			var firstMessageInQueue = connection.FirstOrDefault(FirstMessageQuery.make(connection));
-			if (firstMessageInQueue != null && firstMessageInQueue.Id == request.MessageId)
+			if (firstMessageInQueue == null || firstMessageInQueue.Id != request.MessageId)
 			{
-				firstMessageInQueue.Readed = true;
-				connection.Update(firstMessageInQueue);
-				return () => PropagateRequest(request);
+				throw new ArgumentException("Provided message was not first in queue");
 			}
-			return () => { throw new ArgumentException("Provided message was not first in queue"); };
+			PropagateRequest(request);
+			firstMessageInQueue.Readed = true;
+			connection.Update(firstMessageInQueue);
 		}
 
 		void PropagateRequest(DeleteMessage request)

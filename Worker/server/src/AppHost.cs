@@ -71,7 +71,7 @@ namespace Server
 			container.Register(new CreatingAnnouncement(Connections, Locks));
 			container.Register(new ReadingAnnouncement(Connections, Locks));
 			container.Register(new CreatingSubscription(Connections, Locks));
-			container.Register(new DeletingAnnouncement(Connections));
+			container.Register(new DeletingAnnouncement(Connections, Locks));
 			container.Register(new DeletingSubscription(Connections));
 			container.Register(new DeletingQueue(Connections, Locks));
 			container.Register(new DeletingTopic(Connections, Locks));
