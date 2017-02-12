@@ -86,11 +86,10 @@ namespace Server
 			var request = new RestRequest(ConfigurationManager.AppSettings["QueuesAndTopicsPath"], Method.GET);
 			request.AddQueryParameter("WorkerId", ConfigurationManager.AppSettings["Id"]);
 			request.RequestFormat = DataFormat.Json;
-			var deserializer = new RestSharp.Deserializers.JsonDeserializer();
-			var response = client.Execute(request);
+			var response = client.Execute<QueuesAndTopics>(request);
 			if (response.StatusCode == System.Net.HttpStatusCode.OK)
 			{
-				QueuesAndTopicsToRecover = deserializer.Deserialize<QueuesAndTopics>(response);
+				QueuesAndTopicsToRecover = response.Data;
 			}
 		}
 

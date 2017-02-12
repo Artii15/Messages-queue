@@ -163,6 +163,7 @@
     <Compile Include="src\Services\Databases\Topics\TopicDatabaseService.cs" />
     <Compile Include="src\Services\Databases\Topics\TopicDatabaseResponse.cs" />
     <Compile Include="src\Logic\DatabaseRecovery.cs" />
+    <Compile Include="src\Logic\Propagators.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
