@@ -11,11 +11,13 @@ namespace Server.Logic
 	{
 		readonly Connections Connections;
 		Locks Locks;
+		Propagators Propagators;
 
-		public CreatingSubscription(Connections connections, Locks locks)
+		public CreatingSubscription(Connections connections, Locks locks, Propagators propagators)
 		{
 			Connections = connections;
 			Locks = locks;
+			Propagators = propagators;
 		}
 
 		public void Create(CreateSubscription request)
@@ -43,14 +45,13 @@ namespace Server.Logic
 				LastAnnouncementId = null,
 				Id = request.SubscriberId
 			};
+			connection.Insert(subscriber);
 
 			if (!string.IsNullOrEmpty(request.Cooperator))
 			{
 				request.CreationTime = subscriber.CreationTime;
-				PropagateRequest(request);
+				Propagators.ScheduleTopicOperation(request.TopicName, () => PropagateRequest(request));
 			}
-
-			connection.Insert(subscriber);
 		}
 
 		void PropagateRequest(CreateSubscription request)
