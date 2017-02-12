@@ -43,8 +43,7 @@ namespace Server
 			var requestToSend = new RestRequest($"/topics/{request.TopicName}/announcements", Method.POST);
 			requestToSend.AddParameter("Content", request.Content);
 			requestToSend.AddParameter("CreationTime", DateTime.UtcNow);
-			if (coworker.Alive)
-				requestToSend.AddParameter("Cooperator", coworker.Address);
+			requestToSend.AddParameter("Cooperator", coworker.Address);
 			return client.Execute(requestToSend);
 		}
 

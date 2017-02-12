@@ -51,8 +51,7 @@ namespace Server
 			client.Timeout = TIMEOUT;
 			var requestToSend = new RestRequest("queues", Method.POST);
 			requestToSend.AddParameter("Name", request.Name);
-			if(coworker.Alive)
-				requestToSend.AddParameter("Cooperator", coworker.Address);
+			requestToSend.AddParameter("Cooperator", coworker.Address);
 			return client.Execute(requestToSend);
 		}
 
