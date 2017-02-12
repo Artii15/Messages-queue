@@ -3,6 +3,7 @@ using ServiceStack.OrmLite;
 using ServiceStack.ServiceInterface;
 using System.Net;
 using System.Data;
+using ServiceStack.Common;
 
 namespace Server
 {
@@ -21,7 +22,8 @@ namespace Server
 			IDbTransaction transaction = Db.OpenTransaction();
 			try
 			{
-				DeletingAnnouncement.Delete(request);
+				var subscriberId = this.GetSession().UserAuthId.ToInt();
+				DeletingAnnouncement.Delete(request, subscriberId);
 			}
 			catch (TopicNotExistsException)
 			{
