@@ -154,6 +154,10 @@
     <Compile Include="src\Services\Queues\Get\GetQueues.cs" />
     <Compile Include="src\Services\Queues\Get\GetQueuesResponse.cs" />
     <Compile Include="src\Services\Queues\Get\GetQueuesService.cs" />
+    <Compile Include="src\Logic\Topics\GettingTopics.cs" />
+    <Compile Include="src\Services\Topics\Get\GetTopics.cs" />
+    <Compile Include="src\Services\Topics\Get\GetTopicsResponse.cs" />
+    <Compile Include="src\Services\Topics\Get\GetTopicsService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -193,6 +197,7 @@
     <Folder Include="src\Services\Topics\Announcements\Get\" />
     <Folder Include="src\Services\Topics\Announcements\Delete\" />
     <Folder Include="src\Services\Queues\Get\" />
+    <Folder Include="src\Services\Topics\Get\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
