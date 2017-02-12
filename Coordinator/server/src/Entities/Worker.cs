@@ -1,4 +1,5 @@
-﻿using ServiceStack.DataAnnotations;
+﻿using System;
+using ServiceStack.DataAnnotations;
 
 namespace Server
 {
@@ -8,5 +9,6 @@ namespace Server
 		public long Id { get; set; }
 		public string Address { get; set; }
 		public bool Alive { get; set; }
+		public DateTime LastHeartbeat { get; set; }
 	}
 }
