@@ -145,6 +145,11 @@
     <Compile Include="src\Services\Topics\Announcements\Delete\DeleteAnnouncement.cs" />
     <Compile Include="src\Services\Topics\Announcements\Delete\DeleteAnnouncementResponse.cs" />
     <Compile Include="src\Services\Topics\Announcements\Delete\DeleteAnnouncementService.cs" />
+    <Compile Include="src\Logic\Topics\Announcements\GettingAnnouncement.cs" />
+    <Compile Include="src\Entities\Announcement.cs" />
+    <Compile Include="src\Services\Topics\Announcements\Get\GetAnnouncement.cs" />
+    <Compile Include="src\Services\Topics\Announcements\Get\GetAnnouncementResponse.cs" />
+    <Compile Include="src\Services\Topics\Announcements\Get\GetAnnouncementService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

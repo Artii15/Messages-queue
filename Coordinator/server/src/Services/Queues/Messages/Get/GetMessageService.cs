@@ -1,7 +1,6 @@
 ﻿using ServiceStack.Common.Web;
 using ServiceStack.ServiceInterface;
 using System.Net;
-using System;
 
 namespace Server
 {
