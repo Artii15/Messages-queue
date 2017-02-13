@@ -24,7 +24,7 @@ namespace Server
 				var coworker = WorkerQueries.GetWorkerById(DBConnection, queue.Cooperator);
 
 				QueuesQueries.DeleteQueue(DBConnection, request.QueueName);
-				if (worker.Alive)
+				if (WorkerQueries.IsWorkerAlive(DBConnection, worker.Id))
 				{
 					var response = PropagateRequest(request, worker, coworker);
 					if (response.ResponseStatus == ResponseStatus.TimedOut ||

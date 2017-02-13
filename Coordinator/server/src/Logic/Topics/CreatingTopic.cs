@@ -23,14 +23,15 @@ namespace Server
 				Worker worker, coworker;
 				CalculateTopicWorkers(request.Name, out worker, out coworker);
 				TopicsQueries.CreateTopic(DBConnection, request.Name, worker.Id, coworker.Id);
-				if (worker.Alive)
+
+				if (WorkerQueries.IsWorkerAlive(DBConnection, worker.Id))
 				{
 					var response = PropagateRequest(request, worker, coworker);
 					if (response.ResponseStatus == ResponseStatus.TimedOut ||
 						response.ResponseStatus == ResponseStatus.Error)
 						PropagateRequestToCoworker(request, coworker);
 				}
-				else
+				else 
 					PropagateRequestToCoworker(request, coworker);
 			}
 		}

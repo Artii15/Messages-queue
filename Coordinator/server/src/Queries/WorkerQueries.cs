@@ -6,6 +6,8 @@ namespace Server
 {
 	public static class WorkerQueries
 	{
+		static readonly double HeartBeatThreshold = 12; //seconds
+
 		public static long GetWorkersCount(IDbConnection dbConnection)
 		{
 			return dbConnection.Count<Worker>();
@@ -29,8 +31,21 @@ namespace Server
 		public static bool IsWorkerAlive(IDbConnection dbConnection, long id)
 		{
 			var exp = dbConnection.CreateExpression<Worker>()
-			                      .Where(worker => worker.Id == id);
-			return dbConnection.FirstOrDefault(exp).Alive;
+			                      .Where(w => w.Id == id);
+			var worker = dbConnection.FirstOrDefault(exp);
+			if (worker.LastHeartbeat.AddSeconds(HeartBeatThreshold) >= DateTime.UtcNow)
+				return true;
+			else
+			{
+				updateWorkerLiveliness(dbConnection, worker);
+				return false;
+			}
+		}
+
+		static void updateWorkerLiveliness(IDbConnection dbConnection, Worker worker)
+		{
+			dbConnection.Update(new Worker { Id = worker.Id, Address = worker.Address, Alive = false, LastHeartbeat = worker.LastHeartbeat },
+									w => w.Id == worker.Id);
 		}
 
 		public static void AddNewWorker(IDbConnection dbConnection, Worker worker)

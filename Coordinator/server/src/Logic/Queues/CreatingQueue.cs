@@ -23,7 +23,8 @@ namespace Server
 				Worker worker, coworker;
 				CalculateQueueWorkers(request.Name, out worker, out coworker);
 				QueuesQueries.CreateQueue(DBConnection, request.Name, worker.Id, coworker.Id);
-				if (worker.Alive)
+
+				if (WorkerQueries.IsWorkerAlive(DBConnection, worker.Id))
 				{
 					var response = PropagateRequest(request, worker, coworker);
 					if (response.ResponseStatus == ResponseStatus.TimedOut ||

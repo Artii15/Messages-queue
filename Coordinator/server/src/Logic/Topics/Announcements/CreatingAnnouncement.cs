@@ -24,7 +24,7 @@ namespace Server
 				var worker = WorkerQueries.GetWorkerById(DBConnection, topic.Worker);
 				var coworker = WorkerQueries.GetWorkerById(DBConnection, topic.Cooperator);
 
-				if (worker.Alive)
+				if (WorkerQueries.IsWorkerAlive(DBConnection, worker.Id))
 				{
 					var response = PropagateRequest(request, worker, coworker);
 					if (response.ResponseStatus == ResponseStatus.TimedOut ||
