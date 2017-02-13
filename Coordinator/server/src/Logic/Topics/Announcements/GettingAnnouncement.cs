@@ -53,7 +53,7 @@ namespace Server
 		{
 			var client = new RestClient(worker.Address);
 			client.Timeout = TIMEOUT;
-			var requestToSend = new RestRequest($"/topics/{request.TopicName}/announcements\"", Method.GET);
+			var requestToSend = new RestRequest($"/topics/{request.TopicName}/announcements", Method.GET);
 			requestToSend.AddParameter("SubscriberId", subscriberId);
 			return client.Execute<Announcement>(requestToSend);
 		}
@@ -61,7 +61,7 @@ namespace Server
 		IRestResponse<Announcement> PropagateRequestToCoworker(GetAnnouncement request, int subscriberId, Worker coworker)
 		{
 			var coworkerClient = new RestClient(coworker.Address);
-			var coworkerRequestToSend = new RestRequest($"/topics/{request.TopicName}/announcements\"", Method.GET);
+			var coworkerRequestToSend = new RestRequest($"/topics/{request.TopicName}/announcements", Method.GET);
 			coworkerRequestToSend.AddParameter("SubscriberId", subscriberId);
 			return coworkerClient.Execute<Announcement>(coworkerRequestToSend);
 		}
