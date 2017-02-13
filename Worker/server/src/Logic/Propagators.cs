@@ -23,7 +23,7 @@ namespace Server.Logic
 
 		Task ScheduleOperation(Task previousTask, Action operation)
 		{
-			return previousTask.ContinueWith(_ => operation);
+			return previousTask.ContinueWith(_ => operation());
 		}
 	}
 }
