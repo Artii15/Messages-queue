@@ -44,7 +44,7 @@ namespace Server
 
 		IRestResponse PropagateRequest(DeleteQueue request, Worker worker, Worker coworker)
 		{
-			var client = new RestClient($"http://{worker.Address}");
+			var client = new RestClient(worker.Address);
 			client.Timeout = TIMEOUT;
 			var requestToSend = new RestRequest($"queues/{request.QueueName}", Method.DELETE);
 			requestToSend.AddParameter("Cooperator", coworker.Address);
@@ -53,7 +53,7 @@ namespace Server
 
 		void PropagateRequestToCoworker(DeleteQueue request, Worker coworker)
 		{
-			var coworkerClient = new RestClient($"http://{coworker.Address}");
+			var coworkerClient = new RestClient(coworker.Address);
 			var coworkerRequestToSend = new RestRequest($"queues/{request.QueueName}", Method.DELETE);
 			coworkerClient.Execute(coworkerRequestToSend);
 		}

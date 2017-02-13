@@ -43,7 +43,7 @@ namespace Server
 
 		IRestResponse PropagateRequest(DeleteAnnouncement request, int subscriberId, Worker worker, Worker coworker)
 		{
-			var client = new RestClient($"http://{worker.Address}");
+			var client = new RestClient(worker.Address);
 			client.Timeout = TIMEOUT;
 			var requestToSend = new RestRequest($"/topics/{request.TopicName}/announcements/{request.AnnouncementId}", Method.DELETE);
 			requestToSend.AddParameter("SubscriberId", subscriberId);
@@ -53,7 +53,7 @@ namespace Server
 
 		void PropagateRequestToCoworker(DeleteAnnouncement request, int subscriberId, Worker coworker)
 		{
-			var coworkerClient = new RestClient($"http://{coworker.Address}");
+			var coworkerClient = new RestClient(coworker.Address);
 			var coworkerRequestToSend = new RestRequest($"/topics/{request.TopicName}/announcements/{request.AnnouncementId}", Method.DELETE);
 			coworkerRequestToSend.AddParameter("SubscriberId", subscriberId);
 			coworkerClient.Execute(coworkerRequestToSend);

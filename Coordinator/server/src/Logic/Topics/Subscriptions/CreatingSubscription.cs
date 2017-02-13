@@ -44,7 +44,7 @@ namespace Server
 
 		IRestResponse PropagateRequest(CreateSubscription request, int subscriberId, Worker worker, Worker coworker)
 		{
-			var client = new RestClient($"http://{worker.Address}");
+			var client = new RestClient(worker.Address);
 			client.Timeout = TIMEOUT;
 			var requestToSend = new RestRequest($"topics/{request.TopicName}/subscriptions", Method.POST);
 			requestToSend.AddParameter("SubscriberId", subscriberId);
@@ -55,7 +55,7 @@ namespace Server
 
 		void PropagateRequestToCoworker(CreateSubscription request, int subscriberId, Worker coworker)
 		{
-			var coworkerClient = new RestClient($"http://{coworker.Address}");
+			var coworkerClient = new RestClient(coworker.Address);
 			var coworkerRequestToSend = new RestRequest($"topics/{request.TopicName}/subscriptions", Method.POST);
 			coworkerRequestToSend.AddParameter("SubscriberId", subscriberId);
 			coworkerRequestToSend.AddParameter("CreationTime", DateTime.UtcNow);
