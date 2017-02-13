@@ -25,6 +25,10 @@ namespace Server
 			{
 				return new HttpError(HttpStatusCode.NotFound, $"Queue {request.QueueName} not exists");
 			}
+			catch (NoNewContentToGetException)
+			{
+				return new HttpError(HttpStatusCode.NoContent, "No new content");
+			}
 
 			return new GetMessageResponse()
 			{

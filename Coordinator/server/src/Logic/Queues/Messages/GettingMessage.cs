@@ -29,7 +29,10 @@ namespace Server
 					response = PropagateRequest(request, worker, coworker);
 					if (response.ResponseStatus == ResponseStatus.TimedOut ||
 						response.ResponseStatus == ResponseStatus.Error)
-						response = PropagateRequestToCoworker(request, coworker);
+						if (!WorkerQueries.IsWorkerAlive(DBConnection, worker.Id))
+							response = PropagateRequestToCoworker(request, coworker);
+						else
+							throw new NoNewContentToGetException();
 				}
 				else
 					response = PropagateRequestToCoworker(request, coworker);

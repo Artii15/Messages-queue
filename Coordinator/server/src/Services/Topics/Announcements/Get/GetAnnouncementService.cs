@@ -27,6 +27,10 @@ namespace Server
 			{
 				return new HttpError(HttpStatusCode.NotFound, $"Topic {request.TopicName} not exists");
 			}
+			catch (NoNewContentToGetException)
+			{
+				return new HttpError(HttpStatusCode.NoContent, "No new content");
+			}
 
 			return new GetAnnouncementResponse()
 			{

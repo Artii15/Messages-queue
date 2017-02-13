@@ -158,6 +158,7 @@
     <Compile Include="src\Services\Topics\Get\GetTopics.cs" />
     <Compile Include="src\Services\Topics\Get\GetTopicsResponse.cs" />
     <Compile Include="src\Services\Topics\Get\GetTopicsService.cs" />
+    <Compile Include="src\Exceptions\NoNewContentToGetException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
