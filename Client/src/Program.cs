@@ -40,6 +40,7 @@ namespace Client
 				{"3", new ReadMessage(client)},
 				{"4", new CreateMessage(client)},
 				{"5", new CreateTopic(client)},
+				{"6", new DeleteTopic(client)},
 				{"13", new EmptyCommand(client)}
 			};
 			var selectedCommand = "";

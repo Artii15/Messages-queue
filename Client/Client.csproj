@@ -47,6 +47,7 @@
     <Compile Include="src\Entities\ReadMessageResponse.cs" />
     <Compile Include="src\Commands\CreateMessage.cs" />
     <Compile Include="src\Commands\CreateTopic.cs" />
+    <Compile Include="src\Commands\DeleteTopic.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
