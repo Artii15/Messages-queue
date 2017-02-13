@@ -1,3 +1,5 @@
 packages
 supervisor
 *.userprefs
+/Client/obj
+/Client/bin
