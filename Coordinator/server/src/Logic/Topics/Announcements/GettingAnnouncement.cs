@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using RestSharp;
 
 namespace Server
@@ -28,7 +27,6 @@ namespace Server
 				if (WorkerQueries.IsWorkerAlive(DBConnection, worker.Id))
 				{
 					response = PropagateRequest(request, subscriberId, worker, coworker);
-					Console.WriteLine(response.ResponseStatus);
 					if (response.ResponseStatus == ResponseStatus.TimedOut ||
 						response.ResponseStatus == ResponseStatus.Error)
 					{
