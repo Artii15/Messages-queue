@@ -43,6 +43,7 @@
     <Compile Include="src\Program.cs" />
     <Compile Include="src\ProgramError.cs" />
     <Compile Include="src\Reader.cs" />
+    <Compile Include="src\Commands\ReadMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

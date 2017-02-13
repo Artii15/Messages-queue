@@ -36,6 +36,7 @@ namespace Client
 			var commands = new Dictionary<string, Command>
 			{
 				{"1", new CreateQueue(client)},
+				{"2", new DeleteQueue(client)},
 				{"13", new EmptyCommand(client)}
 			};
 			var selectedCommand = "";

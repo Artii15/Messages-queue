@@ -11,7 +11,7 @@ namespace Client.Commands
 		public override void Execute()
 		{
 			Console.Write("Queue name: ");
-			switch (SendCreateRequest(Reader.ReadNonEmptyString()))
+			switch (SendRequest(Reader.ReadNonEmptyString()))
 			{
 				case HttpStatusCode.Created:
 					Console.WriteLine("Queue created");
@@ -25,7 +25,7 @@ namespace Client.Commands
 			}
 		}
 
-		HttpStatusCode SendCreateRequest(string queueName)
+		HttpStatusCode SendRequest(string queueName)
 		{
 			var request = new RestRequest("queues", Method.POST);
 			request.AddBody(new { Name = queueName });
