@@ -35,20 +35,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Commands\CreateQueue.cs" />
-    <Compile Include="Reader.cs" />
-    <Compile Include="Commands\Command.cs" />
-    <Compile Include="ProgramError.cs" />
-    <Compile Include="Commands\EmptyCommand.cs" />
-    <Compile Include="Commands\DeleteQueue.cs" />
+    <Compile Include="src\Commands\Command.cs" />
+    <Compile Include="src\Commands\CreateQueue.cs" />
+    <Compile Include="src\Commands\DeleteQueue.cs" />
+    <Compile Include="src\Commands\EmptyCommand.cs" />
+    <Compile Include="src\Program.cs" />
+    <Compile Include="src\ProgramError.cs" />
+    <Compile Include="src\Reader.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Commands\" />
+    <Folder Include="src\" />
+    <Folder Include="src\Commands\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
