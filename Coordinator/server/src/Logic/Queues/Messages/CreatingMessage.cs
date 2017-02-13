@@ -27,10 +27,16 @@ namespace Server
 					var response = PropagateRequest(request, worker, coworker);
 					if (response.ResponseStatus == ResponseStatus.TimedOut ||
 						response.ResponseStatus == ResponseStatus.Error)
+					{
 						PropagateRequestToCoworker(request, coworker);
+						QueuesQueries.swapWorkers(DBConnection, queue);
+					}
 				}
 				else
+				{
 					PropagateRequestToCoworker(request, coworker);
+					QueuesQueries.swapWorkers(DBConnection, queue);
+				}
 			}
 		}
 

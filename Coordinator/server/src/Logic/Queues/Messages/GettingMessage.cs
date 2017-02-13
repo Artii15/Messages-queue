@@ -30,12 +30,18 @@ namespace Server
 					if (response.ResponseStatus == ResponseStatus.TimedOut ||
 						response.ResponseStatus == ResponseStatus.Error)
 						if (!WorkerQueries.IsWorkerAlive(DBConnection, worker.Id))
+						{
 							response = PropagateRequestToCoworker(request, coworker);
+							QueuesQueries.swapWorkers(DBConnection, queue);
+						}
 						else
 							throw new NoNewContentToGetException();
 				}
 				else
+				{
 					response = PropagateRequestToCoworker(request, coworker);
+					QueuesQueries.swapWorkers(DBConnection, queue);
+				}
 
 				return response.Data;
 			}

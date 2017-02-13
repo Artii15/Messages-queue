@@ -31,13 +31,19 @@ namespace Server
 						response.ResponseStatus == ResponseStatus.Error)
 					{
 						if (!WorkerQueries.IsWorkerAlive(DBConnection, worker.Id))
+						{
 							response = PropagateRequestToCoworker(request, subscriberId, coworker);
+							TopicsQueries.swapWorkers(DBConnection, topic);
+						}
 						else
 							throw new NoNewContentToGetException();
 					}
 				}
-				else 
+				else
+				{
 					response = PropagateRequestToCoworker(request, subscriberId, coworker);
+					TopicsQueries.swapWorkers(DBConnection, topic);
+				}
 
 				return response.Data;
 			}
