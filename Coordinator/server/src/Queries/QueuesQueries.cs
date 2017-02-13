@@ -36,9 +36,10 @@ namespace Server
 		public static Dictionary<string, RecoveryQueue> GetWorkerQueues(IDbConnection dbConnection, long workerId)
 		{
 			var qList = dbConnection.Select<RecoveryQueue>("Select Name, Address as Cooperator " +
-			                                               "from Queue q join Worker w on q.Cooperator = w.Id " +
-			                                               $"where q.Worker = {workerId} or q.Cooperator = {workerId}");
-			return qList.ToDictionary(x => x.Name, x => x);
+			                                               $"from Queue q join Worker w on q.Cooperator = w.Id where q.worker = {workerId}");
+			var qList2 = dbConnection.Select<RecoveryQueue>("Select Name, Address as Cooperator " +
+														   $"from Queue q join Worker w on q.Worker = w.Id where q.cooperator = {workerId}");
+			return qList.Concat(qList2).ToDictionary(x => x.Name, x => x);
 		}
 
 		public static void swapWorkers(IDbConnection dbConnection, Queue queue)

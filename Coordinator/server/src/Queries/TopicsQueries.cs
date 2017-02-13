@@ -36,9 +36,10 @@ namespace Server
 		public static Dictionary<string, RecoveryTopic> GetWorkerTopics(IDbConnection dbConnection, long workerId)
 		{
 			var tList = dbConnection.Select<RecoveryTopic>("Select Name, Address as Cooperator " +
-														   "from Topic t join Worker w on t.Cooperator = w.Id " +
-														   $"where t.Worker = {workerId} or t.Cooperator = {workerId}");
-			return tList.ToDictionary(x => x.Name, x => x);
+														   $"from Topic t join Worker w on t.Cooperator = w.Id where t.worker = {workerId}");
+			var tList2 = dbConnection.Select<RecoveryTopic>("Select Name, Address as Cooperator " +
+														   $"from Topic t join Worker w on t.Worker = w.Id where t.cooperator = {workerId}");
+			return tList.Concat(tList2).ToDictionary(x => x.Name, x => x);
 		}
 
 		public static void swapWorkers(IDbConnection dbConnection, Topic topic)
