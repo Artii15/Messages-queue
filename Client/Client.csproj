@@ -45,6 +45,7 @@
     <Compile Include="src\Reader.cs" />
     <Compile Include="src\Commands\ReadMessage.cs" />
     <Compile Include="src\Entities\ReadMessageResponse.cs" />
+    <Compile Include="src\Commands\CreateMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
