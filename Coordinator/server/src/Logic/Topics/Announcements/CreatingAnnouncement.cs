@@ -48,7 +48,6 @@ namespace Server
 			client.Timeout = TIMEOUT;
 			var requestToSend = new RestRequest($"/topics/{request.TopicName}/announcements", Method.POST);
 			requestToSend.AddParameter("Content", request.Content);
-			requestToSend.AddParameter("CreationTime", DateTime.UtcNow);
 			requestToSend.AddParameter("Cooperator", coworker.Address);
 			return client.Execute(requestToSend);
 		}
@@ -58,7 +57,6 @@ namespace Server
 			var coworkerClient = new RestClient(coworker.Address);
 			var coworkerRequestToSend = new RestRequest($"/topics/{request.TopicName}/announcements", Method.POST);
 			coworkerRequestToSend.AddParameter("Content", request.Content);
-			coworkerRequestToSend.AddParameter("CreationTime", DateTime.UtcNow);
 			coworkerClient.Execute(coworkerRequestToSend);
 		}
 	}
