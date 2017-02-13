@@ -2,7 +2,7 @@
 
 namespace Server.Services.Databases.Topics
 {
-	[Route("databases/topics/{Name}", "put")]
+	[Route("/databases/topics/{Name}", "put")]
 	public class TopicDatabase
 	{
 		public string Name { get; set; }

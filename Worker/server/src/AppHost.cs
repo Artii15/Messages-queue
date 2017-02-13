@@ -80,6 +80,7 @@ namespace Server
 			container.Register(new DeletingQueue(Connections, Locks, propagators));
 			container.Register(new DeletingTopic(Connections, Locks, propagators));
 			container.Register(new FailureReporting(Locks, propagators));
+			container.Register(new DatabaseRecovery(Locks));
 		}
 
 		void RequestQueuesAndTopicsList()
@@ -89,6 +90,7 @@ namespace Server
 			request.AddQueryParameter("WorkerId", ConfigurationManager.AppSettings["Id"]);
 			request.RequestFormat = DataFormat.Json;
 			var response = client.Execute<QueuesAndTopics>(request);
+
 			if (response.StatusCode == System.Net.HttpStatusCode.OK)
 			{
 				QueuesAndTopicsToRecover = response.Data;
