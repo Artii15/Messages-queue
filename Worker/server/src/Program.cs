@@ -22,6 +22,7 @@ namespace Server
 				Console.Error.WriteLine ("Invalid address format");
 				Environment.Exit(2);
 			}
+			/*
 			if (listenAddress.Contains("127.0.0.1")
 			   || listenAddress.Contains("localhost")
 			   || listenAddress.Contains("://*")
@@ -29,7 +30,7 @@ namespace Server
 			{
 				Console.Error.WriteLine("Use specific address visible outside");
 				Environment.Exit(3);
-			}
+			}*/
 
 			var appHost = new AppHost(listenAddress);
             appHost.Init ();            
