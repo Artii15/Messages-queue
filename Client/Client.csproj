@@ -44,6 +44,7 @@
     <Compile Include="src\ProgramError.cs" />
     <Compile Include="src\Reader.cs" />
     <Compile Include="src\Commands\ReadMessage.cs" />
+    <Compile Include="src\Entities\ReadMessageResponse.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -51,6 +52,7 @@
   <ItemGroup>
     <Folder Include="src\" />
     <Folder Include="src\Commands\" />
+    <Folder Include="src\Entities\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
