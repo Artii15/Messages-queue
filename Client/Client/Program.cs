@@ -16,6 +16,8 @@ namespace Client
 			Console.WriteLine("8 - Unsubscribe topic");
 			Console.WriteLine("9 - Read announcement");
 			Console.WriteLine("10 - Create announcement");
+			Console.WriteLine("11 - List queues");
+			Console.WriteLine("12 - List topics");
 		}
 	}
 }
