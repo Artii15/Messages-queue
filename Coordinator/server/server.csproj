@@ -164,6 +164,8 @@
     <Compile Include="src\Services\Workers\QueuesAndTopics\QueuesAndTopicsService.cs" />
     <Compile Include="src\Logic\Workers\GettingQueuesAndTopics.cs" />
     <Compile Include="src\Entities\QueuesAndTopics.cs" />
+    <Compile Include="src\Entities\RecoveryQueue.cs" />
+    <Compile Include="src\Entities\RecoveryTopic.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

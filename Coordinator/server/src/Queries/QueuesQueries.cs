@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Collections.Generic;
 using System.Data;
 using ServiceStack.OrmLite;
 
@@ -30,6 +31,14 @@ namespace Server
 		public static List<string> getQueuesNames(IDbConnection dbConnection)
 		{
 			return new List<string>(dbConnection.List<string>("select Name from Queue"));
+		}
+
+		public static Dictionary<string, RecoveryQueue> GetWorkerQueues(IDbConnection dbConnection, long workerId)
+		{
+			var qList = dbConnection.Select<RecoveryQueue>("Select Name, Address as Cooperator " +
+			                                               "from Queue q join Worker w on q.Cooperator = w.Id " +
+			                                               $"where q.Worker = {workerId} or q.Cooperator = {workerId}");
+			return qList.ToDictionary(x => x.Name, x => x);
 		}
 	}
 }

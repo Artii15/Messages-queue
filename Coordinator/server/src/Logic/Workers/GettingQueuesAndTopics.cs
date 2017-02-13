@@ -15,6 +15,13 @@ namespace Server
 
 		public QueuesAndTopics Get(QueuesAndTopicsRequest request)
 		{
+			var queues = QueuesQueries.GetWorkerQueues(DBConnection, request.WorkerId);
+			var topics = TopicsQueries.GetWorkerTopics(DBConnection, request.WorkerId);
+			return new QueuesAndTopics() 
+			{ 
+				Queues = queues, 
+				Topics= topics 
+			};
 		}
 	}
 }
