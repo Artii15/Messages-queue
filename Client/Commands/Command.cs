@@ -10,5 +10,7 @@ namespace Client.Commands
 		{
 			Client = client;
 		}
+
+		public abstract void Execute();
 	}
 }

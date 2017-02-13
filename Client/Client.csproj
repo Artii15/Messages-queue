@@ -40,6 +40,8 @@
     <Compile Include="Commands\CreateQueue.cs" />
     <Compile Include="Reader.cs" />
     <Compile Include="Commands\Command.cs" />
+    <Compile Include="ProgramError.cs" />
+    <Compile Include="Commands\EmptyCommand.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

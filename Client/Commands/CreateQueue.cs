@@ -8,7 +8,7 @@ namespace Client.Commands
 	{
 		public CreateQueue(RestClient client) : base(client) { }
 
-		public void Create()
+		public override void Execute()
 		{
 			Console.Write("Queue name: ");
 			switch (SendCreateRequest(Reader.ReadNonEmptyString()))
