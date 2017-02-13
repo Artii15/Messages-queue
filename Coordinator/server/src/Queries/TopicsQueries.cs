@@ -40,5 +40,11 @@ namespace Server
 														   $"where t.Worker = {workerId} or t.Cooperator = {workerId}");
 			return tList.ToDictionary(x => x.Name, x => x);
 		}
+
+		public static void swapWorkers(IDbConnection dbConnection, Topic topic)
+		{
+			dbConnection.Update(new Topic { Id = topic.Id, Name = topic.Name, Worker = topic.Cooperator, Cooperator = topic.Worker },
+									t => t.Id == topic.Id);
+		}
 	}
 }
