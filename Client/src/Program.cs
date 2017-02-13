@@ -38,6 +38,8 @@ namespace Client
 				{"1", new CreateQueue(client)},
 				{"2", new DeleteQueue(client)},
 				{"3", new ReadMessage(client)},
+				{"4", new CreateMessage(client)},
+				{"5", new CreateTopic(client)},
 				{"13", new EmptyCommand(client)}
 			};
 			var selectedCommand = "";

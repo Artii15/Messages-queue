@@ -46,6 +46,7 @@
     <Compile Include="src\Commands\ReadMessage.cs" />
     <Compile Include="src\Entities\ReadMessageResponse.cs" />
     <Compile Include="src\Commands\CreateMessage.cs" />
+    <Compile Include="src\Commands\CreateTopic.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
