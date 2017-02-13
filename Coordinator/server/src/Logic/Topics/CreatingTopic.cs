@@ -50,7 +50,7 @@ namespace Server
 		{
 			var client = new RestClient(worker.Address);
 			client.Timeout = TIMEOUT;
-			var requestToSend = new RestRequest("topic", Method.POST);
+			var requestToSend = new RestRequest("topics", Method.POST);
 			requestToSend.AddParameter("Name", request.Name);
 			requestToSend.AddParameter("Cooperator", coworker.Address);
 			return client.Execute(requestToSend);
@@ -59,7 +59,7 @@ namespace Server
 		void PropagateRequestToCoworker(CreateTopic request, Worker coworker)
 		{
 			var coworkerClient = new RestClient(coworker.Address);
-			var coworkerRequestToSend = new RestRequest("topic", Method.POST);
+			var coworkerRequestToSend = new RestRequest("topics", Method.POST);
 			coworkerRequestToSend.AddParameter("Name", request.Name);
 			coworkerClient.Execute(coworkerRequestToSend);
 		}
