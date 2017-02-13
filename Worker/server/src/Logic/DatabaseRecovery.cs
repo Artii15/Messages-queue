@@ -1,7 +1,5 @@
 ﻿using System.Collections.Concurrent;
 using System.IO;
-using Server.Services.Databases.Queues;
-using Server.Services.Databases.Topics;
 
 namespace Server.Logic
 {
@@ -14,35 +12,38 @@ namespace Server.Logic
 			Locks = locks;
 		}
 
-		public void Recover(QueueDatabase request)
+		public void RecoverQueue(string name, Stream db)
 		{
 			Recover(new RecoveryDescriptor
 			{
-				DB = request.DatabaseFile,
-				DBName = request.Name,
+				Db = db,
+				DbName = name,
 				Locks = Locks.QueuesRecoveryLocks,
-				PathToDbFile = Connections.PathToDbFile(Connections.QueuesDir, request.Name)
+				PathToDbFile = Connections.PathToDbFile(Connections.QueuesDir, name)
 			});
 		}
 
-		public void Recover(TopicDatabase request)
+		public void RecoverTopic(string name, Stream db)
 		{
 			Recover(new RecoveryDescriptor
 			{
-				DB = request.DatabaseFile,
-				DBName = request.Name,
+				Db = db,
+				DbName = name,
 				Locks = Locks.TopicsRecoveryLocks,
-				PathToDbFile = Connections.PathToDbFile(Connections.TopicsDir, request.Name)
+				PathToDbFile = Connections.PathToDbFile(Connections.TopicsDir, name)
 			});
 		}
 
 		void Recover(RecoveryDescriptor recoveryDescriptor)
 		{
 			File.Delete(recoveryDescriptor.PathToDbFile);
-			File.WriteAllBytes(recoveryDescriptor.PathToDbFile, recoveryDescriptor.DB);
+			using (var dbFile = File.Create(recoveryDescriptor.PathToDbFile))
+			{
+				recoveryDescriptor.Db.CopyTo(dbFile);
+			}
 
 			byte dummyValue;
-			recoveryDescriptor.Locks.TryRemove(recoveryDescriptor.DBName, out dummyValue);
+			recoveryDescriptor.Locks.TryRemove(recoveryDescriptor.DbName, out dummyValue);
 		}
 	}
 
@@ -50,7 +51,7 @@ namespace Server.Logic
 	{
 		public string PathToDbFile { get; set; }
 		public ConcurrentDictionary<string, byte> Locks { get; set; }
-		public byte[] DB { get; set; }
-		public string DBName { get; set; }
+		public Stream Db { get; set; }
+		public string DbName { get; set; }
 	}
 }

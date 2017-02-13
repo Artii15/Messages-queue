@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using RestSharp;
+using System.Net;
 using Server.Services.Failures.Queues;
 using Server.Services.Failures.Topics;
 
@@ -54,12 +54,12 @@ namespace Server.Logic
 			{
 				lock (failureDescriptor.DbLock)
 				{
-					var client = new RestClient(failureDescriptor.CooperatorAddress);
-					var request = new RestRequest($"databases/{failureDescriptor.RecoveryCategory}/{failureDescriptor.DbName}", Method.PUT);
-					request.RequestFormat = DataFormat.Json;
-					request.AddHeader("Content-Type", "multipart/form-data");
-					request.AddFile("DatabaseFile", Path.GetFullPath(failureDescriptor.PathToDbFile));
-					client.Execute(request);
+					using (WebClient client = new WebClient())
+					{
+						var normalizedAddr = failureDescriptor.CooperatorAddress.TrimEnd(new char[] { '/' });
+						var databaseAdd = $"{normalizedAddr}/databases/{failureDescriptor.RecoveryCategory}/{failureDescriptor.DbName}";
+						client.UploadFile(databaseAdd, "PUT", failureDescriptor.PathToDbFile);
+					}
 				}
 			};
 		}

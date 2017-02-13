@@ -1,9 +1,9 @@
 ﻿using Server.Logic;
-using ServiceStack.ServiceHost;
+using ServiceStack.ServiceInterface;
 
 namespace Server.Services.Databases.Queues
 {
-	public class QueueDatabaseService: IService
+	public class QueueDatabaseService: Service
 	{
 		readonly DatabaseRecovery DatabaseRecovery;
 
@@ -14,7 +14,7 @@ namespace Server.Services.Databases.Queues
 
 		public QueueDatabaseResponse Put(QueueDatabase request)
 		{
-			DatabaseRecovery.Recover(request);
+			DatabaseRecovery.RecoverQueue(Paths.GetLastSegment(Request.PathInfo), request.RequestStream);
 			return new QueueDatabaseResponse();
 		}
 	}

@@ -1,9 +1,9 @@
 ﻿using Server.Logic;
-using ServiceStack.ServiceHost;
+using ServiceStack.ServiceInterface;
 
 namespace Server.Services.Databases.Topics
 {
-	public class TopicDatabaseService: IService
+	public class TopicDatabaseService: Service
 	{
 		readonly DatabaseRecovery DatabaseRecovery;
 
@@ -14,7 +14,7 @@ namespace Server.Services.Databases.Topics
 
 		public TopicDatabaseResponse Put(TopicDatabase request)
 		{
-			DatabaseRecovery.Recover(request);
+			DatabaseRecovery.RecoverTopic(Paths.GetLastSegment(Request.PathInfo), request.RequestStream);
 			return new TopicDatabaseResponse();
 		}
 	}

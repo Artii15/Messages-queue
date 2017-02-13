@@ -1,11 +1,12 @@
-﻿using ServiceStack.ServiceHost;
+﻿using System.IO;
+using ServiceStack.ServiceHost;
 
 namespace Server.Services.Databases.Queues
 {
 	[Route("/databases/queues/{Name}", "put")]
-	public class QueueDatabase
+	public class QueueDatabase: IRequiresRequestStream
 	{
 		public string Name { get; set; }
-		public byte[] DatabaseFile { get; set; }
+		public Stream RequestStream { get; set; }
 	}
 }
