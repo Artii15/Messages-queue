@@ -67,12 +67,15 @@ namespace Server
 			Plugins.Add(new SessionFeature());
 			Plugins.Add(new RequestLogsFeature());
 
+			/*
 			container.Register<IRedisClientsManager>(c =>
 				new PooledRedisClientManager(m_redisConnString));
 			container.Register<ICacheClient>(c =>
 				(ICacheClient)c.Resolve<IRedisClientsManager>()
 				.GetCacheClient())
 				.ReusedWithin(Funq.ReuseScope.None);
+
+*/
 
 			container.Register<IDbConnectionFactory>(
 				new OrmLiteConnectionFactory(m_pgConnString, PostgreSQLDialectProvider.Instance)
