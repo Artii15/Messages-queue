@@ -23,15 +23,6 @@ namespace Server
 				Environment.Exit(2);
 			}
 
-			if (listenAddress.Contains("127.0.0.1")
-			   || listenAddress.Contains("localhost")
-			   || listenAddress.Contains("://*")
-			   || listenAddress.Contains("0.0.0.0"))
-			{
-				Console.Error.WriteLine("Use specific address visible outside");
-				Environment.Exit(3);
-			}
-
 			var appHost = new AppHost(listenAddress);
             appHost.Init ();            
 			appHost.Start (listenAddress);
@@ -49,7 +40,7 @@ namespace Server
 			var heartbeatClient = new RestClient(ConfigurationManager.AppSettings["CoordinatorAddress"]);
 			var heartbeatRequest = new RestRequest(ConfigurationManager.AppSettings["HeartbeatPath"], Method.POST);
 			heartbeatRequest.RequestFormat = DataFormat.Json;
-			heartbeatRequest.AddJsonBody(new { Address = ownAddress, Id = int.Parse(ConfigurationManager.AppSettings["Id"]) });
+			heartbeatRequest.AddJsonBody(new { Address = ownAddress, Id = int.Parse(Environment.GetEnvironmentVariable("WORKER_ID")) });
 
 			var heartbeatInterval = double.Parse(ConfigurationManager.AppSettings["HeartbeatInterval"]);
 			var timer = new Timer(heartbeatInterval);
