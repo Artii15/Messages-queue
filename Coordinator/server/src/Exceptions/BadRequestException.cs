@@ -1,10 +1,7 @@
 ﻿using System;
 namespace Server
 {
-	public class BadRequestException
+	public class BadRequestException : Exception
 	{
-		public BadRequestException()
-		{
-		}
 	}
 }

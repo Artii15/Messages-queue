@@ -4,18 +4,18 @@ using System;
 
 namespace Server
 {
-	public class CreatingQueue
+	public class CreatingQueue : BasicQueueOperation
 	{
-		readonly IDbConnection DBConnection;
-		const int TIMEOUT = 30000;
 
-		public CreatingQueue(IDbConnection dbConnection)
+		public CreatingQueue(IDbConnection dbConnection) : base(dbConnection)
 		{
-			DBConnection = dbConnection;
 		}
 
 		public void Create(CreateQueue request)
 		{
+			var requestToSend = new RestRequest("queues", Method.POST);
+			requestToSend.AddParameter("Name", request.Name);
+
 			if (QueuesQueries.QueueExists(DBConnection, request.Name))
 				throw new QueueAlreadyExistsException();
 			else
@@ -23,16 +23,8 @@ namespace Server
 				Worker worker, coworker;
 				CalculateQueueWorkers(request.Name, out worker, out coworker);
 				QueuesQueries.CreateQueue(DBConnection, request.Name, worker.Id, coworker.Id);
-
-				if (WorkerQueries.IsWorkerAlive(DBConnection, worker.Id))
-				{
-					var response = PropagateRequest(request, worker, coworker);
-					if (response.ResponseStatus == ResponseStatus.TimedOut ||
-						response.ResponseStatus == ResponseStatus.Error)
-						PropagateRequestToCoworker(request, coworker);
-				}
-				else
-					PropagateRequestToCoworker(request, coworker);
+				var queue = QueuesQueries.getQueueByName(DBConnection, request.Name);
+				PropageteRequestToWorkers(requestToSend, queue, worker, coworker);
 			}
 		}
 
@@ -44,26 +36,6 @@ namespace Server
 			var coworkerPosition = (nameHash + 1) % workerCount;
 			worker = WorkerQueries.GetWorker(DBConnection, workerPosition);
 			coworker = WorkerQueries.GetWorker(DBConnection, coworkerPosition);
-		}
-
-		IRestResponse PropagateRequest(CreateQueue request, Worker worker, Worker coworker)
-		{
-			var client = new RestClient(worker.Address);
-			client.Timeout = TIMEOUT;
-			var requestToSend = new RestRequest("queues", Method.POST);
-			requestToSend.AddParameter("Name", request.Name);
-			requestToSend.AddParameter("Cooperator", coworker.Address);
-			return client.Execute(requestToSend);
-		}
-
-		void PropagateRequestToCoworker(CreateQueue request, Worker coworker)
-		{
-			var coworkerClient = new RestClient(coworker.Address);
-			var coworkerRequestToSend = new RestRequest("queues", Method.POST);
-			coworkerRequestToSend.AddParameter("Name", request.Name);
-			var response = coworkerClient.Execute(coworkerRequestToSend);
-			Console.WriteLine(response.StatusCode);
-			Console.WriteLine(response.ResponseStatus);
 		}
 	}
 }

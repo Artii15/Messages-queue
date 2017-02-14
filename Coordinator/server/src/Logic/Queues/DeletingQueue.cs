@@ -3,18 +3,17 @@ using RestSharp;
 
 namespace Server
 {
-	public class DeletingQueue
+	public class DeletingQueue : BasicQueueOperation
 	{
-		readonly IDbConnection DBConnection;
-		const int TIMEOUT = 30000;
 
-		public DeletingQueue(IDbConnection dbConnection)
+		public DeletingQueue(IDbConnection dbConnection) : base (dbConnection)
 		{
-			DBConnection = dbConnection;
 		}
 
 		public void Delete(DeleteQueue request)
 		{ 
+			var requestToSend = new RestRequest($"queues/{request.QueueName}", Method.DELETE);
+
 			if (!QueuesQueries.QueueExists(DBConnection, request.QueueName))
 				throw new QueueNotExistsException();
 			else
@@ -24,38 +23,9 @@ namespace Server
 				var coworker = WorkerQueries.GetWorkerById(DBConnection, queue.Cooperator);
 
 				QueuesQueries.DeleteQueue(DBConnection, request.QueueName);
-				if (WorkerQueries.IsWorkerAlive(DBConnection, worker.Id))
-				{
-					var response = PropagateRequest(request, worker, coworker);
-					if (response.ResponseStatus == ResponseStatus.TimedOut ||
-						response.ResponseStatus == ResponseStatus.Error)
-					{
-						PropagateRequestToCoworker(request, coworker);
-						QueuesQueries.swapWorkers(DBConnection, queue);
-					}
-				}
-				else
-				{
-					PropagateRequestToCoworker(request, coworker);
-					QueuesQueries.swapWorkers(DBConnection, queue);
-				}
+				PropageteRequestToWorkers(requestToSend, queue, worker, coworker);
 			}
 		}
 
-		IRestResponse PropagateRequest(DeleteQueue request, Worker worker, Worker coworker)
-		{
-			var client = new RestClient(worker.Address);
-			client.Timeout = TIMEOUT;
-			var requestToSend = new RestRequest($"queues/{request.QueueName}", Method.DELETE);
-			requestToSend.AddParameter("Cooperator", coworker.Address);
-			return client.Execute(requestToSend);
-		}
-
-		void PropagateRequestToCoworker(DeleteQueue request, Worker coworker)
-		{
-			var coworkerClient = new RestClient(coworker.Address);
-			var coworkerRequestToSend = new RestRequest($"queues/{request.QueueName}", Method.DELETE);
-			coworkerClient.Execute(coworkerRequestToSend);
-		}
 	}
 }

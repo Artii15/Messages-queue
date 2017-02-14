@@ -1,14 +1,16 @@
-﻿using RestSharp;
+﻿using System.Data;
+using System.Net;
+using RestSharp;
 
 namespace Server
 {
 	public abstract class BasicQueueOperation : BasicOperation
 	{
-		public BasicQueueOperation()
+		public BasicQueueOperation(IDbConnection dbConnection) : base(dbConnection)
 		{
 		}
 
-		protected void doStuff(string queueName, RestRequest request)
+		protected void processRequest(string queueName, RestRequest request)
 		{
 			if (!QueuesQueries.QueueExists(DBConnection, queueName))
 				throw new QueueNotExistsException();
@@ -31,21 +33,19 @@ namespace Server
 			{
 				response = PropagateRequest(requestForMaster, worker);
 				if (response.ResponseStatus == ResponseStatus.TimedOut ||
-						response.ResponseStatus == ResponseStatus.Error)
+					response.ResponseStatus == ResponseStatus.Error)
 				{
-					PropagateRequest(request, coworker);
+					response = PropagateRequest(request, coworker);
 					QueuesQueries.swapWorkers(DBConnection, queue);
-				}
-				if (response.ResponseStatus != ResponseStatus.Completed)
-				{
-					
 				}
 			}
 			else
 			{
-				PropagateRequest(request, coworker);
+				response = PropagateRequest(request, coworker);
 				QueuesQueries.swapWorkers(DBConnection, queue);
 			}
+			if (response.StatusCode != HttpStatusCode.OK)
+				throw new BadRequestException();
 		}
 
 		IRestResponse PropagateRequest(IRestRequest request, Worker worker)

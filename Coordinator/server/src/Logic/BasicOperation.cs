@@ -7,8 +7,9 @@ namespace Server
 		protected readonly IDbConnection DBConnection;
 		protected const int TIMEOUT = 30000;
 
-		public BasicOperation()
+		public BasicOperation(IDbConnection dbConnection)
 		{
+			DBConnection = dbConnection;
 		}
 	}
 }
