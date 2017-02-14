@@ -1,9 +1,9 @@
 ﻿using Server.Logic;
-using ServiceStack.ServiceHost;
+using ServiceStack.ServiceInterface;
 
 namespace Server.Services.Failures.Topics
 {
-	public class TopicFailureService: IService
+	public class TopicFailureService: Service
 	{
 		readonly FailureReporting FailureReporting;
 

@@ -1,9 +1,9 @@
 ﻿using Server.Logic;
-using ServiceStack.ServiceHost;
+using ServiceStack.ServiceInterface;
 
 namespace Server.Services.Messages.Delete
 {
-	public class DeleteMessageService: IService
+	public class DeleteMessageService: Service
 	{
 		readonly DeletingMessage DeletingMessage;
 

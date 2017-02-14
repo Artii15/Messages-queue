@@ -1,9 +1,9 @@
 ﻿using Server.Logic;
-using ServiceStack.ServiceHost;
+using ServiceStack.ServiceInterface;
 
 namespace Server.Services.Topics.Create
 {
-	public class CreateTopicService: IService
+	public class CreateTopicService: Service
 	{
 		readonly CreatingTopic CreatingTopic;
 

@@ -1,9 +1,9 @@
-﻿using ServiceStack.ServiceHost;
-using Server.Logic;
+﻿using Server.Logic;
+using ServiceStack.ServiceInterface;
 
 namespace Server.Services.Queues.Create
 {
-	public class CreateQueueService: IService
+	public class CreateQueueService: Service
 	{
 		readonly CreatingQueue CreatingQueue;
 

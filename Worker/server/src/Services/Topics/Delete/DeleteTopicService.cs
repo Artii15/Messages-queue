@@ -1,9 +1,9 @@
 ﻿using Server.Logic;
-using ServiceStack.ServiceHost;
+using ServiceStack.ServiceInterface;
 
 namespace Server.Services.Topics.Delete
 {
-	public class DeleteTopicService: IService
+	public class DeleteTopicService: Service
 	{
 		readonly DeletingTopic DeletingTopic;
 
