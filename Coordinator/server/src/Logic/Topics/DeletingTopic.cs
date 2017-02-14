@@ -3,18 +3,16 @@ using RestSharp;
 
 namespace Server
 {
-	public class DeletingTopic
+	public class DeletingTopic : BasicTopicOperation
 	{
-		readonly IDbConnection DBConnection;
-		const int TIMEOUT = 30000;
-
-		public DeletingTopic(IDbConnection dbConnection)
+		public DeletingTopic(IDbConnection dbConnection) : base (dbConnection)
 		{
-			DBConnection = dbConnection;
 		}
 
 		public void Delete(DeleteTopic request)
 		{
+			var requestToSend = new RestRequest($"/topics/{request.TopicName}", Method.DELETE);
+
 			if (!TopicsQueries.TopicExists(DBConnection, request.TopicName))
 				throw new TopicNotExistsException();
 			else
@@ -24,38 +22,8 @@ namespace Server
 				var coworker = WorkerQueries.GetWorkerById(DBConnection, topic.Cooperator);
 
 				TopicsQueries.DeleteTopic(DBConnection, request.TopicName);
-				if (WorkerQueries.IsWorkerAlive(DBConnection, worker.Id))
-				{
-					var response = PropagateRequest(request, worker, coworker);
-					if (response.ResponseStatus == ResponseStatus.TimedOut ||
-						response.ResponseStatus == ResponseStatus.Error)
-					{
-						PropagateRequestToCoworker(request, coworker);
-						TopicsQueries.swapWorkers(DBConnection, topic);
-					}
-				}
-				else
-				{
-					PropagateRequestToCoworker(request, coworker);
-					TopicsQueries.swapWorkers(DBConnection, topic);
-				}
+				PropageteRequestToWorkers(requestToSend, topic, worker, coworker);
 			}
-		}
-
-		IRestResponse PropagateRequest(DeleteTopic request, Worker worker, Worker coworker)
-		{
-			var client = new RestClient(worker.Address);
-			client.Timeout = TIMEOUT;
-			var requestToSend = new RestRequest($"/topics/{request.TopicName}", Method.DELETE);
-			requestToSend.AddParameter("Cooperator", coworker.Address);
-			return client.Execute(requestToSend);
-		}
-
-		void PropagateRequestToCoworker(DeleteTopic request, Worker coworker)
-		{
-			var coworkerClient = new RestClient(coworker.Address);
-			var coworkerRequestToSend = new RestRequest($"/topics/{request.TopicName}", Method.DELETE);
-			coworkerClient.Execute(coworkerRequestToSend);
 		}
 	}
 }

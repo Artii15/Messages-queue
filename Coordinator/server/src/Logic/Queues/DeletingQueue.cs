@@ -26,6 +26,5 @@ namespace Server
 				PropageteRequestToWorkers(requestToSend, queue, worker, coworker);
 			}
 		}
-
 	}
 }

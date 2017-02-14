@@ -4,18 +4,17 @@ using System;
 
 namespace Server
 {
-	public class CreatingTopic
+	public class CreatingTopic : BasicTopicOperation
 	{
-		readonly IDbConnection DBConnection;
-		const int TIMEOUT = 30000;
-
-		public CreatingTopic(IDbConnection dbConnection)
+		public CreatingTopic(IDbConnection dbConnection) : base (dbConnection)
 		{
-			DBConnection = dbConnection;
 		}
 
 		public void Create(CreateTopic request)
 		{
+			var requestToSend = new RestRequest("topics", Method.POST);
+			requestToSend.AddParameter("Name", request.Name);
+
 			if (TopicsQueries.TopicExists(DBConnection, request.Name))
 				throw new TopicAlreadyExistsException();
 			else
@@ -23,16 +22,9 @@ namespace Server
 				Worker worker, coworker;
 				CalculateTopicWorkers(request.Name, out worker, out coworker);
 				TopicsQueries.CreateTopic(DBConnection, request.Name, worker.Id, coworker.Id);
+				var topic = TopicsQueries.getTopicByName(DBConnection, request.Name);
 
-				if (WorkerQueries.IsWorkerAlive(DBConnection, worker.Id))
-				{
-					var response = PropagateRequest(request, worker, coworker);
-					if (response.ResponseStatus == ResponseStatus.TimedOut ||
-						response.ResponseStatus == ResponseStatus.Error)
-						PropagateRequestToCoworker(request, coworker);
-				}
-				else 
-					PropagateRequestToCoworker(request, coworker);
+				PropageteRequestToWorkers(requestToSend, topic, worker, coworker);
 			}
 		}
 
@@ -44,24 +36,6 @@ namespace Server
 			var coworkerPosition = (nameHash + 1) % workerCount;
 			worker = WorkerQueries.GetWorker(DBConnection, workerPosition);
 			coworker = WorkerQueries.GetWorker(DBConnection, coworkerPosition);
-		}
-
-		IRestResponse PropagateRequest(CreateTopic request, Worker worker, Worker coworker)
-		{
-			var client = new RestClient(worker.Address);
-			client.Timeout = TIMEOUT;
-			var requestToSend = new RestRequest("topics", Method.POST);
-			requestToSend.AddParameter("Name", request.Name);
-			requestToSend.AddParameter("Cooperator", coworker.Address);
-			return client.Execute(requestToSend);
-		}
-
-		void PropagateRequestToCoworker(CreateTopic request, Worker coworker)
-		{
-			var coworkerClient = new RestClient(coworker.Address);
-			var coworkerRequestToSend = new RestRequest("topics", Method.POST);
-			coworkerRequestToSend.AddParameter("Name", request.Name);
-			coworkerClient.Execute(coworkerRequestToSend);
 		}
 	}
 }
