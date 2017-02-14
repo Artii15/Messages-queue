@@ -1,9 +1,9 @@
 ﻿using Server.Logic;
-using ServiceStack.ServiceHost;
+using ServiceStack.ServiceInterface;
 
 namespace Server.Services.Subscriptions.Create
 {
-	public class CreateSubscriptionService: IService
+	public class CreateSubscriptionService: Service
 	{
 		readonly CreatingSubscription CreatingSubscription;
 

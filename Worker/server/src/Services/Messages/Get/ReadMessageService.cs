@@ -1,9 +1,9 @@
 ﻿using Server.Logic;
-using ServiceStack.ServiceHost;
+using ServiceStack.ServiceInterface;
 
 namespace Server.Services.Messages.Get
 {
-	public class ReadMessageService: IService
+	public class ReadMessageService: Service
 	{
 		readonly ReadingMessage ReadingMessage;
 

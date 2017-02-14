@@ -1,9 +1,9 @@
 ﻿using Server.Logic;
-using ServiceStack.ServiceHost;
+using ServiceStack.ServiceInterface;
 
 namespace Server.Services.Subscriptions.Delete
 {
-	public class DeleteSubscriptionService: IService
+	public class DeleteSubscriptionService: Service
 	{
 		readonly DeletingSubscription DeletingSubscription;
 

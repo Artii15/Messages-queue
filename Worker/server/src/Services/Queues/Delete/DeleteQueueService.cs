@@ -1,9 +1,9 @@
 ﻿using Server.Logic;
-using ServiceStack.ServiceHost;
+using ServiceStack.ServiceInterface;
 
 namespace Server.Services.Queues.Delete
 {
-	public class DeleteQueueService: IService
+	public class DeleteQueueService: Service
 	{
 		public DeletingQueue DeletingQueue;
 

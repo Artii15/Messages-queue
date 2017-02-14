@@ -1,9 +1,9 @@
 ﻿using Server.Logic;
-using ServiceStack.ServiceHost;
+using ServiceStack.ServiceInterface;
 
 namespace Server.Services.Announcements.Delete
 {
-	public class DeleteAnnouncementService: IService
+	public class DeleteAnnouncementService: Service
 	{
 		readonly DeletingAnnouncement DeletingAnnouncement;
 

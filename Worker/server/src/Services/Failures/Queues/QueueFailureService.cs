@@ -1,9 +1,9 @@
 ﻿using Server.Logic;
-using ServiceStack.ServiceHost;
+using ServiceStack.ServiceInterface;
 
 namespace Server.Services.Failures.Queues
 {
-	public class QueueFailureService: IService
+	public class QueueFailureService: Service
 	{
 		readonly FailureReporting FailureReporting;
 

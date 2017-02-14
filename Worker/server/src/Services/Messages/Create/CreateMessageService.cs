@@ -1,9 +1,9 @@
 ﻿using Server.Logic;
-using ServiceStack.ServiceHost;
+using ServiceStack.ServiceInterface;
 
 namespace Server.Services.Messages.Create
 {
-	public class CreateMessageService: IService
+	public class CreateMessageService: Service
 	{
 		readonly CreatingMessage CreatingMessage;
 

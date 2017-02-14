@@ -1,9 +1,9 @@
 ﻿using Server.Logic;
-using ServiceStack.ServiceHost;
+using ServiceStack.ServiceInterface;
 
 namespace Server.Services.Announcements.Create
 {
-	public class CreateAnnouncementService: IService
+	public class CreateAnnouncementService: Service
 	{
 		readonly CreatingAnnouncement CreatingAnnouncement;
 

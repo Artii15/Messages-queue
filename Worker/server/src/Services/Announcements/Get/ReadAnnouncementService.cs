@@ -1,9 +1,9 @@
 ﻿using Server.Logic;
-using ServiceStack.ServiceHost;
+using ServiceStack.ServiceInterface;
 
 namespace Server.Services.Announcements.Get
 {
-	public class ReadAnnouncementService: IService
+	public class ReadAnnouncementService: Service
 	{
 		readonly ReadingAnnouncement ReadingAnnouncement;
 
