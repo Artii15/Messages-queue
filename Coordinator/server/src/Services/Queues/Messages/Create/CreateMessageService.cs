@@ -25,6 +25,10 @@ namespace Server
 			{
 				return new HttpError(HttpStatusCode.NotFound, $"Queue {request.QueueName} not exists");
 			}
+			catch (BadRequestException)
+			{
+				return new HttpError(HttpStatusCode.BadRequest, "BadRequest");
+			}
 
 			return new HttpResult(new CreateQueueResponse(), HttpStatusCode.Created);
 		}

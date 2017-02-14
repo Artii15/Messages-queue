@@ -30,6 +30,10 @@ namespace Server
 			{
 				return new HttpError(HttpStatusCode.Conflict, $"Topic {request.Name} already exists");
 			}
+			catch (BadRequestException)
+			{
+				return new HttpError(HttpStatusCode.BadRequest, "BadRequest");
+			}
 			finally
 			{
 				transaction.Commit();

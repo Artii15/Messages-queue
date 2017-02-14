@@ -29,6 +29,10 @@ namespace Server
 			{
 				return new HttpError(HttpStatusCode.NoContent, "No new content");
 			}
+			catch (BadRequestException)
+			{
+				return new HttpError(HttpStatusCode.BadRequest, "BadRequest");
+			}
 
 			return new GetMessageResponse()
 			{

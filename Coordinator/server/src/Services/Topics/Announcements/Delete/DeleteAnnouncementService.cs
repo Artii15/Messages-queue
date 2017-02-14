@@ -29,6 +29,10 @@ namespace Server
 			{
 				return new HttpError(HttpStatusCode.NotFound, $"Topic {request.TopicName} not exists");
 			}
+			catch (BadRequestException)
+			{
+				return new HttpError(HttpStatusCode.BadRequest, "BadRequest");
+			}
 			finally
 			{
 				transaction.Commit();
