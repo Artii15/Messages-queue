@@ -65,9 +65,22 @@ namespace Server
 			LockAllQueuesToRecover();
 			LockAllTopicsToRecover();
 
-			container.Register(Connections);
-			container.Register(Locks);
-			container.Register(new Propagators());
+			var propagators = new Propagators();
+
+			container.Register(new CreatingQueue(Connections, Locks, propagators));
+			container.Register(new CreatingMessage(Connections, Locks, propagators));
+			container.Register(new ReadingMessage(Connections, Locks));
+			container.Register(new DeletingMessage(Connections, Locks, propagators));
+			container.Register(new CreatingTopic(Connections, Locks, propagators));
+			container.Register(new CreatingAnnouncement(Connections, Locks, propagators));
+			container.Register(new ReadingAnnouncement(Connections, Locks));
+			container.Register(new CreatingSubscription(Connections, Locks, propagators));
+			container.Register(new DeletingAnnouncement(Connections, Locks, propagators));
+			container.Register(new DeletingSubscription(Connections, Locks, propagators));
+			container.Register(new DeletingQueue(Connections, Locks, propagators));
+			container.Register(new DeletingTopic(Connections, Locks, propagators));
+			container.Register(new FailureReporting(Locks, propagators));
+			container.Register(new DatabaseRecovery(Locks));
 		}
 
 		void RequestQueuesAndTopicsList()
