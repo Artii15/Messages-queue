@@ -168,6 +168,10 @@
     <Compile Include="src\Entities\RecoveryTopic.cs" />
     <Compile Include="src\Services\Queues\Create\CreateQueueValidator.cs" />
     <Compile Include="src\Services\Topics\Create\CreateTopicValidator.cs" />
+    <Compile Include="src\Logic\BasicOperation.cs" />
+    <Compile Include="src\Logic\IRequest.cs" />
+    <Compile Include="src\Logic\BasicQueueOperation.cs" />
+    <Compile Include="src\Exceptions\BadRequestException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -61,7 +61,9 @@ namespace Server
 			var coworkerClient = new RestClient(coworker.Address);
 			var coworkerRequestToSend = new RestRequest("queues", Method.POST);
 			coworkerRequestToSend.AddParameter("Name", request.Name);
-			coworkerClient.Execute(coworkerRequestToSend);
+			var response = coworkerClient.Execute(coworkerRequestToSend);
+			Console.WriteLine(response.StatusCode);
+			Console.WriteLine(response.ResponseStatus);
 		}
 	}
 }
