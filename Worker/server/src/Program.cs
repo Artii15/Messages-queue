@@ -40,7 +40,7 @@ namespace Server
 			var heartbeatClient = new RestClient(ConfigurationManager.AppSettings["CoordinatorAddress"]);
 			var heartbeatRequest = new RestRequest(ConfigurationManager.AppSettings["HeartbeatPath"], Method.POST);
 			heartbeatRequest.RequestFormat = DataFormat.Json;
-			heartbeatRequest.AddJsonBody(new { Address = ownAddress, Id = int.Parse(ConfigurationManager.AppSettings["Id"]) });
+			heartbeatRequest.AddJsonBody(new { Address = ownAddress, Id = int.Parse(Environment.GetEnvironmentVariable("WORKER_ID")) });
 
 			var heartbeatInterval = double.Parse(ConfigurationManager.AppSettings["HeartbeatInterval"]);
 			var timer = new Timer(heartbeatInterval);
