@@ -18,6 +18,7 @@ namespace Server
 			Db.CreateTableIfNotExists<Queue>();
 		}
 
+		[RequiredPermission("create")]
 		public object Post(CreateQueue request)
 		{
 			IDbTransaction transaction = Db.OpenTransaction();

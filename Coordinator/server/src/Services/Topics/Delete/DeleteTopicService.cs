@@ -14,6 +14,7 @@ namespace Server
 			DeletingTopic = new DeletingTopic(Db);
 		}
 
+		[RequiredPermission("create")]
 		public object Delete(DeleteTopic request)
 		{
 			IDbTransaction transaction = Db.OpenTransaction();
