@@ -67,7 +67,7 @@ namespace Server
 			Plugins.Add(new SessionFeature());
 			Plugins.Add(new RequestLogsFeature());
 
-			/*
+
 			container.Register<IRedisClientsManager>(c =>
 				new PooledRedisClientManager(m_redisConnString));
 			container.Register<ICacheClient>(c =>
@@ -75,7 +75,6 @@ namespace Server
 				.GetCacheClient())
 				.ReusedWithin(Funq.ReuseScope.None);
 
-*/
 
 			container.Register<IDbConnectionFactory>(
 				new OrmLiteConnectionFactory(m_pgConnString, PostgreSQLDialectProvider.Instance)
@@ -88,6 +87,9 @@ namespace Server
 
 
 			Plugins.Add (new ValidationFeature ());
+
+			container.RegisterValidators(typeof(CreateQueueValidator).Assembly);
+			container.RegisterValidators(typeof(CreateTopicValidator).Assembly);
 
             var config = new EndpointHostConfig ();
 

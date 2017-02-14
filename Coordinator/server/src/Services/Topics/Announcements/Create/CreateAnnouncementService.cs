@@ -14,6 +14,7 @@ namespace Server
 			CreatingAnnouncement = new CreatingAnnouncement(Db);
 		}
 
+		[RequiredPermission("write")]
 		public object Post(CreateAnnouncement request)
 		{
 			try

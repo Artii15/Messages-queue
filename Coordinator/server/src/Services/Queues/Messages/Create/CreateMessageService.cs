@@ -14,6 +14,7 @@ namespace Server
 			CreatingMessage = new CreatingMessage(Db);
 		}
 
+		[RequiredPermission("write")]
 		public object Post(CreateMessage request)
 		{
 			try

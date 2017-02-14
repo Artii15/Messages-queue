@@ -18,6 +18,7 @@ namespace Server
 			Db.CreateTableIfNotExists<Topic>();
 		}
 
+		[RequiredPermission("create")]
 		public object Post(CreateTopic request)
 		{
 			IDbTransaction transaction = Db.OpenTransaction();

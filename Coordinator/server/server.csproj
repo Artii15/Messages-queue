@@ -166,6 +166,8 @@
     <Compile Include="src\Entities\QueuesAndTopics.cs" />
     <Compile Include="src\Entities\RecoveryQueue.cs" />
     <Compile Include="src\Entities\RecoveryTopic.cs" />
+    <Compile Include="src\Services\Queues\Create\CreateQueueValidator.cs" />
+    <Compile Include="src\Services\Topics\Create\CreateTopicValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

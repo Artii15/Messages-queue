@@ -16,6 +16,7 @@ namespace Server
 			DeletingQueue = new DeletingQueue(Db);
 		}
 
+		[RequiredPermission("create")]
 		public object Delete(DeleteQueue request)
 		{
 			IDbTransaction transaction = Db.OpenTransaction();
