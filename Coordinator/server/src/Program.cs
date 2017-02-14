@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 namespace Server
 {
@@ -22,6 +23,10 @@ namespace Server
             appHost.Init ();            
             var listeningOn = string.Format ("http://*:{0}/", port);
             appHost.Start (listeningOn);
+
+			var t = new ManualResetEventSlim();
+			t.Reset();
+			t.Wait();
 
             Console.WriteLine ("AppHost Created at {0}, listening on {1}", DateTime.Now, listeningOn);
 			Console.WriteLine("Press <ENTER> key to exit...");

@@ -3,7 +3,6 @@
 namespace Server
 {
 	[Route("/workers/heartbeat", "post")]
-	[Restrict(InternalOnly = true)]
 	public class WorkerHeartbeat
 	{
 		public int Id { get; set; }
