@@ -85,7 +85,7 @@ namespace Server
 
 		void RequestQueuesAndTopicsList()
 		{
-			var client = new RestClient(ConfigurationManager.AppSettings["CoordinatorAddress"]);
+			var client = new RestClient(Environment.GetEnvironmentVariable("COORDINATOR_ADDRESS"));
 			var request = new RestRequest(ConfigurationManager.AppSettings["QueuesAndTopicsPath"], Method.GET);
 			request.AddQueryParameter("WorkerId", Environment.GetEnvironmentVariable("WORKER_ID"));
 			request.RequestFormat = DataFormat.Json;

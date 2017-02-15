@@ -37,7 +37,7 @@ namespace Server
 
 		static void BeginHeartbeat(string ownAddress)
 		{
-			var heartbeatClient = new RestClient(ConfigurationManager.AppSettings["CoordinatorAddress"]);
+			var heartbeatClient = new RestClient(Environment.GetEnvironmentVariable("COORDINATOR_ADDRESS"));
 			var heartbeatRequest = new RestRequest(ConfigurationManager.AppSettings["HeartbeatPath"], Method.POST);
 			heartbeatRequest.RequestFormat = DataFormat.Json;
 			heartbeatRequest.AddJsonBody(new { Address = ownAddress, Id = int.Parse(Environment.GetEnvironmentVariable("WORKER_ID")) });
