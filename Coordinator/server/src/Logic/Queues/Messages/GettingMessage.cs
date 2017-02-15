@@ -1,6 +1,4 @@
-﻿using System;
-using System.Data;
-using System.Net;
+﻿using System.Data;
 using RestSharp;
 
 namespace Server
