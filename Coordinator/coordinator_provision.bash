@@ -35,8 +35,8 @@ xbuild /p:Configuration=Release $COORDINATOR_SLN
 
 ENV_FILE="$COORDINATOR_DIR/server/bin/Release/.env"
 
-echo "SERVICE_PORT=$SERVICE_PORT" >> $ENV_FILE
-echo "PG_IP=$PG_IP" > $ENV_FILE
+echo "SERVICE_PORT=$SERVICE_PORT" > $ENV_FILE
+echo "PG_IP=$PG_IP" >> $ENV_FILE
 echo "PG_USER=$PG_USER" >> $ENV_FILE
 echo "PG_DB=$PG_DB" >> $ENV_FILE
 echo "PG_PASS=$PG_PASS" >> $ENV_FILE
