@@ -3,6 +3,7 @@
 namespace Server
 {
 	[Route("/workers/heartbeat", "post")]
+	[Restrict(EndpointAttributes.InternalNetworkAccess)]
 	public class WorkerHeartbeat
 	{
 		public int Id { get; set; }
