@@ -1,20 +1,20 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
+using System.Net;
 using RestSharp;
 
 namespace Server
 {
-	public class GettingMessage
+	public class GettingMessage : BasicGettingOperation
 	{
-		readonly IDbConnection DBConnection;
-		const int TIMEOUT = 30000;
-
-		public GettingMessage(IDbConnection dbConnection)
+		public GettingMessage(IDbConnection dbConnection) : base (dbConnection)
 		{
-			DBConnection = dbConnection;
 		}
 
 		public Message Get(GetMessage request)
 		{
+			var requestToSend = new RestRequest($"queues/{request.QueueName}/messages", Method.GET);
+
 			if (!QueuesQueries.QueueExists(DBConnection, request.QueueName))
 				throw new QueueNotExistsException();
 			else
@@ -22,44 +22,14 @@ namespace Server
 				var queue = QueuesQueries.getQueueByName(DBConnection, request.QueueName);
 				var worker = WorkerQueries.GetWorkerById(DBConnection, queue.Worker);
 				var coworker = WorkerQueries.GetWorkerById(DBConnection, queue.Cooperator);
-				IRestResponse<Message> response;
 
-				if (WorkerQueries.IsWorkerAlive(DBConnection, worker.Id))
-				{
-					response = PropagateRequest(request, worker, coworker);
-					if (response.ResponseStatus == ResponseStatus.TimedOut ||
-						response.ResponseStatus == ResponseStatus.Error)
-						if (!WorkerQueries.IsWorkerAlive(DBConnection, worker.Id))
-						{
-							response = PropagateRequestToCoworker(request, coworker);
-							QueuesQueries.swapWorkers(DBConnection, queue);
-						}
-						else
-							throw new NoNewContentToGetException();
-				}
-				else
-				{
-					response = PropagateRequestToCoworker(request, coworker);
-					QueuesQueries.swapWorkers(DBConnection, queue);
-				}
-
-				return response.Data;
+				return PropageteRequestToWorkers<Message>(requestToSend, queue, worker, coworker);
 			}
 		}
 
-		IRestResponse<Message> PropagateRequest(GetMessage request, Worker worker, Worker coworker)
+		protected override void swapWorkers(ICollection collection)
 		{
-			var client = new RestClient(worker.Address);
-			client.Timeout = TIMEOUT;
-			var requestToSend = new RestRequest($"queues/{request.QueueName}/messages", Method.GET);
-			return client.Execute<Message>(requestToSend);
-		}
-
-		IRestResponse<Message> PropagateRequestToCoworker(GetMessage request, Worker coworker)
-		{
-			var coworkerClient = new RestClient(coworker.Address);
-			var coworkerRequestToSend = new RestRequest($"queues/{request.QueueName}/messages", Method.GET);
-			return coworkerClient.Execute<Message>(coworkerRequestToSend);
+			QueuesQueries.swapWorkers(DBConnection, (Queue)collection);
 		}
 	}
 }

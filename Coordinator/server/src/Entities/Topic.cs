@@ -2,7 +2,7 @@
 
 namespace Server
 {
-	public class Topic
+	public class Topic : ICollection
 	{
 		[AutoIncrement]
 		public long Id { get; set; }

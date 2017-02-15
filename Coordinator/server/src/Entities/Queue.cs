@@ -2,7 +2,7 @@
 
 namespace Server
 {
-	public class Queue
+	public class Queue : ICollection
 	{
 		[AutoIncrement]
 		public long Id { get; set; }

@@ -172,6 +172,8 @@
     <Compile Include="src\Logic\BasicQueueOperation.cs" />
     <Compile Include="src\Exceptions\BadRequestException.cs" />
     <Compile Include="src\Logic\BasicTopicOperation.cs" />
+    <Compile Include="src\Logic\BasicGettingOperation.cs" />
+    <Compile Include="src\Entities\ICollection.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
