@@ -1,5 +1,4 @@
-﻿using System;
-using ServiceStack.ServiceHost;
+﻿using ServiceStack.ServiceHost;
 
 namespace Server.Services.Announcements.Create
 {
@@ -9,6 +8,6 @@ namespace Server.Services.Announcements.Create
 		public string TopicName { get; set; }
 		public string Content { get; set; }
 		public string Cooperator { get; set; }
-		public DateTime CreationTime { get; set; }
+		public long? CreationTime { get; set; }
 	}
 }

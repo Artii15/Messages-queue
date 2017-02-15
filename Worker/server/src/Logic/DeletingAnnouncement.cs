@@ -61,7 +61,8 @@ namespace Server.Logic
 				var client = new RestClient(request.Cooperator);
 
 				var requestToSend = new RestRequest($"topics/{request.TopicName}/announcements/{request.AnnouncementId}", Method.DELETE);
-				requestToSend.AddBody(new { request.SubscriberId });
+				requestToSend.RequestFormat = DataFormat.Json;
+				requestToSend.AddParameter("SubscriberId", request.SubscriberId);
 
 				client.Execute(requestToSend);
 			}

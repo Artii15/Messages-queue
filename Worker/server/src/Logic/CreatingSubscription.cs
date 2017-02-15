@@ -41,7 +41,7 @@ namespace Server.Logic
 		{
 			var subscriber = new Subscriber
 			{
-				CreationTime = request.CreationTime.HasValue ? request.CreationTime.Value : DateTime.UtcNow,
+				CreationTime = request.CreationTime.HasValue ? DateTime.FromBinary(request.CreationTime.Value) : DateTime.UtcNow,
 				LastAnnouncementId = null,
 				Id = request.SubscriberId
 			};
@@ -49,7 +49,7 @@ namespace Server.Logic
 
 			if (!string.IsNullOrEmpty(request.Cooperator))
 			{
-				request.CreationTime = subscriber.CreationTime;
+				request.CreationTime = subscriber.CreationTime.ToBinary();
 				Propagators.ScheduleTopicOperation(request.TopicName, () => PropagateRequest(request));
 			}
 		}
