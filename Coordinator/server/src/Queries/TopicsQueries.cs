@@ -12,9 +12,10 @@ namespace Server
 			return dbConnection.Select<Topic>(topic => topic.Name == name).Count != 0;
 		}
 
-		public static void CreateTopic(IDbConnection dbConnection, string name, long worker, long coworker)
+		public static Topic CreateTopic(IDbConnection dbConnection, string name, long worker, long coworker)
 		{
 			dbConnection.Insert(new Topic { Name = name, Worker = worker, Cooperator = coworker });
+			return getTopicByName(dbConnection, name);
 		}
 
 		public static void DeleteTopic(IDbConnection dbConnection, string name)

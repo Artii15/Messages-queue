@@ -22,8 +22,7 @@ namespace Server
 			{
 				Worker worker, coworker;
 				CalculateQueueWorkers(request.Name, out worker, out coworker);
-				QueuesQueries.CreateQueue(DBConnection, request.Name, worker.Id, coworker.Id);
-				var queue = QueuesQueries.getQueueByName(DBConnection, request.Name);
+				var queue = QueuesQueries.CreateQueue(DBConnection, request.Name, worker.Id, coworker.Id);
 				PropageteRequestToWorkers(requestToSend, queue, worker, coworker);
 			}
 		}

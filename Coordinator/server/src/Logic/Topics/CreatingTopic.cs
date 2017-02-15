@@ -21,8 +21,7 @@ namespace Server
 			{
 				Worker worker, coworker;
 				CalculateTopicWorkers(request.Name, out worker, out coworker);
-				TopicsQueries.CreateTopic(DBConnection, request.Name, worker.Id, coworker.Id);
-				var topic = TopicsQueries.getTopicByName(DBConnection, request.Name);
+				var topic = TopicsQueries.CreateTopic(DBConnection, request.Name, worker.Id, coworker.Id);
 
 				PropageteRequestToWorkers(requestToSend, topic, worker, coworker);
 			}

@@ -12,9 +12,10 @@ namespace Server
 			return dbConnection.Select<Queue>(queue => queue.Name == name).Count != 0;
 		}
 
-		public static void CreateQueue(IDbConnection dbConnection, string name, long worker, long coworker)
+		public static Queue CreateQueue(IDbConnection dbConnection, string name, long worker, long coworker)
 		{
 			dbConnection.Insert(new Queue { Name = name, Worker = worker, Cooperator = coworker });
+			return getQueueByName(dbConnection, name);
 		}
 
 		public static void DeleteQueue(IDbConnection dbConnection, string name)
