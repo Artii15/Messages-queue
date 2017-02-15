@@ -2,6 +2,7 @@
 
 SERVICE_USER="ubuntu"
 SERVICE_PORT=8888
+KEY="kolejki"
 
 PG_IP=test.cdylfzlzer8p.eu-west-1.rds.amazonaws.com
 PG_USER=test
@@ -36,6 +37,7 @@ xbuild /p:Configuration=Release $COORDINATOR_SLN
 ENV_FILE="$COORDINATOR_DIR/server/bin/Release/.env"
 
 echo "SERVICE_PORT=$SERVICE_PORT" > $ENV_FILE
+echo "KEY=$KEY" >> $ENV_FILE
 echo "PG_IP=$PG_IP" >> $ENV_FILE
 echo "PG_USER=$PG_USER" >> $ENV_FILE
 echo "PG_DB=$PG_DB" >> $ENV_FILE

@@ -15,14 +15,17 @@ namespace Server
 
 		public void Register(WorkerHeartbeat request)
 		{
-			using (IDbTransaction transaction = DBConnection.OpenTransaction())
-			{
-				if (!WorkerQueries.WorkerExists(DBConnection, request.Id))
-					AddNewWorker(request);
-				else
-					Revive(request);
-				transaction.Commit();
-			}
+			if (Encrypt.EncryptToken(request.Time, request.Token))
+				using (IDbTransaction transaction = DBConnection.OpenTransaction())
+				{
+					if (!WorkerQueries.WorkerExists(DBConnection, request.Id))
+						AddNewWorker(request);
+					else
+						Revive(request);
+					transaction.Commit();
+				}
+			else
+				throw new BadRequestException();
 		}
 
 		void Revive(WorkerHeartbeat request)

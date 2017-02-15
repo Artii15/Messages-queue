@@ -17,7 +17,15 @@ namespace Server
 
 		public object Post(WorkerHeartbeat request)
 		{
-			RegisteringWorker.Register(request);
+			try
+			{
+				RegisteringWorker.Register(request);
+			}
+			catch (BadRequestException)
+			{
+				return new HttpError(HttpStatusCode.BadRequest, "BadRequest");
+			}
+
 			return new HttpResult(new WorkerHeartbeatResponse(), HttpStatusCode.Created);
 		}
 	}
