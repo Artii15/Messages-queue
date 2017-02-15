@@ -165,6 +165,8 @@
     <Compile Include="src\Logic\DatabaseRecovery.cs" />
     <Compile Include="src\Logic\Propagators.cs" />
     <Compile Include="src\Services\Paths.cs" />
+    <Compile Include="src\TokenGenerator.cs" />
+    <Compile Include="src\HeartbeatSender.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

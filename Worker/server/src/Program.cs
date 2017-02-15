@@ -35,22 +35,8 @@ namespace Server
 
 		static void BeginHeartbeat(string ownAddress)
 		{
-			var heartbeatClient = new RestClient(Environment.GetEnvironmentVariable("COORDINATOR_ADDRESS"));
-			var heartbeatRequest = new RestRequest(ConfigurationManager.AppSettings["HeartbeatPath"], Method.POST);
-			heartbeatRequest.RequestFormat = DataFormat.Json;
-			heartbeatRequest.AddJsonBody(new { Address = ownAddress, Id = int.Parse(Environment.GetEnvironmentVariable("WORKER_ID")) });
-
-			var heartbeatInterval = double.Parse(ConfigurationManager.AppSettings["HeartbeatInterval"]);
-			var timer = new Timer(heartbeatInterval);
-			timer.AutoReset = true;
-			timer.Elapsed += (sender, e) => SendHeartbeat(heartbeatClient, heartbeatRequest);
-			SendHeartbeat(heartbeatClient, heartbeatRequest);
-			timer.Start();
-		}
-
-		static void SendHeartbeat(RestClient client, RestRequest request)
-		{
-			client.Execute(request);
+			var heartbeatSender = new HeartbeatSender(ownAddress);
+			heartbeatSender.BeginHeartbeat();
 		}
     }
 }
