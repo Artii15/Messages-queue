@@ -4,7 +4,7 @@ WORKER_ID=1
 SERVICE_INTERFACE="eth0"
 SERVICE_PORT=8888
 SERVICE_USER="ubuntu"
-COORDINATOR_ADDRESS="http://localhost:8080"
+COORDINATOR_ADDRESS="http://internal-internal-balancer-for-workers-1816754698.eu-west-1.elb.amazonaws.com:8888"
 APP_KEY="kolejki"
 
 PROJECT_REPO_NAME="Messages-queue"
