@@ -1,6 +1,6 @@
 #!/bin/bash
 
-WORKER_RUNTIME_DIR="/home/artur/Pulpit/Messages-queue/Worker/server/bin/Release"
+WORKER_RUNTIME_DIR="/home/ubuntu/Messages-queue/Worker/server/bin/Release"
 
 cd $WORKER_RUNTIME_DIR
 

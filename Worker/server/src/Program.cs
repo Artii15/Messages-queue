@@ -30,9 +30,7 @@ namespace Server
 			BeginHeartbeat(listenAddress);
 
 			Console.WriteLine ("AppHost Created at {0}, listening on {1}", DateTime.Now, listenAddress);
-			Console.WriteLine("Press <ENTER> key to exit...");
-			Console.ReadLine();
-			appHost.Stop();
+			new System.Threading.ManualResetEventSlim(false).Wait();
         }
 
 		static void BeginHeartbeat(string ownAddress)
