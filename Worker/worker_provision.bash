@@ -38,3 +38,4 @@ echo "SERVICE_PORT=$SERVICE_PORT" >> $ENV_FILE
 chown -R $SERVICE_USER:$SERVICE_USER $PROJECT_DIR
 
 systemctl enable worker
+systemctl start worker
