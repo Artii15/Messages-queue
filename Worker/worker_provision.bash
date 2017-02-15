@@ -1,13 +1,13 @@
 #!/bin/bash
 
 WORKER_ID=1
-SERVICE_INTERFACE="wlp3s0"
+SERVICE_INTERFACE="eth0"
 SERVICE_PORT=8888
 COORDINATOR_ADDRESS="http://localhost:8080"
 
 PROJECT_REPO_NAME="Messages-queue"
 PROJECT_REPO="https://github.com/Artii15/$PROJECT_REPO_NAME.git"
-PROJECT_DIR_PWD="/home/artur/Pulpit"
+PROJECT_DIR_PWD="/home/ubuntu"
 PROJECT_DIR="$PROJECT_DIR_PWD/$PROJECT_REPO_NAME"
 
 if [ -d $PROJECT_DIR ]; then
