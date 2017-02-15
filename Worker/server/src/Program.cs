@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Configuration;
 using System.Text.RegularExpressions;
-using System.Timers;
-using RestSharp;
 
 namespace Server
 {
