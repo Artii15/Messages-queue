@@ -15,7 +15,7 @@ namespace Server
 
 		public void Register(WorkerHeartbeat request)
 		{
-			if (Encrypt.EncryptToken(request.Time, request.Token))
+			if (Encrypt.EncryptToken(request.Time, request.Id, request.Address, request.Token))
 				using (IDbTransaction transaction = DBConnection.OpenTransaction())
 				{
 					if (!WorkerQueries.WorkerExists(DBConnection, request.Id))

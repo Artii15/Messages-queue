@@ -1,6 +1,4 @@
-﻿using System;
-using System.Data;
-using ServiceStack.OrmLite;
+﻿using System.Data;
 
 namespace Server
 {
@@ -15,18 +13,17 @@ namespace Server
 
 		public QueuesAndTopics Get(QueuesAndTopicsRequest request)
 		{
-			if (Encrypt.EncryptToken(request.Time, request.Token))
+			if (Encrypt.EncryptToken(request.Time, request.WorkerId, request.Address, request.Token))
 			{
 				var queues = QueuesQueries.GetWorkerQueues(DBConnection, request.WorkerId);
 				var topics = TopicsQueries.GetWorkerTopics(DBConnection, request.WorkerId);
-				return new QueuesAndTopics()
+				return new QueuesAndTopics
 				{
 					Queues = queues,
 					Topics = topics
 				};
 			}
-			else
-				throw new BadRequestException();
+			throw new BadRequestException();
 		}
 	}
 }

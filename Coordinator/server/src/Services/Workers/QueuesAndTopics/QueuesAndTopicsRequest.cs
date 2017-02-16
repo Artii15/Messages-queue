@@ -8,5 +8,6 @@ namespace Server
 		public int WorkerId { get; set; }
 		public long Time { get; set; }
 		public string Token { get; set; }
+		public string Address { get; set; }
 	}
 }

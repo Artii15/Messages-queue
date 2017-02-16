@@ -31,7 +31,7 @@ namespace Server
 		{
 			var heartbeatRequest = new RestRequest(HeartbeatPath, Method.POST);
 			heartbeatRequest.RequestFormat = DataFormat.Json;
-			var tokenPair = TokenGenerator.Generate();
+			var tokenPair = TokenGenerator.Generate(WorkerId, ListenAddress);
 
 			heartbeatRequest.AddJsonBody(new
 			{

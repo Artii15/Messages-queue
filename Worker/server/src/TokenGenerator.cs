@@ -14,13 +14,13 @@ namespace Server
 			Key = key;
 		}
 
-		public TimeToken Generate()
+		public TimeToken Generate(int workerId, string workerAddress)
 		{
 			var time = DateTime.UtcNow.ToBinary();
 			return new TimeToken
 			{
 				Time = time,
-				Token = GetMd5Hash($"{Key}{time.ToString()}")
+				Token = GetMd5Hash($"{Key}{time}{workerId}{workerAddress}")
 			};
 		}
 

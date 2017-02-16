@@ -85,13 +85,16 @@ namespace Server
 
 		void RequestQueuesAndTopicsList()
 		{
+			var workerId = int.Parse(Environment.GetEnvironmentVariable("WORKER_ID"));
+			var tokenPair = new TokenGenerator(Environment.GetEnvironmentVariable("APP_KEY")).Generate(workerId, ListenAddress);
 			var client = new RestClient(Environment.GetEnvironmentVariable("COORDINATOR_ADDRESS"));
 			var request = new RestRequest(ConfigurationManager.AppSettings["QueuesAndTopicsPath"], Method.GET);
-			request.AddQueryParameter("WorkerId", Environment.GetEnvironmentVariable("WORKER_ID"));
 			request.RequestFormat = DataFormat.Json;
-			var tokenPair = new TokenGenerator(Environment.GetEnvironmentVariable("APP_KEY")).Generate();
+
+			request.AddParameter("WorkerId", workerId.ToString());
 			request.AddParameter("Time", tokenPair.Time);
 			request.AddParameter("Token", tokenPair.Token);
+			request.AddParameter("Address", ListenAddress);
 			var response = client.Execute<QueuesAndTopics>(request);
 
 			if (response.StatusCode == System.Net.HttpStatusCode.OK)
