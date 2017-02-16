@@ -1,11 +1,11 @@
 #!/bin/bash
 
-WORKER_ID=1
+WORKER_ID=
 SERVICE_INTERFACE="eth0"
-SERVICE_PORT=8888
-SERVICE_USER="ubuntu"
-COORDINATOR_ADDRESS="http://internal-internal-balancer-for-workers-1816754698.eu-west-1.elb.amazonaws.com:8888"
-APP_KEY="kolejki"
+SERVICE_PORT=
+SERVICE_USER=""
+COORDINATOR_ADDRESS=""
+APP_KEY=""
 
 PROJECT_REPO_NAME="Messages-queue"
 PROJECT_REPO="https://github.com/Artii15/$PROJECT_REPO_NAME.git"

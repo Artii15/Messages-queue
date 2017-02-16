@@ -1,15 +1,15 @@
 #!/bin/bash
 
-SERVICE_USER="ubuntu"
-SERVICE_PORT=8888
-KEY="kolejki"
+SERVICE_USER=""
+SERVICE_PORT=
+KEY=""
 
-PG_IP=test.cdylfzlzer8p.eu-west-1.rds.amazonaws.com
-PG_USER=test
-PG_DB=test
-PG_PASS=testtest
+PG_IP=""
+PG_USER=
+PG_DB=
+PG_PASS=
 PG_PORT=5432
-REDIS_IP=queueredis.y6w0go.0001.euw1.cache.amazonaws.com
+REDIS_IP=
 REDIS_PORT=6379
 
 PROJECT_REPO_NAME="Messages-queue"
